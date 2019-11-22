@@ -44,13 +44,16 @@ HEADERS += \
     ChangeHeaderWnd.h
 
 FORMS += \
-        mainwindow.ui \
     registwindow.ui \
     mainwindow.ui \
     loginwindow.ui \
     dataframe.ui \
     chatdialog.ui \
     ChangeHeaderWnd.ui
+
+INCLUDEPATH += /usr/local/include/qxmpp
+
+LIBS += -lqxmpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

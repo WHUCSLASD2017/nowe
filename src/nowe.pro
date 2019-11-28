@@ -41,7 +41,8 @@ HEADERS += \
     DragScrollArea.h \
     dataframe.h \
     chatdialog.h \
-    ChangeHeaderWnd.h
+    ChangeHeaderWnd.h \
+    dateStructure.h
 
 FORMS += \
     registwindow.ui \

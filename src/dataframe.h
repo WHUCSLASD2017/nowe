@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include"ChangeHeaderWnd.h"
-
+#include"dateStructure.h"
 namespace Ui {
 class DataFrame;
 }
@@ -30,7 +30,14 @@ public slots:
     void ChangeHeader();
     void windowclosed();
     void windowmin();
+    void setInfo(infoDate info);
 
+    void sendInfo();
+private slots:
+    void on_ok_clicked();
+signals:
+    void infoChange(infoDate);
+    void update();
 };
 
 #endif // DATAFRAME_H

@@ -1,4 +1,4 @@
-﻿#include "chatdialog.h"
+#include "chatdialog.h"
 #include "ui_chatdialog.h"
 #include <QBitmap>
 #include <QPainter>

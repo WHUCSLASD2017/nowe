@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Description: 切换头像窗口
 * Author: 公子开明 KaiMing Prince
 * Detail: 从本地上传图片，进行放缩，切割等操作，选择合适范围作为头像

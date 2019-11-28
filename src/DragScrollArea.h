@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Description: 拖拽滚动区域窗口
 * Author: 公子开明 KaiMing Prince
 * Detail: 用鼠标左键拖拽进行滚动的窗口

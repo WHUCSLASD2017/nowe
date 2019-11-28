@@ -1,4 +1,4 @@
-﻿#include "loginwindow.h"
+#include "loginwindow.h"
 #include"dataframe.h"
 #include <QApplication>
 #include"ChangeHeaderWnd.h"

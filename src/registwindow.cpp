@@ -1,4 +1,4 @@
-﻿#include "registwindow.h"
+#include "registwindow.h"
 #include "ui_registwindow.h"
 
 RegistWindow::RegistWindow(QWidget *parent) :

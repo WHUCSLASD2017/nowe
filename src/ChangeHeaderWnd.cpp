@@ -1,4 +1,4 @@
-﻿#include "ChangeHeaderWnd.h"
+#include "ChangeHeaderWnd.h"
 
 
 ChangeHeaderWnd::ChangeHeaderWnd(QWidget *parent)

@@ -4,6 +4,7 @@
 项目目录
 ├── LICENSE
 ├── README.md
+├── specification.md  -- 开发说明文档
 └── src
     ├── nowe.pro      -- 项目文件
     ├── *.cpp *.h ... -- 源代码文件和头文件

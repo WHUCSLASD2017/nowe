@@ -98,7 +98,7 @@ border-image:none;
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QPushButton" name="registBtn">
           <property name="geometry">
            <rect>
             <x>150</x>
@@ -124,7 +124,7 @@ background-color:rgb(0, 150, 225);
            <string>注册</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="pushButton_4">
+         <widget class="QPushButton" name="resetBtn">
           <property name="geometry">
            <rect>
             <x>270</x>
@@ -150,7 +150,7 @@ background-color:rgb(0, 150, 225);
            <string>重置</string>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_33">
+         <widget class="QLineEdit" name="nameLnEdt">
           <property name="geometry">
            <rect>
             <x>150</x>
@@ -186,7 +186,7 @@ bottom:10px
 </string>
           </property>
           <property name="text">
-           <string>姓名：</string>
+           <string>昵称：</string>
           </property>
          </widget>
          <widget class="QLabel" name="label_40">
@@ -226,7 +226,7 @@ bottom:10px
 </string>
           </property>
           <property name="text">
-           <string>用户名：</string>
+           <string>ID：</string>
           </property>
          </widget>
          <widget class="QLabel" name="label_42">
@@ -249,7 +249,7 @@ bottom:10px
            <string>密码：</string>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_36">
+         <widget class="QLineEdit" name="phoneLnEdt">
           <property name="geometry">
            <rect>
             <x>150</x>
@@ -268,7 +268,7 @@ bottom:10px
            <bool>false</bool>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_37">
+         <widget class="QLineEdit" name="idLnEdt">
           <property name="geometry">
            <rect>
             <x>150</x>
@@ -287,7 +287,7 @@ bottom:10px
            <bool>false</bool>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_38">
+         <widget class="QLineEdit" name="passwdLnEdt">
           <property name="geometry">
            <rect>
             <x>150</x>
@@ -332,7 +332,7 @@ bottom:10px
            <string>确认密码：</string>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_39">
+         <widget class="QLineEdit" name="confirmPasswdLnEdt">
           <property name="geometry">
            <rect>
             <x>150</x>

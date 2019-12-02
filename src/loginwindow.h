@@ -25,8 +25,8 @@ public:
 
 private:
     Ui::LoginWindow *ui;
-    MainWindow mainwindow;
-    RegistWindow registwindow;
+    MainWindow *mainwindow;
+    RegistWindow *registwindow;
     QPoint last;
 
     //DataBase myDatabase;
@@ -36,7 +36,9 @@ public slots:
     void Regist();
     void windowclosed();
     void windowmin();
-
+    void loginSucceed();
+    void loginFail();
+    void loginError(QXmppClient::Error);
 };
 
 #endif // LOGINWINDOW_H

@@ -13,7 +13,7 @@
 #include <QWidget>
 #include<QTreeWidgetItem>
 #include<QRegExp>
-
+#include <QXmppClient.h>
 
 
 namespace Ui {
@@ -32,6 +32,7 @@ public:
     void mouseReleaseEvent(QMouseEvent *e);
     QWidget *setItem(QString mainTitle,QString iconAddr,QString subTitle,bool ifVIP=false,bool ifOnline=true);
     QMenu *menu;
+    QXmppClient *client;
 
     QWidget *createItem(QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
     QTreeWidgetItem *createFriendGroup(QString grpName);

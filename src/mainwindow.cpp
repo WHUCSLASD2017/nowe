@@ -15,11 +15,12 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    client(new QXmppClient(this)),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
 
     //Show in the center
     QDesktopWidget *deskdop=QApplication::desktop();
@@ -88,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->messageTree->setIndentation(0);
     setMenu();
 
+    client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
 
 
 
@@ -283,6 +285,7 @@ QWidget *MainWindow::createItem(QString mainTitle, QString iconAddr, QString sub
 //
 void MainWindow::windowclosed()
 {
+    client->disconnectFromServer();
     QApplication::exit();
     //this->close();
 }

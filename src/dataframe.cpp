@@ -43,7 +43,7 @@ DataFrame::~DataFrame()
 }
 
 
-void DataFrame::setInfo(infoData info){
+void DataFrame::setInfo(infoData info) {
     ui->name->setText(info.nickname);
     ui->jid->setText(info.jid);
     ui->jid->setEnabled(false);
@@ -53,7 +53,7 @@ void DataFrame::setInfo(infoData info){
 }
 
 
-void DataFrame::sendInfo(){
+void DataFrame::sendInfo() {
     infoData info;
     info.jid=ui->jid->text();
     info.nickname=ui->name->text();
@@ -63,9 +63,9 @@ void DataFrame::sendInfo(){
 
 void DataFrame::on_ok_clicked()
 {
-    if(ui->name->text().isEmpty()||ui->instruction->toPlainText().isEmpty()){
+    if(ui->name->text().isEmpty()||ui->instruction->toPlainText().isEmpty()) {
         ui->stateLabel->setText("不可以为空!");
-    }else{
+    } else {
         sendInfo();
         ui->stateLabel->setText("修改成功!");
         emit update();
@@ -81,9 +81,9 @@ void DataFrame::mousePressEvent(QMouseEvent *e)
 void DataFrame::mouseMoveEvent(QMouseEvent *e)
 {
     int dx = e->globalX() - last.x();
-        int dy = e->globalY() - last.y();
-        last = e->globalPos();
-        move(x()+dx, y()+dy);
+    int dy = e->globalY() - last.y();
+    last = e->globalPos();
+    move(x()+dx, y()+dy);
 }
 void DataFrame::mouseReleaseEvent(QMouseEvent *e)
 {
@@ -105,6 +105,6 @@ void DataFrame::windowmin()
 //未用
 void DataFrame::ChangeHeader()
 {
-  ch.show();
+    ch.show();
 }
 

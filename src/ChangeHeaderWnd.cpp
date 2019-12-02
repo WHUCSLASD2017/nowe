@@ -120,19 +120,19 @@ void ChangeHeaderWnd::onCancel()
 //Mouse Move
 void ChangeHeaderWnd::mousePressEvent(QMouseEvent *e)
 {
-   /* last=e->globalPos();*/
+    /* last=e->globalPos();*/
 }
 void ChangeHeaderWnd::mouseMoveEvent(QMouseEvent *e)
 {
-   /* int dx = e->globalX() - last.x();
-        int dy = e->globalY() - last.y();
-        last = e->globalPos();
-        move(x()+dx, y()+dy);*/
+    /* int dx = e->globalX() - last.x();
+         int dy = e->globalY() - last.y();
+         last = e->globalPos();
+         move(x()+dx, y()+dy);*/
 }
 void ChangeHeaderWnd::mouseReleaseEvent(QMouseEvent *e)
 {
-   /* int dx = e->globalX() - last.x();
-    int dy = e->globalY() - last.y();
-    move(x()+dx, y()+dy);*/
+    /* int dx = e->globalX() - last.x();
+     int dy = e->globalY() - last.y();
+     move(x()+dx, y()+dy);*/
 }
 

@@ -41,4 +41,4 @@ signals:
 };
 
 #endif // DATAFRAME_H
-                      
+

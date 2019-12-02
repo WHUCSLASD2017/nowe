@@ -116,9 +116,9 @@ void RegistWindow::mousePressEvent(QMouseEvent *e)
 void RegistWindow::mouseMoveEvent(QMouseEvent *e)
 {
     int dx = e->globalX() - last.x();
-        int dy = e->globalY() - last.y();
-        last = e->globalPos();
-        move(x()+dx, y()+dy);
+    int dy = e->globalY() - last.y();
+    last = e->globalPos();
+    move(x()+dx, y()+dy);
 }
 void RegistWindow::mouseReleaseEvent(QMouseEvent *e)
 {

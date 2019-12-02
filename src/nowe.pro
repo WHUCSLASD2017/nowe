@@ -42,7 +42,7 @@ HEADERS += \
     dataframe.h \
     chatdialog.h \
     ChangeHeaderWnd.h \
-    dateStructure.h
+    dataStructure.h
 
 FORMS += \
     registwindow.ui \

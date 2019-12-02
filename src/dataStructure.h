@@ -5,7 +5,7 @@
 #include <qstring.h>
 
 
-struct infoDate{
+struct infoData{
     QString nickname;
     QString jid;
     QString descrition;

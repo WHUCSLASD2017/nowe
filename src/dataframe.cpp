@@ -43,7 +43,7 @@ DataFrame::~DataFrame()
 }
 
 
-void DataFrame::setInfo(infoDate info){
+void DataFrame::setInfo(infoData info){
     ui->name->setText(info.nickname);
     ui->jid->setText(info.jid);
     ui->jid->setEnabled(false);
@@ -54,7 +54,7 @@ void DataFrame::setInfo(infoDate info){
 
 
 void DataFrame::sendInfo(){
-    infoDate info;
+    infoData info;
     info.jid=ui->jid->text();
     info.nickname=ui->name->text();
     info.descrition=ui->instruction->toPlainText();

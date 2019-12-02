@@ -1,11 +1,12 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
 #include <QXmppClient.h>
+#include <QXmppVCardManager.h>
 
 LoginWindow::LoginWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::LoginWindow),
-    mainwindow(new MainWindow(this)),
+    mainwindow(new MainWindow),
     registwindow(new RegistWindow(this))
 {
     ui->setupUi(this);
@@ -131,6 +132,7 @@ void LoginWindow::windowmin()
 // 登录成功
 void LoginWindow::loginSucceed()
 {
+    mainwindow->client->findExtension<QXmppVCardManager>()->requestClientVCard();
     mainwindow->show();
     this->hide();
 }

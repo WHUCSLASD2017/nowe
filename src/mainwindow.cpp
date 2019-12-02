@@ -12,6 +12,10 @@
 #include "loginwindow.h"
 #include"dataframe.h"
 #include"ChangeHeaderWnd.h"
+#include <QXmppVCardIq.h>
+#include <QXmppVCardManager.h>
+#include <QBuffer>
+#include <QImageReader>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -91,6 +95,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
 
+    connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::clientVCardReceived,
+            this, &MainWindow::on_clientVCardReceived);
+
 
 
 
@@ -138,6 +145,24 @@ void MainWindow::displayProfilePanel()
 {
             //显示个人资料窗口
     DataFrame* d=new DataFrame;
+    // 将当前个人信息显示到个人资料窗口
+    // d->setInfo(info);
+    QXmppVCardIq myCard=client->findExtension<QXmppVCardManager>()->clientVCard();
+    QBuffer buffer;
+    buffer.setData(myCard.photo());
+    infoData info;
+    if(buffer.open(QIODevice::ReadOnly))
+    {
+        QImageReader imageReader(&buffer);
+        info.jid= client->configuration().jidBare();
+        info.avatar = imageReader.read();
+        info.nickname = myCard.fullName();
+        info.descrition = myCard.description();
+        d->setInfo(info);
+    }
+
+    connect(d, &DataFrame::infoChange, this, &MainWindow::setInfo);
+    connect(d, &DataFrame::update, this, &MainWindow::updateInfo);
     d->show();
 }
 
@@ -410,4 +435,42 @@ void MainWindow::on_pushButton_4_clicked()
                     //菜单在540像素位置弹出
     pos.setY(540);
     menu->exec(this->mapToGlobal(pos));
+}
+
+void MainWindow::on_clientVCardReceived()
+{
+    auto myCard =  client->findExtension<QXmppVCardManager>()->clientVCard();
+    QBuffer buffer;
+    buffer.setData(myCard.photo());
+    buffer.open(QIODevice::ReadOnly);
+
+    info.jid = client->configuration().jidBare();
+    info.avatar = QImageReader(&buffer).read();
+    info.nickname = myCard.fullName();
+    info.descrition = myCard.description();
+
+    emit infoUpdated(info);
+}
+
+void MainWindow::setInfo(infoData new_info)
+{
+    info = new_info;
+}
+
+void MainWindow::updateInfo()
+{
+    auto vmanager = client->findExtension<QXmppVCardManager>();
+
+    QBuffer buffer;
+    buffer.open(QIODevice::ReadWrite);
+    info.avatar.save(&buffer);
+
+    QXmppVCardIq vCard;
+    vCard.setType(QXmppIq::Set);
+    vCard.setFullName(info.nickname);
+    vCard.setDescription(info.descrition);
+    vCard.setPhoto(buffer.data());
+
+    vmanager->setClientVCard(vCard);
+    vmanager->requestClientVCard();
 }

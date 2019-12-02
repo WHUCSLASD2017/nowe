@@ -14,6 +14,7 @@
 #include<QTreeWidgetItem>
 #include<QRegExp>
 #include <QXmppClient.h>
+#include <dataStructure.h>
 
 
 namespace Ui {
@@ -51,6 +52,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QPoint last;
+    infoData info;
 
 public slots:
     void windowclosed();
@@ -68,9 +70,18 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_clientVCardReceived();
+
+    // 设置当前用户资料
+    void setInfo(infoData);
+
+    // 将当前用户资料同步至服务器
+    void updateInfo();
+
 signals:
     void friendClicked(QString usrName);
     void msgClicked(QString usrName);
+    void infoUpdated(const infoData&);
 };
 
 #endif // MAINWINDOW_H

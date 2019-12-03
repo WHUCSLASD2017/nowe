@@ -142,7 +142,10 @@ void LoginWindow::windowmin()
 // 登录成功
 void LoginWindow::loginSucceed()
 {
+    // 请求服务器发送 VCard，获取个人资料
     client->findExtension<QXmppVCardManager>()->requestClientVCard();
+
+    // 关闭 login 窗口并在 exec 的执行处返回 QDialog::Accepted
     this->accept();
 }
 

@@ -100,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
 
+    // 当服务器发送 VCard 时更新主窗口上个人资料
     connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::clientVCardReceived,
             this, &MainWindow::on_clientVCardReceived);
 
@@ -364,19 +365,17 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
     }
 }
 
+//设置头像
 void MainWindow::setAvatar(QPixmap &avatar, int length, int width, int radius)
 {
-    //设置头像
-    QPixmap pixMap= avatar.scaled(width,length, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     //首先缩放头像
+    QPixmap pixMap= avatar.scaled(width,length, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-
-    pixMap =  PixmapToRound(pixMap, radius);
     //把头像搞成圆形的
+    pixMap =  PixmapToRound(pixMap, radius);
 
-    ui->avatar->setPixmap(pixMap);
     //最后设置
-
+    ui->avatar->setPixmap(pixMap);
 }
 
 QPixmap MainWindow::PixmapToRound(const QPixmap &src, int radius)
@@ -419,6 +418,7 @@ void MainWindow::on_pushButton_4_clicked()
     menu->exec(this->mapToGlobal(pos));
 }
 
+// 根据最新的 VCard 更新主窗口上个人资料
 void MainWindow::on_clientVCardReceived()
 {
     const auto& myCard =  Nowe::myVCard();

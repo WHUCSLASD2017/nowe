@@ -41,14 +41,17 @@ DataFrame::DataFrame(QWidget *parent) :
     connect(closeButton, &QToolButton::clicked, this, &DataFrame::windowclosed);
     connect(minButton, &QToolButton::clicked, this, &DataFrame::windowmin);
 
+    // 每次服务器发送 VCard 时自动更新
     auto myVCardManager = Nowe::myClient()->findExtension<QXmppVCardManager>();
     connect(myVCardManager, &QXmppVCardManager::clientVCardReceived, [=]() {
         updatePanel(Nowe::myVCard());
     });
 //    connect(ui->avatarLineedit,SIGNAL(clicked()), this, SLOT(ChangeHeader()));
 
+    // 初始化个人资料面板
     updatePanel(Nowe::myVCard());
 
+    // JID 设置为不可编辑状态
     ui->jid->setText(Nowe::myJid());
     ui->jid->setDisabled(true);
 }
@@ -68,8 +71,11 @@ void DataFrame::on_ok_clicked()
     }
 }
 
+// 向服务器发送新 VCard 以更新资料
 void DataFrame::sendNewVCard()
 {
+    // 每次必须发送所有字段，无论是否改动，
+    // 所以在原 VCard 的基础上编辑
     auto myVCard =  Nowe::myVCard();
     auto myVCardManager = Nowe::myClient()->findExtension<QXmppVCardManager>();
 
@@ -80,6 +86,7 @@ void DataFrame::sendNewVCard()
     myVCardManager->requestClientVCard();
 }
 
+// 根据传入的 VCard 更新个人资料面板
 void DataFrame::updatePanel(const QXmppVCardIq &vcard)
 {
     QBuffer buffer;

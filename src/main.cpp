@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     MainWindow m;
 
     if (w.exec() == QDialog::Accepted) {
+        // 登录成功，则转到主窗口
         m.show();
         return a.exec();
     } else {

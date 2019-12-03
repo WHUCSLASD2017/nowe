@@ -5,8 +5,8 @@
 * Class： ChangeHeaderWnd
 * Implement: 本类实现了一个具有简单操作的切换头像窗口，布局仿造QQ8.9.6上的切换头像窗口
 */
-#ifndef _CHANGE_HEADER_WND_H__
-#define _CHANGE_HEADER_WND_H__
+#ifndef CHANGE_HEADER_WND_H
+#define CHANGE_HEADER_WND_H
 #include <QWidget>
 #include "ui_ChangeHeaderWnd.h"
 #include"DragScrollArea.h"
@@ -49,4 +49,4 @@ private:
     QPoint last;
 
 };
-#endif //_CHANGE_HEADER_WND_H__
+#endif // CHANGE_HEADER_WND_H

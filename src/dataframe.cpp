@@ -129,8 +129,8 @@ void DataFrame::windowmin()
 
 //**************************************************
 //未用
-void DataFrame::ChangeHeader()
-{
-    ch.show();
-}
+//void DataFrame::ChangeHeader()
+//{
+//    ch.show();
+//}
 

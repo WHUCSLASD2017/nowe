@@ -22,12 +22,11 @@ public:
 
 private:
     Ui::DataFrame *ui;
-    ChangeHeaderWnd ch;
     QPoint last;
 
 
 public slots:
-    void ChangeHeader();
+//    void ChangeHeader();
     void windowclosed();
     void windowmin();
 

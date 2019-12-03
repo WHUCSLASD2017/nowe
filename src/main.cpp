@@ -9,9 +9,9 @@ int main(int argc, char *argv[])
     QXmppClient client;
 
     LoginWindow w(&client);
+    MainWindow m(&client);
 
     if (w.exec() == QDialog::Accepted) {
-        MainWindow m(&client);
         m.show();
         return a.exec();
     } else {

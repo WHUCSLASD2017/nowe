@@ -115,12 +115,6 @@ MainWindow::MainWindow(QXmppClient* client, QWidget *parent) :
     setFriendToTop(f,"new","new",":/images/4.png",a);
 
     createMessage("5555","66666",":/images/3.png");
-
-    QPixmap avatar;
-    avatar.load("avatar.jpg");
-    setAvatar(avatar,80,80,45);
-    setMainTitle("吴旭晖");
-    setSubTitle("开心每一天！");
 }
 
 MainWindow::~MainWindow()
@@ -447,11 +441,17 @@ void MainWindow::on_clientVCardReceived()
     QBuffer buffer;
     buffer.setData(myCard.photo());
     buffer.open(QIODevice::ReadOnly);
+    QImageReader avaterReader(&buffer);
 
     info.jid = client->configuration().jidBare();
-    info.avatar = QImageReader(&buffer).read();
+    info.avatar = avaterReader.read();
     info.nickname = myCard.fullName();
     info.descrition = myCard.description();
+
+    QPixmap avatar = QPixmap::fromImage(info.avatar);
+    setAvatar(avatar,80,80,45);
+    setMainTitle(info.nickname);
+    setSubTitle(info.descrition);
 
     emit infoUpdated(info);
 }

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include"ChangeHeaderWnd.h"
-#include"dataStructure.h"
+#include"NoweGlobal.h"
 namespace Ui {
 class DataFrame;
 }
@@ -30,14 +30,11 @@ public slots:
     void ChangeHeader();
     void windowclosed();
     void windowmin();
-    void setInfo(infoData info);
 
-    void sendInfo();
 private slots:
     void on_ok_clicked();
-signals:
-    void infoChange(infoData);
-    void update();
+    void sendVCard();
+    void on_clientVCardReceived();
 };
 
 #endif // DATAFRAME_H

@@ -1,8 +1,12 @@
 #include "dataframe.h"
 #include "ui_dataframe.h"
+#include "NoweGlobal.h"
 #include <QToolButton>
 #include <QDesktopWidget>
 #include <QMouseEvent>
+#include <QXmppVCardManager.h>
+#include <QBuffer>
+#include <QImageReader>
 
 DataFrame::DataFrame(QWidget *parent) :
     QDialog(parent),
@@ -34,10 +38,17 @@ DataFrame::DataFrame(QWidget *parent) :
 
 
     //信号与槽
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(windowclosed()) );
-    connect(minButton, SIGNAL(clicked()), this, SLOT(windowmin()));
+    connect(closeButton, &QToolButton::clicked, this, &DataFrame::windowclosed);
+    connect(minButton, &QToolButton::clicked, this, &DataFrame::windowmin);
 
+    auto myVCardManager = Nowe::myClient()->findExtension<QXmppVCardManager>();
+    connect(myVCardManager, &QXmppVCardManager::clientVCardReceived, this, &DataFrame::on_clientVCardReceived);
 //    connect(ui->avatarLineedit,SIGNAL(clicked()), this, SLOT(ChangeHeader()));
+
+    myVCardManager->requestClientVCard();
+
+    ui->jid->setText(Nowe::myJid());
+    ui->jid->setDisabled(true);
 }
 
 DataFrame::~DataFrame()
@@ -45,34 +56,46 @@ DataFrame::~DataFrame()
     delete ui;
 }
 
-
-void DataFrame::setInfo(infoData info) {
-    ui->name->setText(info.nickname);
-    ui->jid->setText(info.jid);
-    ui->jid->setEnabled(false);
-    ui->instruction->setText(info.descrition);
-    QPixmap pixMap=QPixmap::fromImage(info.avatar);
-    ui->avatar->setPixmap(pixMap);
-}
-
-
-void DataFrame::sendInfo() {
-    infoData info;
-    info.jid=ui->jid->text();
-    info.nickname=ui->name->text();
-    info.descrition=ui->instruction->toPlainText();
-    emit infoChange(info);
-}
-
 void DataFrame::on_ok_clicked()
 {
     if(ui->name->text().isEmpty()||ui->instruction->toPlainText().isEmpty()) {
         ui->stateLabel->setText("不可以为空!");
     } else {
-        sendInfo();
+        sendVCard();
         ui->stateLabel->setText("修改成功!");
-        emit update();
     }
+}
+
+void DataFrame::sendVCard()
+{
+    auto myVCard =  Nowe::myVCard();
+    auto myVCardManager = Nowe::myClient()->findExtension<QXmppVCardManager>();
+
+    QBuffer avatarData;
+    avatarData.open(QIODevice::WriteOnly);
+    auto pixmap = ui->avatar->pixmap();
+    pixmap->save(&avatarData, "PNG");
+
+    myVCard.setFullName(ui->name->text());
+    myVCard.setDescription(ui->instruction->toPlainText());
+    myVCard.setPhoto(avatarData.buffer());
+
+    myVCardManager->setClientVCard(myVCard);
+    myVCardManager->requestClientVCard();
+}
+
+void DataFrame::on_clientVCardReceived()
+{
+    const auto& myCard =  Nowe::myVCard();
+    QBuffer buffer;
+    buffer.setData(myCard.photo());
+    buffer.open(QIODevice::ReadOnly);
+    QImageReader avaterReader(&buffer);
+    QPixmap avatar = QPixmap::fromImage(avaterReader.read());
+
+    ui->name->setText(myCard.fullName());
+    ui->instruction->setText(myCard.description());
+    ui->avatar->setPixmap(avatar);
 }
 
 

@@ -32,7 +32,8 @@ SOURCES += \
     DragScrollArea.cpp \
     dataframe.cpp \
     chatdialog.cpp \
-    ChangeHeaderWnd.cpp
+    ChangeHeaderWnd.cpp \
+    noweglobal.cpp
 
 HEADERS += \
     registwindow.h \
@@ -42,7 +43,7 @@ HEADERS += \
     dataframe.h \
     chatdialog.h \
     ChangeHeaderWnd.h \
-    dataStructure.h
+    NoweGlobal.h
 
 FORMS += \
     registwindow.ui \

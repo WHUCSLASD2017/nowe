@@ -3,6 +3,7 @@
 #include "chatdialog.h"
 #include "dataframe.h"
 #include "ChangeHeaderWnd.h"
+#include "NoweGlobal.h"
 #include <QRegExpValidator>
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -21,10 +22,10 @@
 #include <QBuffer>
 #include <QImageReader>
 
-MainWindow::MainWindow(QXmppClient* client, QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    client(client)
+    client(Nowe::myClient())
 {
     ui->setupUi(this);
 
@@ -143,24 +144,7 @@ void MainWindow::displayProfilePanel()
 {
     //显示个人资料窗口
     DataFrame* d=new DataFrame;
-    // 将当前个人信息显示到个人资料窗口
-    // d->setInfo(info);
-    QXmppVCardIq myCard=client->findExtension<QXmppVCardManager>()->clientVCard();
-    QBuffer buffer;
-    buffer.setData(myCard.photo());
-    infoData info;
-    if(buffer.open(QIODevice::ReadOnly))
-    {
-        QImageReader imageReader(&buffer);
-        info.jid= client->configuration().jidBare();
-        info.avatar = imageReader.read();
-        info.nickname = myCard.fullName();
-        info.descrition = myCard.description();
-        d->setInfo(info);
-    }
 
-    connect(d, &DataFrame::infoChange, this, &MainWindow::setInfo);
-    connect(d, &DataFrame::update, this, &MainWindow::updateInfo);
     d->show();
 }
 
@@ -437,44 +421,15 @@ void MainWindow::on_pushButton_4_clicked()
 
 void MainWindow::on_clientVCardReceived()
 {
-    auto myCard =  client->findExtension<QXmppVCardManager>()->clientVCard();
+    const auto& myCard =  Nowe::myVCard();
     QBuffer buffer;
     buffer.setData(myCard.photo());
     buffer.open(QIODevice::ReadOnly);
     QImageReader avaterReader(&buffer);
+    QPixmap avatar = QPixmap::fromImage(avaterReader.read());
 
-    info.jid = client->configuration().jidBare();
-    info.avatar = avaterReader.read();
-    info.nickname = myCard.fullName();
-    info.descrition = myCard.description();
-
-    QPixmap avatar = QPixmap::fromImage(info.avatar);
     setAvatar(avatar,80,80,45);
-    setMainTitle(info.nickname);
-    setSubTitle(info.descrition);
-
-    emit infoUpdated(info);
+    setMainTitle(myCard.fullName());
+    setSubTitle(myCard.description());
 }
 
-void MainWindow::setInfo(infoData new_info)
-{
-    info = new_info;
-}
-
-void MainWindow::updateInfo()
-{
-    auto vmanager = client->findExtension<QXmppVCardManager>();
-
-    QBuffer buffer;
-    buffer.open(QIODevice::ReadWrite);
-    info.avatar.save(&buffer);
-
-    QXmppVCardIq vCard;
-    vCard.setType(QXmppIq::Set);
-    vCard.setFullName(info.nickname);
-    vCard.setDescription(info.descrition);
-    vCard.setPhoto(buffer.data());
-
-    vmanager->setClientVCard(vCard);
-    vmanager->requestClientVCard();
-}

@@ -1,5 +1,6 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
+#include "NoweGlobal.h"
 #include <QRegExpValidator>
 #include <QToolButton>
 #include <QStyle>
@@ -8,10 +9,10 @@
 #include <QMessageBox>
 #include <QXmppVCardManager.h>
 
-LoginWindow::LoginWindow(QXmppClient *client, QWidget *parent) :
+LoginWindow::LoginWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LoginWindow),
-    client(client)
+    client(Nowe::myClient())
 {
     ui->setupUi(this);
 
@@ -70,10 +71,10 @@ LoginWindow::LoginWindow(QXmppClient *client, QWidget *parent) :
 
     //连接serve成功会发射connected()，失败发射disconnected()、error()
     connect(client, &QXmppClient::connected, this, &LoginWindow::loginSucceed);
-    connect(client, &QXmppClient::disconnected, [=](){
+    connect(client, &QXmppClient::disconnected, [=]() {
         QMessageBox::critical(this, tr("登陆失败"), tr("与服务器断开连接"));
     });
-    connect(client, &QXmppClient::error, this, [=](){
+    connect(client, &QXmppClient::error, this, [=]() {
         QMessageBox::critical(this, tr("登陆失败"), tr("登陆过程中出错"));
     });
 

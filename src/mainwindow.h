@@ -5,7 +5,6 @@
 #include <QWidget>
 #include <QTreeWidgetItem>
 #include <QXmppClient.h>
-#include <dataStructure.h>
 
 
 namespace Ui {
@@ -17,7 +16,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QXmppClient* client, QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
@@ -42,7 +41,6 @@ public:
 private:
     Ui::MainWindow *ui;
     QPoint last;
-    infoData info;
     QXmppClient *const client;
 
 public slots:
@@ -63,16 +61,9 @@ private slots:
 
     void on_clientVCardReceived();
 
-    // 设置当前用户资料
-    void setInfo(infoData);
-
-    // 将当前用户资料同步至服务器
-    void updateInfo();
-
 signals:
     void friendClicked(QString usrName);
     void msgClicked(QString usrName);
-    void infoUpdated(const infoData&);
 };
 
 #endif // MAINWINDOW_H

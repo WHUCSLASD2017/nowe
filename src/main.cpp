@@ -8,8 +8,8 @@ int main(int argc, char *argv[])
 
     QXmppClient client;
 
-    LoginWindow w(&client);
-    MainWindow m(&client);
+    LoginWindow w;
+    MainWindow m;
 
     if (w.exec() == QDialog::Accepted) {
         m.show();

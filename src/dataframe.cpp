@@ -42,10 +42,12 @@ DataFrame::DataFrame(QWidget *parent) :
     connect(minButton, &QToolButton::clicked, this, &DataFrame::windowmin);
 
     auto myVCardManager = Nowe::myClient()->findExtension<QXmppVCardManager>();
-    connect(myVCardManager, &QXmppVCardManager::clientVCardReceived, this, &DataFrame::on_clientVCardReceived);
+    connect(myVCardManager, &QXmppVCardManager::clientVCardReceived, [=]() {
+        updatePanel(Nowe::myVCard());
+    });
 //    connect(ui->avatarLineedit,SIGNAL(clicked()), this, SLOT(ChangeHeader()));
 
-    myVCardManager->requestClientVCard();
+    updatePanel(Nowe::myVCard());
 
     ui->jid->setText(Nowe::myJid());
     ui->jid->setDisabled(true);
@@ -61,43 +63,35 @@ void DataFrame::on_ok_clicked()
     if(ui->name->text().isEmpty()||ui->instruction->toPlainText().isEmpty()) {
         ui->stateLabel->setText("不可以为空!");
     } else {
-        sendVCard();
+        sendNewVCard();
         ui->stateLabel->setText("修改成功!");
     }
 }
 
-void DataFrame::sendVCard()
+void DataFrame::sendNewVCard()
 {
     auto myVCard =  Nowe::myVCard();
     auto myVCardManager = Nowe::myClient()->findExtension<QXmppVCardManager>();
 
-    QBuffer avatarData;
-    avatarData.open(QIODevice::WriteOnly);
-    auto pixmap = ui->avatar->pixmap();
-    pixmap->save(&avatarData, "PNG");
-
     myVCard.setFullName(ui->name->text());
     myVCard.setDescription(ui->instruction->toPlainText());
-    myVCard.setPhoto(avatarData.buffer());
 
     myVCardManager->setClientVCard(myVCard);
     myVCardManager->requestClientVCard();
 }
 
-void DataFrame::on_clientVCardReceived()
+void DataFrame::updatePanel(const QXmppVCardIq &vcard)
 {
-    const auto& myCard =  Nowe::myVCard();
     QBuffer buffer;
-    buffer.setData(myCard.photo());
+    buffer.setData(vcard.photo());
     buffer.open(QIODevice::ReadOnly);
     QImageReader avaterReader(&buffer);
     QPixmap avatar = QPixmap::fromImage(avaterReader.read());
 
-    ui->name->setText(myCard.fullName());
-    ui->instruction->setText(myCard.description());
-    ui->avatar->setPixmap(avatar);
+    ui->name->setText(vcard.fullName());
+    ui->instruction->setText(vcard.description());
+    ui->avatar->setPixmap(avatar.scaled(ui->avatar->size()));
 }
-
 
 //鼠标移动更改窗口位置
 void DataFrame::mousePressEvent(QMouseEvent *e)

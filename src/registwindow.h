@@ -23,7 +23,6 @@ public:
 
 private:
     Ui::RegistWindow *ui;
-    MainWindow mainwindow;
     //DataBase myDatabase;
     QPoint last;
     QXmppClient *client;

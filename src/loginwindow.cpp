@@ -1,13 +1,17 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
-#include <QXmppClient.h>
+#include <QRegExpValidator>
+#include <QToolButton>
+#include <QStyle>
+#include <QDesktopWidget>
+#include <QMouseEvent>
+#include <QMessageBox>
 #include <QXmppVCardManager.h>
 
-LoginWindow::LoginWindow(QWidget *parent) :
-    QWidget(parent),
+LoginWindow::LoginWindow(QXmppClient *client, QWidget *parent) :
+    QDialog(parent),
     ui(new Ui::LoginWindow),
-    mainwindow(new MainWindow),
-    registwindow(new RegistWindow(this))
+    client(client)
 {
     ui->setupUi(this);
 
@@ -65,9 +69,13 @@ LoginWindow::LoginWindow(QWidget *parent) :
     connect(minButton, &QToolButton::clicked, this, &LoginWindow::windowmin);
 
     //连接serve成功会发射connected()，失败发射disconnected()、error()
-    connect(mainwindow->client, &QXmppClient::connected, this, &LoginWindow::loginSucceed);
-    connect(mainwindow->client, &QXmppClient::disconnected, this, &LoginWindow::loginFail);
-    connect(mainwindow->client, &QXmppClient::error, this, &LoginWindow::loginError);
+    connect(client, &QXmppClient::connected, this, &LoginWindow::loginSucceed);
+    connect(client, &QXmppClient::disconnected, [=](){
+        QMessageBox::critical(this, tr("登陆失败"), tr("与服务器断开连接"));
+    });
+    connect(client, &QXmppClient::error, this, [=](){
+        QMessageBox::critical(this, tr("登陆失败"), tr("登陆过程中出错"));
+    });
 
 }
 
@@ -87,13 +95,13 @@ void LoginWindow::Login()
     config.setPassword(passwd);
     config.setPort(5222);
     config.setIgnoreSslErrors(true);
-    mainwindow->client->connectToServer(config);
+    client->connectToServer(config);
 }
 
 // 跳转注册界面
 void LoginWindow::Regist()
 {
-    registwindow->show();
+    QMessageBox::information(this,tr("尚未开发"),tr("尚待完成"));
 }
 
 // 鼠标拖动移动窗口位置
@@ -121,8 +129,9 @@ void LoginWindow::mouseReleaseEvent(QMouseEvent *e)
 //
 void LoginWindow::windowclosed()
 {
-    QApplication::exit();
+    //QApplication::exit();
     //this->close();
+    this->reject();
 }
 void LoginWindow::windowmin()
 {
@@ -132,19 +141,8 @@ void LoginWindow::windowmin()
 // 登录成功
 void LoginWindow::loginSucceed()
 {
-    mainwindow->client->findExtension<QXmppVCardManager>()->requestClientVCard();
-    mainwindow->show();
-    this->hide();
-}
-
-void LoginWindow::loginFail()
-{
-    QMessageBox::critical(this, tr("登陆失败"), tr("登陆失败"));
-}
-
-void LoginWindow::loginError(QXmppClient::Error e)
-{
-    qDebug() << e;
+    client->findExtension<QXmppVCardManager>()->requestClientVCard();
+    this->accept();
 }
 
 

@@ -2,17 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include<QRegExpValidator>
-#include<QMessageBox>
-#include<QtSql/QSqlQuery>
-#include <QMouseEvent>
-#include<QToolButton>
-#include<QPixmap>
-#include<QStyle>
-#include <QDesktopWidget>
 #include <QWidget>
-#include<QTreeWidgetItem>
-#include<QRegExp>
+#include <QTreeWidgetItem>
 #include <QXmppClient.h>
 #include <dataStructure.h>
 
@@ -26,14 +17,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QXmppClient* client, QWidget *parent = nullptr);
     ~MainWindow();
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     QWidget *setItem(QString mainTitle,QString iconAddr,QString subTitle,bool ifVIP=false,bool ifOnline=true);
     QMenu *menu;
-    QXmppClient *client;
 
     QWidget *createItem(QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
     QTreeWidgetItem *createFriendGroup(QString grpName);
@@ -53,6 +43,7 @@ private:
     Ui::MainWindow *ui;
     QPoint last;
     infoData info;
+    QXmppClient *const client;
 
 public slots:
     void windowclosed();

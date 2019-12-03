@@ -1,5 +1,8 @@
 #include "dataframe.h"
 #include "ui_dataframe.h"
+#include <QToolButton>
+#include <QDesktopWidget>
+#include <QMouseEvent>
 
 DataFrame::DataFrame(QWidget *parent) :
     QDialog(parent),

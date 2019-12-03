@@ -1,6 +1,10 @@
 #include "registwindow.h"
 #include "ui_registwindow.h"
 #include <QXmppRegisterIq.h>
+#include <QDesktopWidget>
+#include <QToolButton>
+#include <QMessageBox>
+#include <QMouseEvent>
 
 RegistWindow::RegistWindow(QWidget *parent) :
     QMainWindow(parent),

@@ -1,5 +1,7 @@
 #include "ChangeHeaderWnd.h"
 
+#include <QDesktopWidget>
+
 
 ChangeHeaderWnd::ChangeHeaderWnd(QWidget *parent)
     : QWidget(parent, Qt::FramelessWindowHint)

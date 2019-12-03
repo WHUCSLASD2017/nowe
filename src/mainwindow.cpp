@@ -1,26 +1,30 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include<QToolButton>
-#include<QLabel>
-#include<QPixmap>
-#include<QGroupBox>
-#include<QDebug>
 #include "chatdialog.h"
-#include<QBitmap>
-#include<QPainter>
-#include<QMenu>
-#include "loginwindow.h"
-#include"dataframe.h"
-#include"ChangeHeaderWnd.h"
+#include "dataframe.h"
+#include "ChangeHeaderWnd.h"
+#include <QRegExpValidator>
+#include <QMessageBox>
+#include <QMouseEvent>
+#include <QToolButton>
+#include <QPixmap>
+#include <QStyle>
+#include <QDesktopWidget>
+#include <QLabel>
+#include <QGroupBox>
+#include <QDebug>
+#include <QBitmap>
+#include <QPainter>
+#include <QMenu>
 #include <QXmppVCardIq.h>
 #include <QXmppVCardManager.h>
 #include <QBuffer>
 #include <QImageReader>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QXmppClient* client, QWidget *parent) :
     QMainWindow(parent),
-    client(new QXmppClient(this)),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    client(client)
 {
     ui->setupUi(this);
 

@@ -4,11 +4,13 @@
 #include <QPainter>
 #include <QToolButton>
 #include <QMouseEvent>
-#include<QToolButton>
-#include<QPixmap>
-#include<QStyle>
+#include <QToolButton>
+#include <QPixmap>
+#include <QStyle>
 #include <QDesktopWidget>
-#include<QMessageBox>
+#include <QMessageBox>
+#include <NoweGlobal.h>
+#include <QXmppUtils.h>
 
 ChatDialog::ChatDialog(QWidget *parent) :
     QDialog(parent),
@@ -87,6 +89,13 @@ ChatDialog::ChatDialog(QWidget *parent) :
     connect(closeButton, SIGNAL(clicked()), this, SLOT(windowclosed()) );
     connect(minButton, SIGNAL(clicked()), this, SLOT(windowmin()));
 
+    connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &ChatDialog::on_messageReceived);
+    connect(this, &ChatDialog::newMessage, [=](QString sender,QString receiver,QDateTime time,QString content) {
+        QXmppMessage msg(sender, receiver, content);
+        msg.setType(QXmppMessage::Chat);
+        msg.setStamp(time);
+        Nowe::myClient()->sendPacket(msg);
+    });
 }
 
 ChatDialog::~ChatDialog()
@@ -188,7 +197,13 @@ void ChatDialog::setOutMsgFormat(QFont target,Qt::GlobalColor color)
     outMsgCharFormat.setForeground(color);
 }
 
-
+void ChatDialog::on_messageReceived(const QXmppMessage &msg)
+{
+    if (QXmppUtils::jidToBareJid(msg.from()) == sender) {
+        auto time = msg.stamp();
+        insertInMessage(msg.body(), &time);
+    }
+}
 
 QPixmap ChatDialog::PixmapToRound(const QPixmap &src, int radius)
 {
@@ -237,18 +252,15 @@ void ChatDialog::mouseReleaseEvent(QMouseEvent *e)
     move(x()+dx, y()+dy);
 }
 
-
-void ChatDialog::on_pushButton_clicked()
+void ChatDialog::on_sendBtn_clicked()
 {
-    //点击发送按钮后发射信号，清空文本区，弹出对话框
-    insertOutMessage("QString msg");
+    //点击发送按钮后发射信号，清空文本区
+    insertOutMessage(ui->contentBox->toPlainText());
     emit newMessage(sender,receiver,QDateTime::currentDateTime(),ui->contentBox->toPlainText());
-    //ui->contentBox->setText("");
-    //QMessageBox::information(this,"提示","消息已发送。",QMessageBox::Yes);
-
+    ui->contentBox->clear();
 }
 
-void ChatDialog::on_pushButton_2_clicked()
+void ChatDialog::on_cancleBtn_clicked()
 {
     close();
 }

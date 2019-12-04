@@ -421,7 +421,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="sendBtn">
    <property name="geometry">
     <rect>
      <x>590</x>
@@ -434,7 +434,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
     <string>发送</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="cancleBtn">
    <property name="geometry">
     <rect>
      <x>450</x>

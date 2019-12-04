@@ -5,6 +5,8 @@
 #include <QToolButton>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QXmppVCardManager.h>
+#include <QXmppVCardIq.h>
 
 RegistWindow::RegistWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,6 +16,7 @@ RegistWindow::RegistWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
+    setAttribute(Qt::WA_DeleteOnClose);
 
     QDesktopWidget *deskdop=QApplication::desktop();
     move((deskdop->width()-this->width())/2, (deskdop->height()-this->height())/2);
@@ -144,11 +147,34 @@ void RegistWindow::windowmin()
 
 void RegistWindow::iqReceived(const QXmppIq &recIq)
 {
-    if(recIq.type() == QXmppIq::Result)
-    {
+    if(recIq.type() == QXmppIq::Result) {
+        client->disconnectFromServer();
         QMessageBox::critical(this, tr("注册成功"), tr("注册成功"));
-    } else if(recIq.type() == QXmppIq::Error && recIq.error().type() == QXmppIq::Error::Modify)
-    {
+
+        // 设置其它信息
+        QXmppVCardIq iq;
+        iq.setFullName(ui->nameLnEdt->text());
+        QXmppVCardPhone phone;
+        phone.setNumber(ui->phoneLnEdt->text());
+        iq.setPhones({phone});
+
+        connect(client, &QXmppClient::connected,[=]() {
+            client->findExtension<QXmppVCardManager>()->setClientVCard(iq);
+            client->disconnectFromServer();
+            this->close();
+        });
+
+        auto id = ui->idLnEdt->text();
+        auto passwd = ui->passwdLnEdt->text();
+
+        QXmppConfiguration config;
+        config.setUser(id);
+        config.setDomain("chirsz.cc");
+        config.setPassword(passwd);
+        config.setPort(5222);
+        config.setIgnoreSslErrors(true);
+        client->connectToServer(config);
+    } else if(recIq.type() == QXmppIq::Error && recIq.error().type() == QXmppIq::Error::Modify) {
         QMessageBox::critical(this, tr("注册失败"), tr("注册失败"));
     }
 }

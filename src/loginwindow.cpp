@@ -1,6 +1,7 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
 #include "NoweGlobal.h"
+#include "registwindow.h"
 #include <QRegExpValidator>
 #include <QToolButton>
 #include <QStyle>
@@ -102,7 +103,8 @@ void LoginWindow::Login()
 // 跳转注册界面
 void LoginWindow::Regist()
 {
-    QMessageBox::information(this,tr("尚未开发"),tr("尚待完成"));
+    auto r = new RegistWindow(this);
+    r->show();
 }
 
 // 鼠标拖动移动窗口位置

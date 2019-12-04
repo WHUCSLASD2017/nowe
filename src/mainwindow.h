@@ -61,6 +61,8 @@ private slots:
 
     void on_clientVCardReceived();
 
+    void on_rosterReceived();
+
 signals:
     void friendClicked(QString usrName);
     void msgClicked(QString usrName);

@@ -21,6 +21,7 @@
 #include <QXmppVCardManager.h>
 #include <QBuffer>
 #include <QImageReader>
+#include <QXmppRosterManager.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -104,19 +105,20 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::clientVCardReceived,
             this, &MainWindow::on_clientVCardReceived);
 
-
+    connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::rosterReceived,
+            this, &MainWindow::on_rosterReceived);
 
 
     //这一部分测试用的，试着添加一部分内容
-    QTreeWidgetItem *a=createFriendGroup("123发");
-    QTreeWidgetItem *b=createFriendGroup("1235");
-    QTreeWidgetItem *c=createFriendGroup("1236775");
-    QTreeWidgetItem *d=createFriendGroup("1235656");
-    QTreeWidgetItem *e=addFriendtoGroup(a,"1","dfgd",":/images/1.png");
-    QTreeWidgetItem *f=addFriendtoGroup(a,"2","dfgd",":/images/1.png");
-    setFriendToTop(f,"new","new",":/images/4.png",a);
+//    QTreeWidgetItem *a=createFriendGroup("123发");
+//    QTreeWidgetItem *b=createFriendGroup("1235");
+//    QTreeWidgetItem *c=createFriendGroup("1236775");
+//    QTreeWidgetItem *d=createFriendGroup("1235656");
+//    QTreeWidgetItem *e=addFriendtoGroup(a,"1","dfgd",":/images/1.png");
+//    QTreeWidgetItem *f=addFriendtoGroup(a,"2","dfgd",":/images/1.png");
+//    setFriendToTop(f,"new","new",":/images/4.png",a);
 
-    createMessage("5555","66666",":/images/3.png");
+    //createMessage("5555","66666",":/images/3.png");
 }
 
 MainWindow::~MainWindow()
@@ -431,5 +433,18 @@ void MainWindow::on_clientVCardReceived()
     setAvatar(avatar,80,80,45);
     setMainTitle(myCard.fullName());
     setSubTitle(myCard.description());
+}
+
+// 初始化好友列表
+void MainWindow::on_rosterReceived()
+{
+    auto rstMng = client->findExtension<QXmppRosterManager>();
+    foreach(const QString& bareJid, rstMng->getRosterBareJids()) {
+        auto item = rstMng->getRosterEntry(bareJid);
+        auto resources = rstMng->getResources(bareJid);
+        QString res = resources.isEmpty() ? "" : resources[0];
+        auto presence = rstMng->getPresence(bareJid,res);
+        createMessage(item.bareJid(), presence.statusText(), ":/images/1.png");
+    }
 }
 

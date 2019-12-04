@@ -3,6 +3,14 @@
 
 namespace Nowe {
 
+class nowe_on_exit {
+public:
+    ~nowe_on_exit()
+    {
+        myClient()->disconnectFromServer();
+    }
+} static _;
+
 QXmppClient* myClient() {
     static QXmppClient client;
     return &client;

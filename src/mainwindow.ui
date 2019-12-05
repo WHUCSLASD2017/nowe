@@ -433,7 +433,7 @@ background:none;</string>
                </rect>
               </property>
               <property name="text">
-               <string>PushButton</string>
+               <string>添加</string>
               </property>
              </widget>
             </widget>

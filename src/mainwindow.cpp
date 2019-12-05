@@ -447,13 +447,22 @@ void MainWindow::on_rosterReceived()
 {
     auto rstMng = client->findExtension<QXmppRosterManager>();
     foreach(const QString& bareJid, rstMng->getRosterBareJids()) {
+        qDebug()<<"■■■■■■■■■■■■■■■"<<"item!";
         auto item = rstMng->getRosterEntry(bareJid);
+        qDebug()<<"■■■■■■■■■■■■■■■"<<"res!";
         auto resources = rstMng->getResources(bareJid);
         QString res = resources.isEmpty() ? "" : resources[0];
+        qDebug()<<"■■■■■■■■■■■■■■■"<<"pres!";
         auto presence = rstMng->getPresence(bareJid,res);
+        qDebug()<<"■■■■■■■■■■■■■■■"<<"create!";
         createMessage(item.bareJid(), presence.statusText(), ":/images/1.png");
-        addFriendtoGroup(grpMng.getGrpAddr(*(item.groups().begin()),this),item.bareJid(),presence.statusText(),":/images/1.png");
+        qDebug()<<"■■■■■■■■■■■■■■■"<<"add!";
         qDebug()<<item.groups()<<"\n\n\n\n\n\n\n\n\n\n\n\n";
+        if(item.groups().empty())
+            addFriendtoGroup(grpMng.getGrpAddr("单向好友",this),item.bareJid(),presence.statusText(),":/images/1.png");
+        else
+            addFriendtoGroup(grpMng.getGrpAddr(*(item.groups().begin()),this),item.bareJid(),presence.statusText(),":/images/1.png");
+
     }
     loadDone=true;
 }

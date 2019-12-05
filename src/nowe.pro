@@ -33,7 +33,8 @@ SOURCES += \
     dataframe.cpp \
     chatdialog.cpp \
     ChangeHeaderWnd.cpp \
-    noweglobal.cpp
+    noweglobal.cpp \
+    nowebasewindow.cpp
 
 HEADERS += \
     registwindow.h \
@@ -43,7 +44,8 @@ HEADERS += \
     dataframe.h \
     chatdialog.h \
     ChangeHeaderWnd.h \
-    NoweGlobal.h
+    NoweGlobal.h \
+    nowebasewindow.h
 
 FORMS += \
     registwindow.ui \

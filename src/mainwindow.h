@@ -47,6 +47,7 @@ public:
 
     void on_presenceChanged();
     void addFriend();
+    void flushAllFriends();
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
@@ -54,6 +55,7 @@ private:
 
 public slots:
     void windowclosed();
+    void updateAllFriends();
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();

@@ -12,6 +12,7 @@ public:
     QMap<QString,QTreeWidgetItem *> groups;
     QTreeWidgetItem *getGrpAddr(QString grpName,QMainWindow *window);
 
+    void flush();
 };
 
 #endif // GROUPMANAGER_H

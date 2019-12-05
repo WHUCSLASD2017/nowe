@@ -125,7 +125,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //createMessage("5555","66666",":/images/3.png");
 
-    addFriend();
+
 }
 
 MainWindow::~MainWindow()
@@ -466,13 +466,13 @@ void MainWindow::on_presenceChanged()
 
 void MainWindow::addFriend()
 {
-    auto rstMng = client->findExtension<QXmppRosterManager>();
-    rstMng->subscribe("b@chirsz.cc");
+    //auto rstMng = client->findExtension<QXmppRosterManager>();
+    //rstMng->subscribe("b@chirsz.cc");
 }
 
 
 void MainWindow::on_pushButton_5_clicked()
 {
-    auto rstMng = client->findExtension<QXmppRosterManager>();
-    rstMng->subscribe("b@chirsz.cc");
+    AddNewFriend *dialog=new AddNewFriend(client,this);
+    dialog->exec();
 }

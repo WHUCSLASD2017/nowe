@@ -120,22 +120,6 @@ color:white;</string>
           <string>TextLabel</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_5">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>PushButton</string>
-         </property>
-        </widget>
        </widget>
       </item>
       <item>
@@ -437,6 +421,19 @@ background:none;</string>
               </property>
               <property name="text">
                <string/>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pushButton_5">
+              <property name="geometry">
+               <rect>
+                <x>130</x>
+                <y>0</y>
+                <width>93</width>
+                <height>28</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>PushButton</string>
               </property>
              </widget>
             </widget>

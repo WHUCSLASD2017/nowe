@@ -222,7 +222,7 @@ background-color: rgb(255, 255, 255);
       </font>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="confirmButton">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -235,7 +235,7 @@ background-color: rgb(255, 255, 255);
       <string>确定</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="cancelButton">
      <property name="geometry">
       <rect>
        <x>240</x>

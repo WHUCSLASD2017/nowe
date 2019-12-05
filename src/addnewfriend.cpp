@@ -20,7 +20,7 @@
 #include <QXmppRosterManager.h>
 #include <QXmppDiscoveryManager.h>
 
-AddNewFriend::AddNewFriend(QWidget *parent) :
+AddNewFriend::AddNewFriend(QXmppClient *client,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddNewFriend)
 {
@@ -64,6 +64,8 @@ AddNewFriend::AddNewFriend(QWidget *parent) :
 
     connect(closeButton, SIGNAL(clicked()), this, SLOT(windowclosed()) );
     connect(minButton, SIGNAL(clicked()), this, SLOT(windowmin()));
+
+    this->client=client;
 }
 
 AddNewFriend::~AddNewFriend()
@@ -98,4 +100,20 @@ void AddNewFriend::mouseReleaseEvent(QMouseEvent *e)
     int dx = e->globalX() - last.x();
     int dy = e->globalY() - last.y();
     move(x()+dx, y()+dy);
+}
+
+void AddNewFriend::on_cancelButton_clicked()
+{
+    close();
+}
+
+void AddNewFriend::on_confirmButton_clicked()
+{
+    auto rstMng = client->findExtension<QXmppRosterManager>();
+    QString user=ui->lineEdit->text();
+    if(user.simplified().length()==0)
+        QMessageBox::critical(this,"输入非法","您输入的ID非法！");
+    else {
+        rstMng->subscribe(user);
+    }
 }

@@ -12,8 +12,7 @@ int main(int argc, char *argv[])
 
     LoginWindow w;
     MainWindow m;
-    AddNewFriend n;
-    //n.exec();
+
 
 
     if (w.exec() == QDialog::Accepted) {

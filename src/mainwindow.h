@@ -6,6 +6,7 @@
 #include <QTreeWidgetItem>
 #include <QXmppClient.h>
 #include "groupmanager.h"
+#include "addnewfriend.h"
 
 
 namespace Ui {

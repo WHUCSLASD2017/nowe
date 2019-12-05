@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include "nowebasewindow.h"
@@ -23,12 +23,17 @@ public:
     QMenu *menu;
 
     QWidget *createItem(QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
+    QWidget *createRoomItem(QString mainTitle, QString iconAddr);
+
     QTreeWidgetItem *createFriendGroup(QString grpName);
     QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr);
     QTreeWidgetItem *removeFriendOrGroup(QTreeWidgetItem *toSet);
     QTreeWidgetItem *addFriendtoGroupAtTop(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr);
     QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, QString avatarAddr, QTreeWidgetItem *grp = nullptr);
     QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr);
+
+    QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
+
     void setAvatar(QPixmap &avatar, int length, int width, int radius);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
     void setMainTitle(QString string);
@@ -44,6 +49,7 @@ public slots:
     void windowclosed();
 private slots:
     void on_pushButton_3_clicked();
+    void on_pushButton_2_clicked();
     void on_pushButton_clicked();
     void on_friendTree_itemClicked(QTreeWidgetItem *item, int column);
 

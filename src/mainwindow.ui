@@ -114,10 +114,27 @@ color:white;</string>
          <string notr="true">background: none;
 font: 11pt &quot;微软雅黑&quot;;
 color:white;</string>
-        </property>
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>0</width>
+           <height>0</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
        </widget>
       </widget>
      </item>

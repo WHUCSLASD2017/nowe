@@ -45,6 +45,7 @@ public:
     GroupManager grpMng;
 
     void on_presenceChanged();
+    void addFriend();
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
@@ -69,6 +70,8 @@ private slots:
     void on_clientVCardReceived();
 
     void on_rosterReceived();
+
+    void on_pushButton_5_clicked();
 
 signals:
     void friendClicked(QString usrName);

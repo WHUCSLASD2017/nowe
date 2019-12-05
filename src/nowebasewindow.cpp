@@ -10,7 +10,6 @@ NoweBaseWindow::NoweBaseWindow(QWidget *parent) : QWidget(parent) { }
 void NoweBaseWindow::initNoweStyle()
 {
     setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
-    setAttribute(Qt::WA_DeleteOnClose, true);
 
     // 居中显示
     QDesktopWidget *deskdop=QApplication::desktop();

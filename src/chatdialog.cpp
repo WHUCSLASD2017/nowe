@@ -96,6 +96,9 @@ ChatDialog::ChatDialog(QWidget *parent) :
         msg.setStamp(time);
         Nowe::myClient()->sendPacket(msg);
     });
+
+    save=ui->messBox->textCursor();
+    savepos=ui->messBox->textCursor().position();
 }
 
 ChatDialog::~ChatDialog()
@@ -107,23 +110,34 @@ void ChatDialog::insertOutMessage(QString msg)
 {
     //插入对外发送消息，格式都一样，下同！
     QTextCursor cursor=ui->messBox->textCursor();
+    ui->messBox->moveCursor(QTextCursor::End);
+    qDebug()<<savepos<<"\n\n\n\n\n\n\n\n\n\n\n\n";
+    //cursor.setPosition(QTextCursor::Start);
+    //ui->messBox->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     cursor.insertBlock(outMsgFormat);
+    ui->messBox->moveCursor(QTextCursor::End);
     //插入文本块儿
     cursor.setCharFormat(outMsgCharFormat);
+    ui->messBox->moveCursor(QTextCursor::End);
     //设置字符模式
     cursor.insertText(sender);
     cursor.insertText("  ");
     cursor.insertText(QDateTime::currentDateTime().toString(timeFormat));
     cursor.insertText("\n");
     cursor.setCharFormat(plainFormat);
+    ui->messBox->moveCursor(QTextCursor::End);
     cursor.insertText(msg);
     //cursor.insertText("\n");
+    save=ui->messBox->textCursor();
+    savepos=ui->messBox->textCursor().position();
 }
 
 void ChatDialog::insertInMessage(QString msg,QDateTime *time)
 {
     //插入接受消息，同上
     QTextCursor cursor=ui->messBox->textCursor();
+    //cursor.setPosition(QTextCursor::End);
+    //ui->messBox->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     cursor.insertBlock(inMsgFormat);
     cursor.setCharFormat(inMsgCharFormat);
     cursor.insertText(receiver);
@@ -263,4 +277,9 @@ void ChatDialog::on_sendBtn_clicked()
 void ChatDialog::on_cancleBtn_clicked()
 {
     close();
+}
+
+void ChatDialog::on_messBox_cursorPositionChanged()
+{
+    ui->messBox->moveCursor(QTextCursor::End);
 }

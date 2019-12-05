@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "chatdialog.h"
 #include "dataframe.h"
@@ -80,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    setFriendToTop(f,"new","new",":/images/4.png",a);
 
     //createMessage("5555","66666",":/images/3.png");
+    addRoom("11","22");
 }
 
 MainWindow::~MainWindow()
@@ -136,6 +137,20 @@ QTreeWidgetItem *MainWindow::createMessage(QString mainTitle,QString subTitle,QS
     ui->messageTree->addTopLevelItem(item1);
     //再把这个表项里的控件插入进去，下面都是这样
     ui->messageTree->setItemWidget(item1,0,createItem(mainTitle,avatarAddr,subTitle,true,true));
+    return item1;
+}
+
+//在群组面板添加一个群组
+QTreeWidgetItem *MainWindow::addRoom(QString roomName,QString avatarAddr)
+{
+    //暂时把头像文件写死
+    avatarAddr = ":/images/room.png";
+
+    //先添加一个表项到群组列表
+    QTreeWidgetItem *item1=new QTreeWidgetItem;
+    ui->roomTree->addTopLevelItem(item1);
+    //再把这个表项里的控件插入进去
+    ui->roomTree->setItemWidget(item1,0,createRoomItem(roomName,avatarAddr));
     return item1;
 }
 
@@ -234,6 +249,47 @@ QWidget *MainWindow::createItem(QString mainTitle, QString iconAddr, QString sub
 }
 
 
+
+//创建群组面板里的控件
+QWidget *MainWindow::createRoomItem(QString mainTitle, QString iconAddr)
+{
+    //本函数用于向一个已经存在的表项里添加控件
+    QWidget *myItem=new QWidget(this);
+    QLabel *mainLabel=new QLabel(this);
+    QLabel *iconLabel=new QLabel(this);
+    QPixmap *avatar=new QPixmap(iconAddr);
+    QLabel *addr=new QLabel(iconAddr,this);
+    addr->hide();
+    QPixmap avatarAfter=avatar->scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+    //分别代表群组名称和头像，addr存头像地址，隐藏起来，发射信号用
+    mainLabel->setText(mainTitle);
+    iconLabel->setPixmap(avatarAfter);
+
+    mainLabel->setStyleSheet(QString("font:bold 12pt \"微软雅黑\";padding:5pt;"));
+    //其余内容都是设置布局
+    QVBoxLayout *vLayout=new QVBoxLayout();
+    vLayout->addStretch();
+    vLayout->addWidget(mainLabel);
+    vLayout->addWidget(addr);
+    vLayout->addStretch();
+    vLayout->setSpacing(5);
+    vLayout->setContentsMargins(0,0,0,0);
+    vLayout->setMargin(3);
+
+    QHBoxLayout *hLayout=new QHBoxLayout();
+    hLayout->addWidget(iconLabel);
+    hLayout->addLayout(vLayout);
+    hLayout->addStretch();
+    hLayout->setContentsMargins(0,0,0,0);
+    hLayout->setMargin(10);
+
+    myItem->setLayout(hLayout);
+
+
+    return myItem;
+}
+
 //
 void MainWindow::windowclosed()
 {
@@ -243,15 +299,23 @@ void MainWindow::windowclosed()
 }
 
 
+//主面板跳转页面
+//跳转至消息页面
+void MainWindow::on_pushButton_clicked()
+{
+    ui->switchPanel->setCurrentIndex(0);
+}
+//跳转至群组页面
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->switchPanel->setCurrentIndex(2);
+}
+//跳转至好友页面
 void MainWindow::on_pushButton_3_clicked()
 {
     ui->switchPanel->setCurrentIndex(1);
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    ui->switchPanel->setCurrentIndex(0);
-}
 
 void MainWindow::on_friendTree_itemClicked(QTreeWidgetItem *item, int column)
 {

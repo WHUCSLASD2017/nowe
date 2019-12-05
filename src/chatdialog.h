@@ -2,9 +2,10 @@
 #define CHATDIALOG_H
 
 #include <QDialog>
-#include<QTextDocument>
-#include<QTextFrame>
-#include<QDateTime>
+#include <QTextDocument>
+#include <QTextFrame>
+#include <QDateTime>
+#include <QXmppMessage.h>
 
 namespace Ui {
 class ChatDialog;
@@ -50,12 +51,13 @@ private:
 public slots:
     void windowclosed();
     void windowmin();
+    void on_messageReceived(const QXmppMessage &msg);
 
 signals:
     void newMessage(QString sender,QString receiver,QDateTime time,QString content);
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    void on_cancleBtn_clicked();
+    void on_sendBtn_clicked();
 };
 
 #endif // CHATDIALOG_H

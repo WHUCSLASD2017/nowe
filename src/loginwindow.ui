@@ -74,7 +74,7 @@ border-image:none;
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="loginBtn">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -100,7 +100,7 @@ background-color:rgb(0, 150, 225);
          <string>登录</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_4">
+       <widget class="QPushButton" name="registBtn">
         <property name="geometry">
          <rect>
           <x>280</x>
@@ -166,7 +166,7 @@ bottom:10px
          <string>密码：</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="lineEdit_3">
+       <widget class="QLineEdit" name="jidLnEdt">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -185,7 +185,7 @@ bottom:10px
          <bool>false</bool>
         </property>
        </widget>
-       <widget class="QLineEdit" name="lineEdit_4">
+       <widget class="QLineEdit" name="passwdLnEdt">
         <property name="geometry">
          <rect>
           <x>140</x>

@@ -4,17 +4,19 @@
 #include <QPainter>
 #include <QToolButton>
 #include <QMouseEvent>
-#include<QToolButton>
-#include<QPixmap>
-#include<QStyle>
+#include <QToolButton>
+#include <QPixmap>
+#include <QStyle>
 #include <QDesktopWidget>
-#include<QMessageBox>
+#include <QMessageBox>
+#include <NoweGlobal.h>
+#include <QXmppUtils.h>
 
 ChatDialog::ChatDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ChatDialog)
 {
-                //做一些默认设置，用户调用下面的函数能覆盖掉
+    //做一些默认设置，用户调用下面的函数能覆盖掉
     ui->setupUi(this);
     document=ui->messBox->document();
     rootFrame=document->rootFrame();
@@ -32,21 +34,21 @@ ChatDialog::ChatDialog(QWidget *parent) :
     plainFormat.setFont(QFont("微软雅黑",10));
     plainFormat.setForeground(Qt::black);
 
-                    //设置按钮1，默认是表情按钮
+    //设置按钮1，默认是表情按钮
     QPixmap button1;
     button1.load(":/images/1.png");
     button1.scaled(20,20);
     ui->button1->setPixmap(button1);
     ui->button1->setScaledContents(true);
 
-                    //设置按钮2，图片按钮
+    //设置按钮2，图片按钮
     QPixmap button2;
     button2.load(":/images/2.png");
     button2.scaled(20,20);
     ui->button2->setPixmap(button2);
     ui->button2->setScaledContents(true);
 
-                //不显示标题
+    //不显示标题
     setWindowFlags(Qt::FramelessWindowHint);
 
     //Show in the center
@@ -87,6 +89,13 @@ ChatDialog::ChatDialog(QWidget *parent) :
     connect(closeButton, SIGNAL(clicked()), this, SLOT(windowclosed()) );
     connect(minButton, SIGNAL(clicked()), this, SLOT(windowmin()));
 
+    connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &ChatDialog::on_messageReceived);
+    connect(this, &ChatDialog::newMessage, [=](QString sender,QString receiver,QDateTime time,QString content) {
+        QXmppMessage msg(sender, receiver, content);
+        msg.setType(QXmppMessage::Chat);
+        msg.setStamp(time);
+        Nowe::myClient()->sendPacket(msg);
+    });
 }
 
 ChatDialog::~ChatDialog()
@@ -96,32 +105,32 @@ ChatDialog::~ChatDialog()
 
 void ChatDialog::insertOutMessage(QString msg)
 {
-                    //插入对外发送消息，格式都一样，下同！
-      QTextCursor cursor=ui->messBox->textCursor();
-      cursor.insertBlock(outMsgFormat);
-                      //插入文本块儿
-      cursor.setCharFormat(outMsgCharFormat);
-                      //设置字符模式
-      cursor.insertText(sender);
-      cursor.insertText("  ");
-      cursor.insertText(QDateTime::currentDateTime().toString(timeFormat));
-      cursor.insertText("\n");
-      cursor.setCharFormat(plainFormat);
-      cursor.insertText(msg);
-      //cursor.insertText("\n");
+    //插入对外发送消息，格式都一样，下同！
+    QTextCursor cursor=ui->messBox->textCursor();
+    cursor.insertBlock(outMsgFormat);
+    //插入文本块儿
+    cursor.setCharFormat(outMsgCharFormat);
+    //设置字符模式
+    cursor.insertText(sender);
+    cursor.insertText("  ");
+    cursor.insertText(QDateTime::currentDateTime().toString(timeFormat));
+    cursor.insertText("\n");
+    cursor.setCharFormat(plainFormat);
+    cursor.insertText(msg);
+    //cursor.insertText("\n");
 }
 
 void ChatDialog::insertInMessage(QString msg,QDateTime *time)
 {
-                    //插入接受消息，同上
+    //插入接受消息，同上
     QTextCursor cursor=ui->messBox->textCursor();
     cursor.insertBlock(inMsgFormat);
     cursor.setCharFormat(inMsgCharFormat);
     cursor.insertText(receiver);
     cursor.insertText("  ");
     if(time==nullptr)
-                        //如果没有传入时间，就用系统当前时间
-    cursor.insertText(QDateTime::currentDateTime().toString(timeFormat));
+        //如果没有传入时间，就用系统当前时间
+        cursor.insertText(QDateTime::currentDateTime().toString(timeFormat));
     else
         cursor.insertText(time->toString(timeFormat));
     cursor.insertText("\n");
@@ -132,7 +141,7 @@ void ChatDialog::insertInMessage(QString msg,QDateTime *time)
 
 void ChatDialog::setUserName(QString usr)
 {
-                    //设置用户名，显示在每次发消息的消息标题上
+    //设置用户名，显示在每次发消息的消息标题上
     sender=usr;
     ui->useTitle->setText(usr);
 
@@ -140,35 +149,35 @@ void ChatDialog::setUserName(QString usr)
 
 void ChatDialog::setSignature(QString sgn)
 {
-                    //设置标题上的个性签名
+    //设置标题上的个性签名
     ui->signature->setText(sgn);
 }
 
 void ChatDialog::setSender(QString sender)
 {
-                    //设置
+    //设置
     this->sender=sender;
 }
 
 void ChatDialog::setReceiver(QString receiver)
 {
-                    //设置接受者，显示在接受消息标题上
+    //设置接受者，显示在接受消息标题上
     this->receiver=receiver;
     ui->useTitle->setText(receiver);
 }
 
 void ChatDialog::setPlainFormat(QFont target,Qt::GlobalColor color)
 {
-                    //设置消息正文格式
+    //设置消息正文格式
     plainFormat.setFont(target);
     plainFormat.setForeground(color);
 }
 
 void ChatDialog::setAvatar(QPixmap &avatar, int length, int width, int radius)
 {
-                    //设置头像
+    //设置头像
     QPixmap pixMap= avatar.scaled(width,length, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                    //搞成圆形
+    //搞成圆形
     pixMap =  PixmapToRound(pixMap, radius);
     ui->avaterLabel->setPixmap(pixMap);
 
@@ -176,23 +185,29 @@ void ChatDialog::setAvatar(QPixmap &avatar, int length, int width, int radius)
 
 void ChatDialog::setInMsgFormat(QFont target,Qt::GlobalColor color)
 {
-                    //设置接受消息的格式
+    //设置接受消息的格式
     inMsgCharFormat.setFont(target);
     inMsgCharFormat.setForeground(color);
 }
 
 void ChatDialog::setOutMsgFormat(QFont target,Qt::GlobalColor color)
 {
-                    //设置发送消息的格式
+    //设置发送消息的格式
     outMsgCharFormat.setFont(target);
     outMsgCharFormat.setForeground(color);
 }
 
-
+void ChatDialog::on_messageReceived(const QXmppMessage &msg)
+{
+    if (QXmppUtils::jidToBareJid(msg.from()) == sender) {
+        auto time = msg.stamp();
+        insertInMessage(msg.body(), &time);
+    }
+}
 
 QPixmap ChatDialog::PixmapToRound(const QPixmap &src, int radius)
 {
-                    //图片变圆的
+    //图片变圆的
     if (src.isNull()) {
         return QPixmap();
     }
@@ -211,7 +226,7 @@ QPixmap ChatDialog::PixmapToRound(const QPixmap &src, int radius)
 
 void ChatDialog::windowclosed()
 {
-   close();
+    close();
     //this->close();
 }
 void ChatDialog::windowmin()
@@ -226,9 +241,9 @@ void ChatDialog::mousePressEvent(QMouseEvent *e)
 void ChatDialog::mouseMoveEvent(QMouseEvent *e)
 {
     int dx = e->globalX() - last.x();
-        int dy = e->globalY() - last.y();
-        last = e->globalPos();
-        move(x()+dx, y()+dy);
+    int dy = e->globalY() - last.y();
+    last = e->globalPos();
+    move(x()+dx, y()+dy);
 }
 void ChatDialog::mouseReleaseEvent(QMouseEvent *e)
 {
@@ -237,18 +252,15 @@ void ChatDialog::mouseReleaseEvent(QMouseEvent *e)
     move(x()+dx, y()+dy);
 }
 
-
-void ChatDialog::on_pushButton_clicked()
+void ChatDialog::on_sendBtn_clicked()
 {
-                    //点击发送按钮后发射信号，清空文本区，弹出对话框
-   insertOutMessage("QString msg");
-   emit newMessage(sender,receiver,QDateTime::currentDateTime(),ui->contentBox->toPlainText());
-   //ui->contentBox->setText("");
-   //QMessageBox::information(this,"提示","消息已发送。",QMessageBox::Yes);
-
+    //点击发送按钮后发射信号，清空文本区
+    insertOutMessage(ui->contentBox->toPlainText());
+    emit newMessage(sender,receiver,QDateTime::currentDateTime(),ui->contentBox->toPlainText());
+    ui->contentBox->clear();
 }
 
-void ChatDialog::on_pushButton_2_clicked()
+void ChatDialog::on_cancleBtn_clicked()
 {
     close();
 }

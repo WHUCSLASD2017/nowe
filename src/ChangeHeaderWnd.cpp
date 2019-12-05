@@ -1,4 +1,8 @@
 #include "ChangeHeaderWnd.h"
+#include "NoweGlobal.h"
+#include <QDesktopWidget>
+#include <QBuffer>
+#include <QXmppVCardManager.h>
 
 
 ChangeHeaderWnd::ChangeHeaderWnd(QWidget *parent)
@@ -23,6 +27,20 @@ ChangeHeaderWnd::ChangeHeaderWnd(QWidget *parent)
     connect(ui.pushButton_clock, &QPushButton::clicked, std::bind(&ChangeHeaderWnd::RotateHeader, this, true));
     connect(ui.pushButton_ok, &QPushButton::clicked, this, &ChangeHeaderWnd::onOk);
     connect(ui.pushButton_cancel, &QPushButton::clicked, this, &ChangeHeaderWnd::onCancel);
+
+    connect(this, &ChangeHeaderWnd::updateHeader, [](const QPixmap& avatar) {
+        auto myVCard =  Nowe::myVCard();
+        auto myVCardManager = Nowe::myClient()->findExtension<QXmppVCardManager>();
+
+        QBuffer avatarData;
+        avatarData.open(QIODevice::WriteOnly);
+        avatar.save(&avatarData, "PNG");
+
+        myVCard.setPhoto(avatarData.buffer());
+
+        myVCardManager->setClientVCard(myVCard);
+        myVCardManager->requestClientVCard();
+    });
 }
 
 ChangeHeaderWnd::~ChangeHeaderWnd()
@@ -115,24 +133,25 @@ void ChangeHeaderWnd::onCancel()
     ui.label_tip->setText(QString::fromLocal8Bit("取消修改头像"));
     m_pDivWidget->hide();
     ui.label_header->clear();
+    this->hide();
 }
 
 //Mouse Move
 void ChangeHeaderWnd::mousePressEvent(QMouseEvent *e)
 {
-   /* last=e->globalPos();*/
+    /* last=e->globalPos();*/
 }
 void ChangeHeaderWnd::mouseMoveEvent(QMouseEvent *e)
 {
-   /* int dx = e->globalX() - last.x();
-        int dy = e->globalY() - last.y();
-        last = e->globalPos();
-        move(x()+dx, y()+dy);*/
+    /* int dx = e->globalX() - last.x();
+         int dy = e->globalY() - last.y();
+         last = e->globalPos();
+         move(x()+dx, y()+dy);*/
 }
 void ChangeHeaderWnd::mouseReleaseEvent(QMouseEvent *e)
 {
-   /* int dx = e->globalX() - last.x();
-    int dy = e->globalY() - last.y();
-    move(x()+dx, y()+dy);*/
+    /* int dx = e->globalX() - last.x();
+     int dy = e->globalY() - last.y();
+     move(x()+dx, y()+dy);*/
 }
 

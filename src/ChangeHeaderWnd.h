@@ -5,8 +5,8 @@
 * Class： ChangeHeaderWnd
 * Implement: 本类实现了一个具有简单操作的切换头像窗口，布局仿造QQ8.9.6上的切换头像窗口
 */
-#ifndef _CHANGE_HEADER_WND_H__
-#define _CHANGE_HEADER_WND_H__
+#ifndef CHANGE_HEADER_WND_H
+#define CHANGE_HEADER_WND_H
 #include <QWidget>
 #include "ui_ChangeHeaderWnd.h"
 #include"DragScrollArea.h"
@@ -17,36 +17,36 @@
 
 class ChangeHeaderWnd : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	ChangeHeaderWnd(QWidget *parent = Q_NULLPTR);
-	~ChangeHeaderWnd();
+    ChangeHeaderWnd(QWidget *parent = Q_NULLPTR);
+    ~ChangeHeaderWnd();
 
-	void LoadHeader(const QPixmap& pixmap);
-	void RotateHeader(bool bClock);
+    void LoadHeader(const QPixmap& pixmap);
+    void RotateHeader(bool bClock);
 
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
 
 protected:
-	virtual bool eventFilter(QObject* watched, QEvent* event);
+    virtual bool eventFilter(QObject* watched, QEvent* event);
 
 signals:
-	void updateHeader(const QPixmap& header);
+    void updateHeader(const QPixmap& header);
 
 protected slots:
-	void onUpload();
-	void onScaledChanged(int nValue);
-	void onOk();
-	void onCancel();
+    void onUpload();
+    void onScaledChanged(int nValue);
+    void onOk();
+    void onCancel();
 
 private:
-	Ui::ChangeHeaderWnd ui;
-	QWidget*			m_pDivWidget;			//选择头像区域的遮罩层
-	QPixmap				m_sourceHeader;			//上传的原始头像文件
+    Ui::ChangeHeaderWnd ui;
+    QWidget*			m_pDivWidget;			//选择头像区域的遮罩层
+    QPixmap				m_sourceHeader;			//上传的原始头像文件
     QPoint last;
 
 };
-#endif //_CHANGE_HEADER_WND_H__
+#endif // CHANGE_HEADER_WND_H

@@ -23,10 +23,9 @@ public:
 
 private:
     Ui::RegistWindow *ui;
-    MainWindow mainwindow;
     //DataBase myDatabase;
     QPoint last;
-
+    QXmppClient *client;
 
 
 public slots:
@@ -34,6 +33,9 @@ public slots:
     void Regist();
     void windowclosed();
     void windowmin();
+
+private slots:
+    void iqReceived(const QXmppIq&);
 };
 
 #endif // REGISTWINDOW_H

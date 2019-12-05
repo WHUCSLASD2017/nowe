@@ -1,3 +1,4 @@
+# Nowe 开发说明
 
 ## 项目依赖
 
@@ -24,6 +25,8 @@ Nowe 使用 Qt 编写，遵循 UI 与业务逻辑分离的设计原则。
   对应 dataframe.ui，显示完整用户信息，可以在这里编辑用户信息。
 - 头像编辑窗口
   对应 ChangeHeaderWnd.ui，是用户使用修改头像功能的界面。
+- Nowe 名称空间
+  其中有数个函数，用于获取程序的全局对象和状态。
 
 ### 程序流程
 
@@ -53,9 +56,9 @@ QXMPP 文档见 [https://doc.qxmpp.org](https://doc.qxmpp.org) 或者 [镜像站
 
 使用 QXMPP 库需要了解一定的 XMPP 知识：[XMPP JID 和通信原语有3种：message、presence和iq](https://blog.csdn.net/iteye_5495/article/details/82652037)，[XMPP详解](https://www.jianshu.com/p/84d15683b61e)
 
-Nowe 客户端主要用到了 QXMPP 的客户端部分。QXMPP 使用 `QXmppClient` 类与服务器建立连接，其它消息收发、获取用户状态等都由加载到 `QXmppClient` 对象的*扩展*（Extension）进行。每次有信息节（stanza）收发，`QXmppClient` 对象会逐个寻找是否有合适的扩展处理。其中 `QXmppRosterManager`、`QXmppVCardManager`、`QXmppVersionManager` 三个扩展是默认加载的，其它扩展需要手动使用 `QXmppClient::addExtension` 加载。程序员也可以通过继承 `QXmppClientExtension` 来编写自己的扩展。
+Nowe 客户端主要用到了 QXMPP 的客户端部分。QXMPP 使用 `QXmppClient` 类与服务器建立连接，其它消息收发、获取用户状态等都由加载到 `QXmppClient` 对象的*扩展*（Extension）进行。每次有信息节（stanza）收发，`QXmppClient` 对象会逐个寻找是否有合适的扩展处理。其中 `QXmppRosterManager`、`QXmppVCardManager`、`QXmppVersionManager` 等扩展是默认加载的，其它扩展需要手动使用 `QXmppClient::addExtension` 加载。程序员也可以通过继承 `QXmppClientExtension` 来编写自己的扩展。
 
-Nowe 客户端的 mainwindow 对象有一个 `QXmppClient*` 成员，这就是用来进行通讯的组件；程序运行过程中应当只用这一个 `QXmppClient` 对象与服务器连接。有一个例外是 loginwindow，它需要创建一个独立的  `QXmppClient` 对象以连接服务器进行注册操作。
+Nowe 客户端有一个 `QXmppClient` 全局对象，这就是用来进行通讯的组件；程序运行过程中应当只用这一个 `QXmppClient` 对象与服务器连接，需要使用时用 `Nowe::myClient()` 获取这个对象的指针。有一个例外是 loginwindow，它需要创建一个独立的  `QXmppClient` 对象以连接服务器进行注册操作。
 
 下面列出客户端各种功能对应的 QXMPP 的函数或类。
 

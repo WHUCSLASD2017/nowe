@@ -1,25 +1,36 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include<QToolButton>
-#include<QLabel>
-#include<QPixmap>
-#include<QGroupBox>
-#include<QDebug>
 #include "chatdialog.h"
-#include<QBitmap>
-#include<QPainter>
-#include<QMenu>
-#include "loginwindow.h"
-#include"dataframe.h"
-#include"ChangeHeaderWnd.h"
+#include "dataframe.h"
+#include "ChangeHeaderWnd.h"
+#include "NoweGlobal.h"
+#include <QRegExpValidator>
+#include <QMessageBox>
+#include <QMouseEvent>
+#include <QToolButton>
+#include <QPixmap>
+#include <QStyle>
+#include <QDesktopWidget>
+#include <QLabel>
+#include <QGroupBox>
+#include <QDebug>
+#include <QBitmap>
+#include <QPainter>
+#include <QMenu>
+#include <QXmppVCardIq.h>
+#include <QXmppVCardManager.h>
+#include <QBuffer>
+#include <QImageReader>
+#include <QXmppRosterManager.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    client(Nowe::myClient())
 {
     ui->setupUi(this);
 
-    setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
 
     //Show in the center
     QDesktopWidget *deskdop=QApplication::desktop();
@@ -59,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(closeButton, SIGNAL(clicked()), this, SLOT(windowclosed()) );
     connect(minButton, SIGNAL(clicked()), this, SLOT(windowmin()));
 
-        //设置面板上面三个按钮的图标
+    //设置面板上面三个按钮的图标
     QPixmap icon1(":/images/b.png");
     ui->pushButton->setIcon(icon1);
 
@@ -69,12 +80,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QPixmap icon3(":/images/c.png");
     ui->pushButton_2->setIcon(icon3);
 
-            //设置下面按钮的图标
+    //设置下面按钮的图标
     QPixmap icon4(":/images/more.png");
     ui->pushButton_4->setIcon(icon4);
     //ui->pushButton->setFixedSize(icon1.size());
 
-            //设置三个面板的表头、列数（被隐藏，但必须设置）
+    //设置三个面板的表头、列数（被隐藏，但必须设置）
     ui->friendTree->setColumnCount(1);
     QStringList headers;
     headers<<"好友";
@@ -88,26 +99,26 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->messageTree->setIndentation(0);
     setMenu();
 
+    client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
+
+    // 当服务器发送 VCard 时更新主窗口上个人资料
+    connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::clientVCardReceived,
+            this, &MainWindow::on_clientVCardReceived);
+
+    connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::rosterReceived,
+            this, &MainWindow::on_rosterReceived);
 
 
+    //这一部分测试用的，试着添加一部分内容
+//    QTreeWidgetItem *a=createFriendGroup("123发");
+//    QTreeWidgetItem *b=createFriendGroup("1235");
+//    QTreeWidgetItem *c=createFriendGroup("1236775");
+//    QTreeWidgetItem *d=createFriendGroup("1235656");
+//    QTreeWidgetItem *e=addFriendtoGroup(a,"1","dfgd",":/images/1.png");
+//    QTreeWidgetItem *f=addFriendtoGroup(a,"2","dfgd",":/images/1.png");
+//    setFriendToTop(f,"new","new",":/images/4.png",a);
 
-
-        //这一部分测试用的，试着添加一部分内容
-    QTreeWidgetItem *a=createFriendGroup("123发");
-    QTreeWidgetItem *b=createFriendGroup("1235");
-    QTreeWidgetItem *c=createFriendGroup("1236775");
-    QTreeWidgetItem *d=createFriendGroup("1235656");
-    QTreeWidgetItem *e=addFriendtoGroup(a,"1","dfgd",":/images/1.png");
-    QTreeWidgetItem *f=addFriendtoGroup(a,"2","dfgd",":/images/1.png");
-    setFriendToTop(f,"new","new",":/images/4.png",a);
-
-    createMessage("5555","66666",":/images/3.png");
-
-    QPixmap avatar;
-    avatar.load("avatar.jpg");
-    setAvatar(avatar,80,80,45);
-    setMainTitle("吴旭晖");
-    setSubTitle("开心每一天！");
+    //createMessage("5555","66666",":/images/3.png");
 }
 
 MainWindow::~MainWindow()
@@ -117,11 +128,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::setMenu()
 {
-            //设置左下角弹出菜单的
+    //设置左下角弹出菜单的
     menu=new QMenu(this);
     QAction *setProfile=new QAction("设置个人资料",this);
     QAction *setAvatar=new QAction("设置头像",this);
-            //把建立的动作添加到菜单
+    //把建立的动作添加到菜单
     menu->addAction(setProfile);
     menu->addSeparator();
     menu->addAction(setAvatar);
@@ -134,14 +145,15 @@ void MainWindow::setMenu()
 
 void MainWindow::displayProfilePanel()
 {
-            //显示个人资料窗口
+    //显示个人资料窗口
     DataFrame* d=new DataFrame;
+
     d->show();
 }
 
 void MainWindow::displayAvatarChangePanel()
 {
-            //显示头像
+    //显示头像
     ChangeHeaderWnd* d=new ChangeHeaderWnd;
     d->show();
 }
@@ -154,9 +166,9 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
 void MainWindow::mouseMoveEvent(QMouseEvent *e)
 {
     int dx = e->globalX() - last.x();
-        int dy = e->globalY() - last.y();
-        last = e->globalPos();
-        move(x()+dx, y()+dy);
+    int dy = e->globalY() - last.y();
+    last = e->globalPos();
+    move(x()+dx, y()+dy);
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *e)
 {
@@ -165,29 +177,29 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *e)
     move(x()+dx, y()+dy);
 }
 
-        //新建一个好友分组
+//新建一个好友分组
 QTreeWidgetItem *MainWindow::createFriendGroup(QString grpName)
 {
     QTreeWidgetItem *item1=new QTreeWidgetItem;
     item1->setText(0,grpName);
-            //添加到列表的顶层
+    //添加到列表的顶层
     ui->friendTree->addTopLevelItem(item1);
     return item1;
 }
-        //在消息面板添加一个消息
+//在消息面板添加一个消息
 QTreeWidgetItem *MainWindow::createMessage(QString mainTitle,QString subTitle,QString avatarAddr)
 {
-            //先添加一个表项到消息列表
+    //先添加一个表项到消息列表
     QTreeWidgetItem *item1=new QTreeWidgetItem;
     ui->messageTree->addTopLevelItem(item1);
-            //再把这个表项里的控件插入进去，下面都是这样
+    //再把这个表项里的控件插入进去，下面都是这样
     ui->messageTree->setItemWidget(item1,0,createItem(mainTitle,avatarAddr,subTitle,true,true));
     return item1;
 }
 
 QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr)
 {
-            //向一个分组里添加一个好友，也就是向二级表项里插入一个三级表项
+    //向一个分组里添加一个好友，也就是向二级表项里插入一个三级表项
     QTreeWidgetItem *item11=new QTreeWidgetItem(grp);
     ui->friendTree->setItemWidget(item11,0,createItem(mainTitle,avatarAddr,subTitle,true,true));
     return item11;
@@ -195,7 +207,7 @@ QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainT
 
 QTreeWidgetItem *MainWindow::addFriendtoGroupAtTop(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr)
 {
-            //和上面函数功能一样，但是上面是在末尾插，这个在顶部插
+    //和上面函数功能一样，但是上面是在末尾插，这个在顶部插
     QTreeWidgetItem *item11=new QTreeWidgetItem(grp,nullptr);
     QWidget *now=createItem(mainTitle,avatarAddr,subTitle,true,true);
     ui->friendTree->setItemWidget(item11,0,now);
@@ -205,18 +217,18 @@ QTreeWidgetItem *MainWindow::addFriendtoGroupAtTop(QTreeWidgetItem *grp,QString 
 
 QTreeWidgetItem *MainWindow::removeFriendOrGroup(QTreeWidgetItem *toSet)
 {
-            //从列表移除分组或好友
+    //从列表移除分组或好友
     QTreeWidgetItem *parent=toSet->parent();
     int index;
     if(parent)
     {
-                //如果不是一级列表！从父对象中删
+        //如果不是一级列表！从父对象中删
         index=parent->indexOfChild(toSet);
         parent->removeChild(toSet);
         //ui->friendTree->removeItemWidget(parent->takeChild(index),0);
     }
-    else{
-                //是一级列表，从根节点下删
+    else {
+        //是一级列表，从根节点下删
         index=ui->friendTree->indexOfTopLevelItem(toSet);
         qDebug()<<parent<<"   "<<index;
         ui->friendTree->takeTopLevelItem(index);
@@ -227,7 +239,7 @@ QTreeWidgetItem *MainWindow::removeFriendOrGroup(QTreeWidgetItem *toSet)
 
 QTreeWidgetItem *MainWindow::setFriendToTop(QTreeWidgetItem *toSet,QString mainTitle,QString subTitle,QString avatarAddr,QTreeWidgetItem *grp)
 {
-            //把某个好友放到顶部去，就是删了再加
+    //把某个好友放到顶部去，就是删了再加
     if(grp==nullptr)
         grp=toSet->parent();
     removeFriendOrGroup(toSet);
@@ -237,7 +249,7 @@ QTreeWidgetItem *MainWindow::setFriendToTop(QTreeWidgetItem *toSet,QString mainT
 
 QWidget *MainWindow::createItem(QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP=false, bool ifOnline=false)
 {
-            //本函数用于向一个已经存在的表项里添加控件
+    //本函数用于向一个已经存在的表项里添加控件
     QWidget *myItem=new QWidget(this);
     QLabel *mainLabel=new QLabel(this);
     QLabel *subLabel=new QLabel(this);
@@ -247,14 +259,14 @@ QWidget *MainWindow::createItem(QString mainTitle, QString iconAddr, QString sub
     addr->hide();
     QPixmap avatarAfter=avatar->scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-        //分别代表一个消息条中的用户名、个性签名和头像，addr存头像地址，隐藏起来，发射信号用
+    //分别代表一个消息条中的用户名、个性签名和头像，addr存头像地址，隐藏起来，发射信号用
     mainLabel->setText(mainTitle);
     subLabel->setText(subTitle);
     iconLabel->setPixmap(avatarAfter);
 
     mainLabel->setStyleSheet(QString("font:bold 12pt \"微软雅黑\";padding:5pt;"));
     subLabel->setStyleSheet(QString(""));
-        //其余内容都是设置布局
+    //其余内容都是设置布局
     QVBoxLayout *vLayout=new QVBoxLayout();
     vLayout->addStretch();
     vLayout->addWidget(mainLabel);
@@ -283,6 +295,7 @@ QWidget *MainWindow::createItem(QString mainTitle, QString iconAddr, QString sub
 //
 void MainWindow::windowclosed()
 {
+    client->disconnectFromServer();
     QApplication::exit();
     //this->close();
 }
@@ -314,31 +327,31 @@ void MainWindow::on_messageTree_itemClicked(QTreeWidgetItem *item, int column)
 
 void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
-            //双击了消息面板！
+    //双击了消息面板！
     QWidget *now=ui->messageTree->itemWidget(item,0);
-        QList<QLabel *> labelList = now->findChildren<QLabel *>();
-                //要找到用户点击了哪个面板，从其中的label里面找到用户名等信息，发射信号
-        emit msgClicked(labelList[1]->text());
+    QList<QLabel *> labelList = now->findChildren<QLabel *>();
+    //要找到用户点击了哪个面板，从其中的label里面找到用户名等信息，发射信号
+    emit msgClicked(labelList[1]->text());
 
-        ChatDialog *chat=new ChatDialog();
-                //不仅要发射信号，还要用获得的用户名等信息，创建一个聊天框
-        //qDebug()<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text();
-        chat->setUserName(labelList[1]->text());
-        chat->setSignature(labelList[2]->text());
-        chat->setReceiver(labelList[1]->text());
-        QPixmap avatar;
-        avatar.load(labelList[3]->text());
-        chat->setAvatar(avatar,80,80,45);
-        chat->show();
-                //聊天框建立
+    ChatDialog *chat=new ChatDialog();
+    //不仅要发射信号，还要用获得的用户名等信息，创建一个聊天框
+    //qDebug()<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text();
+    chat->setUserName(labelList[1]->text());
+    chat->setSignature(labelList[2]->text());
+    chat->setReceiver(labelList[1]->text());
+    QPixmap avatar;
+    avatar.load(labelList[3]->text());
+    chat->setAvatar(avatar,80,80,45);
+    chat->show();
+    //聊天框建立
 }
 
 void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
-            //和上面的on_messageTree_itemDoubleClicked类似，不过这个点击的是好友面板
+    //和上面的on_messageTree_itemDoubleClicked类似，不过这个点击的是好友面板
     QWidget *now=ui->friendTree->itemWidget(item,0);
     if(item->parent())
-   {
+    {
         QList<QLabel *> labelList = now->findChildren<QLabel *>();
 
         emit friendClicked(labelList[1]->text());
@@ -354,24 +367,22 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
     }
 }
 
+//设置头像
 void MainWindow::setAvatar(QPixmap &avatar, int length, int width, int radius)
 {
-                    //设置头像
+    //首先缩放头像
     QPixmap pixMap= avatar.scaled(width,length, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                    //首先缩放头像
 
-
+    //把头像搞成圆形的
     pixMap =  PixmapToRound(pixMap, radius);
-                    //把头像搞成圆形的
 
+    //最后设置
     ui->avatar->setPixmap(pixMap);
-                    //最后设置
-
 }
 
 QPixmap MainWindow::PixmapToRound(const QPixmap &src, int radius)
 {
-                    //用于把头像从方的裁成圆的，radius是裁剪半径
+    //用于把头像从方的裁成圆的，radius是裁剪半径
     if (src.isNull()) {
         return QPixmap();
     }
@@ -390,21 +401,50 @@ QPixmap MainWindow::PixmapToRound(const QPixmap &src, int radius)
 
 void MainWindow::setMainTitle(QString string)
 {
-                    //设置主标题
+    //设置主标题
     ui->nickname->setText(string);
 }
 
 void MainWindow::setSubTitle(QString string)
 {
-                    //设置副标题
+    //设置副标题
     ui->signature->setText(string);
 }
 
 void MainWindow::on_pushButton_4_clicked()
 {
-                //这个按钮时左下角的菜单
+    //这个按钮时左下角的菜单
     QPoint pos;
-                    //菜单在540像素位置弹出
+    //菜单在540像素位置弹出
     pos.setY(540);
     menu->exec(this->mapToGlobal(pos));
 }
+
+// 根据最新的 VCard 更新主窗口上个人资料
+void MainWindow::on_clientVCardReceived()
+{
+    const auto& myCard =  Nowe::myVCard();
+    QBuffer buffer;
+    buffer.setData(myCard.photo());
+    buffer.open(QIODevice::ReadOnly);
+    QImageReader avaterReader(&buffer);
+    QPixmap avatar = QPixmap::fromImage(avaterReader.read());
+
+    setAvatar(avatar,80,80,45);
+    setMainTitle(myCard.fullName());
+    setSubTitle(myCard.description());
+}
+
+// 初始化好友列表
+void MainWindow::on_rosterReceived()
+{
+    auto rstMng = client->findExtension<QXmppRosterManager>();
+    foreach(const QString& bareJid, rstMng->getRosterBareJids()) {
+        auto item = rstMng->getRosterEntry(bareJid);
+        auto resources = rstMng->getResources(bareJid);
+        QString res = resources.isEmpty() ? "" : resources[0];
+        auto presence = rstMng->getPresence(bareJid,res);
+        createMessage(item.bareJid(), presence.statusText(), ":/images/1.png");
+    }
+}
+

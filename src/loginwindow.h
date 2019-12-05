@@ -1,17 +1,14 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 
-#include <QWidget>
-//#include "database.h"
-#include"registwindow.h"
-#include "mainwindow.h"
-
+#include <QDialog>
+#include <QXmppClient.h>
 
 namespace Ui {
 class LoginWindow;
 }
 
-class LoginWindow : public QWidget
+class LoginWindow : public QDialog
 {
     Q_OBJECT
 
@@ -25,8 +22,7 @@ public:
 
 private:
     Ui::LoginWindow *ui;
-    MainWindow mainwindow;
-    RegistWindow registwindow;
+    QXmppClient *const client;
     QPoint last;
 
     //DataBase myDatabase;
@@ -36,7 +32,7 @@ public slots:
     void Regist();
     void windowclosed();
     void windowmin();
-
+    void loginSucceed();
 };
 
 #endif // LOGINWINDOW_H

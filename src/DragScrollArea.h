@@ -11,15 +11,15 @@
 
 class DragScrollArea : public QScrollArea
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	DragScrollArea(QWidget *parent = Q_NULLPTR);
-	~DragScrollArea();
+    DragScrollArea(QWidget *parent = Q_NULLPTR);
+    ~DragScrollArea();
 
 
 protected:
-	virtual bool event(QEvent* event);
+    virtual bool event(QEvent* event);
 
 
 };

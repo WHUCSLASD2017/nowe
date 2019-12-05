@@ -1,30 +1,41 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
+#include "NoweGlobal.h"
+#include "registwindow.h"
+#include <QRegExpValidator>
+#include <QToolButton>
+#include <QStyle>
+#include <QDesktopWidget>
+#include <QMouseEvent>
+#include <QMessageBox>
+#include <QXmppVCardManager.h>
 
 LoginWindow::LoginWindow(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::LoginWindow)
+    QDialog(parent),
+    ui(new Ui::LoginWindow),
+    client(Nowe::myClient())
 {
     ui->setupUi(this);
 
-    setWindowFlags(Qt::FramelessWindowHint);
-    connect(ui->pushButton_3,&QPushButton::clicked,this,&LoginWindow::Login);
-    connect(ui->pushButton_4,&QPushButton::clicked,this,&LoginWindow::Regist);
+    setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
+    connect(ui->loginBtn,&QPushButton::clicked,this,&LoginWindow::Login);
+    connect(ui->registBtn,&QPushButton::clicked,this,&LoginWindow::Regist);
 
+    // 居中显示
     QDesktopWidget *deskdop=QApplication::desktop();
     move((deskdop->width()-this->width())/2, (deskdop->height()-this->height())/2);
 
-    //密码
-    QRegExp code("^[a-zA-Z0-9~!@#$%^&*()_+-=;:,./<>?`]{6,16}$");
-    QRegExpValidator *validator_code = new QRegExpValidator(code, this);
+    // 密码
+    QRegExp passwd_re("^.{,16}$");
+    QRegExpValidator *validator_passwd = new QRegExpValidator(passwd_re, this);
 
-    //名称
-    QRegExp nam("^[a-zA-Z0-9_\u4e00-\u9fa5\\w]{1,10}$");
-    QRegExpValidator *validator_nam = new QRegExpValidator(nam, this);
+//    // JID
+//    QRegExp jid_re(R"(^((?!\s).){1,10}@((?!\s).){1,10}\.((?!\s).){1,10}$)");
+//    QRegExpValidator *validator_jid = new QRegExpValidator(jid_re, this);
 
 
-    ui->lineEdit_3->setValidator(validator_nam);
-    ui->lineEdit_4->setValidator(validator_code);
+    // ui->jidLnEdt->setValidator(validator_jid);
+    ui->passwdLnEdt->setValidator(validator_passwd);
 
 
     QToolButton *minButton = new QToolButton(this);
@@ -56,9 +67,18 @@ LoginWindow::LoginWindow(QWidget *parent) :
     minButton->setStyleSheet("background:none;border:none");
     closeButton->setStyleSheet("background:none;border:none");
 
+    connect(closeButton, &QToolButton::clicked, this, &LoginWindow::windowclosed);
+    connect(minButton, &QToolButton::clicked, this, &LoginWindow::windowmin);
 
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(windowclosed()) );
-    connect(minButton, SIGNAL(clicked()), this, SLOT(windowmin()));
+    //连接serve成功会发射connected()，失败发射disconnected()、error()
+    connect(client, &QXmppClient::connected, this, &LoginWindow::loginSucceed);
+    connect(client, &QXmppClient::disconnected, [=]() {
+        QMessageBox::critical(this, tr("登陆失败"), tr("与服务器断开连接"));
+    });
+    connect(client, &QXmppClient::error, this, [=]() {
+        QMessageBox::critical(this, tr("登陆失败"), tr("登陆过程中出错"));
+    });
+
 }
 
 LoginWindow::~LoginWindow()
@@ -66,65 +86,41 @@ LoginWindow::~LoginWindow()
     delete ui;
 }
 
-//登录验证并跳转
+// 登录
 void LoginWindow::Login()
 {
-/*
-    QString ACCOUNT = ui->lineEdit->text();
-    QString CODE = ui->lineEdit_2->text();
+    QString jid = ui->jidLnEdt->text();
+    QString passwd = ui->passwdLnEdt->text();
 
-    QSqlQuery sql_query(myDatabase.database);
-    QString sele_sql = "select CODE from MANAGER_INFORMATION where MANAGER_INFORMATION.ACCOUNT = '"+ACCOUNT+"'";
-
-    sql_query.exec(sele_sql);
-    sql_query.next();
-
-    bool ok;
-    QString N_CODE = sql_query.value(0).toString();
-    if(ACCOUNT=="" || CODE =="" )
-    {
-        QMessageBox::warning(this,"", u8"请输入用户名或密码！");
-        ui->lineEdit_2->setText("");
-    }
-    else {
-
-        if(N_CODE ==  CODE)
-        {
-            this->close();
-            mainwindow.show();
-        }
-        else
-        {
-            QMessageBox::warning(this,"", u8"用户名名或密码错误！");
-            ui->lineEdit_2->setText("");
-
-        }
-    }
-*/
-
+    QXmppConfiguration config;
+    config.setJid(jid);
+    config.setPassword(passwd);
+    config.setPort(5222);
+    config.setIgnoreSslErrors(true);
+    client->connectToServer(config);
 }
 
-
-
-//跳转注册界面
+// 跳转注册界面
 void LoginWindow::Regist()
 {
-    registwindow.show();
-    this->close();
+    auto r = new RegistWindow(this);
+    r->show();
 }
 
-//Mouse Move
+// 鼠标拖动移动窗口位置
 void LoginWindow::mousePressEvent(QMouseEvent *e)
 {
     last=e->globalPos();
 }
+
 void LoginWindow::mouseMoveEvent(QMouseEvent *e)
 {
     int dx = e->globalX() - last.x();
-        int dy = e->globalY() - last.y();
-        last = e->globalPos();
-        move(x()+dx, y()+dy);
+    int dy = e->globalY() - last.y();
+    last = e->globalPos();
+    move(x()+dx, y()+dy);
 }
+
 void LoginWindow::mouseReleaseEvent(QMouseEvent *e)
 {
     int dx = e->globalX() - last.x();
@@ -136,12 +132,23 @@ void LoginWindow::mouseReleaseEvent(QMouseEvent *e)
 //
 void LoginWindow::windowclosed()
 {
-    QApplication::exit();
+    //QApplication::exit();
     //this->close();
+    this->reject();
 }
 void LoginWindow::windowmin()
 {
     this->showMinimized();
+}
+
+// 登录成功
+void LoginWindow::loginSucceed()
+{
+    // 请求服务器发送 VCard，获取个人资料
+    client->findExtension<QXmppVCardManager>()->requestClientVCard();
+
+    // 关闭 login 窗口并在 exec 的执行处返回 QDialog::Accepted
+    this->accept();
 }
 
 

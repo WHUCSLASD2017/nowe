@@ -1,8 +1,10 @@
 #ifndef DATAFRAME_H
 #define DATAFRAME_H
 
+#include "ChangeHeaderWnd.h"
+#include "NoweGlobal.h"
 #include <QDialog>
-#include"ChangeHeaderWnd.h"
+#include <QXmppVCardIq.h>
 
 namespace Ui {
 class DataFrame;
@@ -22,16 +24,19 @@ public:
 
 private:
     Ui::DataFrame *ui;
-    ChangeHeaderWnd ch;
     QPoint last;
 
 
 public slots:
-    void ChangeHeader();
+//    void ChangeHeader();
     void windowclosed();
     void windowmin();
+    void updatePanel(const QXmppVCardIq&);
 
+private slots:
+    void on_ok_clicked();
+    void sendNewVCard();
 };
 
 #endif // DATAFRAME_H
-                      
+

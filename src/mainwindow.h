@@ -2,18 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include<QRegExpValidator>
-#include<QMessageBox>
-#include<QtSql/QSqlQuery>
-#include <QMouseEvent>
-#include<QToolButton>
-#include<QPixmap>
-#include<QStyle>
-#include <QDesktopWidget>
 #include <QWidget>
-#include<QTreeWidgetItem>
-#include<QRegExp>
-
+#include <QTreeWidgetItem>
+#include <QXmppClient.h>
 
 
 namespace Ui {
@@ -50,6 +41,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QPoint last;
+    QXmppClient *const client;
 
 public slots:
     void windowclosed();
@@ -66,6 +58,10 @@ private slots:
     void on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
     void on_pushButton_4_clicked();
+
+    void on_clientVCardReceived();
+
+    void on_rosterReceived();
 
 signals:
     void friendClicked(QString usrName);

@@ -48,17 +48,7 @@ background-color:rgb(255, 255, 255);
 border-image:none;
 </string>
   </property>
-  <widget class="QGraphicsView" name="graphicsView">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>50</y>
-     <width>101</width>
-     <height>81</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="jid">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -71,7 +61,7 @@ border-image:none;
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="name">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -81,7 +71,7 @@ border-image:none;
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit">
+  <widget class="QTextEdit" name="instruction">
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -130,7 +120,7 @@ border-image:none;
     <string>个性签名:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="ok">
    <property name="geometry">
     <rect>
      <x>390</x>
@@ -163,6 +153,32 @@ background-color:rgb(0, 150, 225);
    </property>
    <property name="text">
     <string>确定</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="avatar">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>40</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="stateLabel">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>310</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

@@ -17,3 +17,8 @@ QTreeWidgetItem *GroupManager::getGrpAddr(QString grpName,QMainWindow *window)
     }
     else return i.value();
 }
+
+void GroupManager::flush()
+{
+    groups.clear();
+}

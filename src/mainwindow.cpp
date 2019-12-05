@@ -112,6 +112,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::presenceChanged,
             this, &MainWindow::on_presenceChanged);
 
+
+
     loadDone=false;
 
     //这一部分测试用的，试着添加一部分内容
@@ -445,6 +447,7 @@ void MainWindow::on_clientVCardReceived()
 // 初始化好友列表
 void MainWindow::on_rosterReceived()
 {
+    loadDone=false;
     auto rstMng = client->findExtension<QXmppRosterManager>();
     foreach(const QString& bareJid, rstMng->getRosterBareJids()) {
        // qDebug()<<"■■■■■■■■■■■■■■■"<<"item!";
@@ -469,8 +472,7 @@ void MainWindow::on_rosterReceived()
 
 void MainWindow::on_presenceChanged()
 {
-    if(loadDone)
-        qDebug()<<"changed!\n\n\n\n\n\n\n\n\n\n";
+
 }
 
 void MainWindow::addFriend()
@@ -482,6 +484,20 @@ void MainWindow::addFriend()
 
 void MainWindow::on_pushButton_5_clicked()
 {
+
     AddNewFriend *dialog=new AddNewFriend(client,this);
     dialog->exec();
+    updateAllFriends();
+}
+
+void MainWindow::flushAllFriends()
+{
+    ui->friendTree->clear();
+}
+
+void MainWindow::updateAllFriends()
+{
+    flushAllFriends();
+    grpMng.flush();
+    on_rosterReceived();
 }

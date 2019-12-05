@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    addnewfriend.cpp \
     groupentry.cpp \
     groupmanager.cpp \
     registwindow.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
     noweglobal.cpp
 
 HEADERS += \
+    addnewfriend.h \
     groupentry.h \
     groupmanager.h \
     registwindow.h \
@@ -50,6 +52,7 @@ HEADERS += \
     NoweGlobal.h
 
 FORMS += \
+    addnewfriend.ui \
     registwindow.ui \
     mainwindow.ui \
     loginwindow.ui \

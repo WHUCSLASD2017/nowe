@@ -22,6 +22,7 @@
 #include <QBuffer>
 #include <QImageReader>
 #include <QXmppRosterManager.h>
+#include <QXmppDiscoveryManager.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -123,6 +124,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //    setFriendToTop(f,"new","new",":/images/4.png",a);
 
     //createMessage("5555","66666",":/images/3.png");
+
+    addFriend();
 }
 
 MainWindow::~MainWindow()
@@ -461,3 +464,15 @@ void MainWindow::on_presenceChanged()
         qDebug()<<"changed!\n\n\n\n\n\n\n\n\n\n";
 }
 
+void MainWindow::addFriend()
+{
+    auto rstMng = client->findExtension<QXmppRosterManager>();
+    rstMng->subscribe("b@chirsz.cc");
+}
+
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    auto rstMng = client->findExtension<QXmppRosterManager>();
+    rstMng->subscribe("b@chirsz.cc");
+}

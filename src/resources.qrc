@@ -10,5 +10,6 @@
         <file>images/c.png</file>
         <file>images/b.png</file>
         <file>images/a.png</file>
+        <file>images/find.png</file>
     </qresource>
 </RCC>

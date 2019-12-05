@@ -53,9 +53,11 @@ FORMS += \
     chatdialog.ui \
     ChangeHeaderWnd.ui
 
-INCLUDEPATH += /usr/local/include/qxmpp
+unix:INCLUDEPATH += /usr/local/include/qxmpp
+win32:INCLUDEPATH += "C:/Program Files (x86)/qxmpp/include/qxmpp/"
 
-LIBS += -lqxmpp
+unix:LIBS += -lqxmpp
+win32:LIBS += "C:/Program Files (x86)/qxmpp/lib/libqxmpp.dll.a"
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

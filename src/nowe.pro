@@ -25,6 +25,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    groupentry.cpp \
+    groupmanager.cpp \
     registwindow.cpp \
     mainwindow.cpp \
     main.cpp \
@@ -37,6 +39,8 @@ SOURCES += \
     nowebasewindow.cpp
 
 HEADERS += \
+    groupentry.h \
+    groupmanager.h \
     registwindow.h \
     mainwindow.h \
     loginwindow.h \

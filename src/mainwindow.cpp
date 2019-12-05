@@ -447,6 +447,8 @@ void MainWindow::on_rosterReceived()
         QString res = resources.isEmpty() ? "" : resources[0];
         auto presence = rstMng->getPresence(bareJid,res);
         createMessage(item.bareJid(), presence.statusText(), ":/images/1.png");
+        addFriendtoGroup(grpMng.getGrpAddr(*(item.groups().begin()),this),item.bareJid(),presence.statusText(),":/images/1.png");
+        qDebug()<<item.groups()<<"\n\n\n\n\n\n\n\n\n\n\n\n";
     }
 }
 

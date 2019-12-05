@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "nowebasewindow.h"
 #include <QMainWindow>
 #include <QWidget>
 #include <QTreeWidgetItem>
@@ -11,16 +12,13 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow : public NoweBaseWindow
 {
     Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void mousePressEvent(QMouseEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
     QWidget *setItem(QString mainTitle,QString iconAddr,QString subTitle,bool ifVIP=false,bool ifOnline=true);
     QMenu *menu;
 
@@ -40,12 +38,10 @@ public:
     void displayAvatarChangePanel();
 private:
     Ui::MainWindow *ui;
-    QPoint last;
     QXmppClient *const client;
 
 public slots:
     void windowclosed();
-    void windowmin();
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_clicked();

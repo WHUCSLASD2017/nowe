@@ -47,6 +47,8 @@ private:
     QString receiver;
     QString timeFormat;
     QPixmap *avatar;
+    QTextCursor save;
+    int savepos;
 
 public slots:
     void windowclosed();
@@ -58,6 +60,7 @@ signals:
 private slots:
     void on_cancleBtn_clicked();
     void on_sendBtn_clicked();
+    void on_messBox_cursorPositionChanged();
 };
 
 #endif // CHATDIALOG_H

@@ -8,7 +8,7 @@ namespace Ui {
 class AddNewFriend;
 }
 
-class AddNewFriend : public QDialog
+class AddNewFriend : public QWidget
 {
     Q_OBJECT
 

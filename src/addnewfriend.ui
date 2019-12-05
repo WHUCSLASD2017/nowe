@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>AddNewFriend</class>
- <widget class="QDialog" name="AddNewFriend">
+ <widget class="QWidget" name="AddNewFriend">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog{
+   <string notr="true">#AddNewFriend{
 background-color: rgb(255, 255, 255);
 border:1px solid rgb(0, 155, 219);
 }
@@ -94,7 +94,7 @@ background-color:rgb(0, 150, 225);
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/images/find.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>1</x>
@@ -180,7 +180,10 @@ color:white;</string>
    <property name="styleSheet">
     <string notr="true">QStackedWidget{
 background-color: rgb(255, 255, 255);
-}</string>
+border:0px solid rgb(0, 155, 219);
+}
+
+</string>
    </property>
    <widget class="QWidget" name="page">
     <widget class="QLabel" name="label_5">

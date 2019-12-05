@@ -21,7 +21,7 @@
 #include <QXmppDiscoveryManager.h>
 
 AddNewFriend::AddNewFriend(QXmppClient *client,QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::AddNewFriend)
 {
     ui->setupUi(this);

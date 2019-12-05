@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QTreeWidgetItem>
 #include <QXmppClient.h>
+#include "groupmanager.h"
 
 
 namespace Ui {
@@ -38,6 +39,8 @@ public:
     void setMenu();
     void displayProfilePanel();
     void displayAvatarChangePanel();
+    GroupManager grpMng;
+
 private:
     Ui::MainWindow *ui;
     QPoint last;

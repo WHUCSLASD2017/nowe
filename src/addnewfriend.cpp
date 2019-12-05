@@ -76,7 +76,7 @@ AddNewFriend::~AddNewFriend()
 void AddNewFriend::windowclosed()
 {
 
-    QApplication::exit();
+    close();
     //this->close();
 }
 void AddNewFriend::windowmin()

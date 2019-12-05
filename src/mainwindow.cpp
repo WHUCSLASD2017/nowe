@@ -486,7 +486,8 @@ void MainWindow::on_pushButton_5_clicked()
 {
 
     AddNewFriend *dialog=new AddNewFriend(client,this);
-    dialog->exec();
+    dialog->show();
+    dialog->setWindowModality(Qt::ApplicationModal);
     updateAllFriends();
 }
 

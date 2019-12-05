@@ -108,6 +108,7 @@ ChatDialog::~ChatDialog()
 
 void ChatDialog::insertOutMessage(QString msg)
 {
+    ui->messBox->moveCursor(QTextCursor::End);
     //插入对外发送消息，格式都一样，下同！
     QTextCursor cursor=ui->messBox->textCursor();
     ui->messBox->moveCursor(QTextCursor::End);
@@ -134,6 +135,7 @@ void ChatDialog::insertOutMessage(QString msg)
 
 void ChatDialog::insertInMessage(QString msg,QDateTime *time)
 {
+    ui->messBox->moveCursor(QTextCursor::End);
     //插入接受消息，同上
     QTextCursor cursor=ui->messBox->textCursor();
     //cursor.setPosition(QTextCursor::End);
@@ -281,5 +283,5 @@ void ChatDialog::on_cancleBtn_clicked()
 
 void ChatDialog::on_messBox_cursorPositionChanged()
 {
-    ui->messBox->moveCursor(QTextCursor::End);
+    //ui->messBox->moveCursor(QTextCursor::End);
 }

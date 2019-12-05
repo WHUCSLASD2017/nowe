@@ -69,6 +69,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::rosterReceived,
             this, &MainWindow::on_rosterReceived);
 
+    connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::presenceChanged,
+            this, &MainWindow::on_presenceChanged);
+
+    loadDone=false;
 
     //这一部分测试用的，试着添加一部分内容
 //    QTreeWidgetItem *a=createFriendGroup("123发");
@@ -450,5 +454,12 @@ void MainWindow::on_rosterReceived()
         addFriendtoGroup(grpMng.getGrpAddr(*(item.groups().begin()),this),item.bareJid(),presence.statusText(),":/images/1.png");
         qDebug()<<item.groups()<<"\n\n\n\n\n\n\n\n\n\n\n\n";
     }
+    loadDone=true;
+}
+
+void MainWindow::on_presenceChanged()
+{
+    if(loadDone)
+        qDebug()<<"changed!\n\n\n\n\n\n\n\n\n\n";
 }
 

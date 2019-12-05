@@ -44,9 +44,11 @@ public:
     void displayAvatarChangePanel();
     GroupManager grpMng;
 
+    void on_presenceChanged();
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
+    bool loadDone=false;
 
 public slots:
     void windowclosed();

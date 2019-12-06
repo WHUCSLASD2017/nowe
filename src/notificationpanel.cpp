@@ -102,19 +102,32 @@ void NotificationPanel::setMessageReceiveMode(QString id,QString content)
     setID(content);
     setAgreeButtonTitle("查看消息");
     setRejectButtonTitle("忽略消息");
+    messageMode=true;
 }
 
 void NotificationPanel::on_agreeBtn_clicked()
 {
+    if(messageMode==false)
+     {
      QXmppRosterManager* rstMng = client->findExtension<QXmppRosterManager>();
      rstMng->acceptSubscription(jid);
      close();
+    }
+    else{
+        close();
+    }
 }
 
 
 void NotificationPanel::on_rejectBtn_clicked()
 {
-    QXmppRosterManager* rstMng = client->findExtension<QXmppRosterManager>();
+    if(messageMode==false)
+    {
+        QXmppRosterManager* rstMng = client->findExtension<QXmppRosterManager>();
     rstMng->refuseSubscription(jid);
     close();
+    }
+    else {
+        close();
+    }
 }

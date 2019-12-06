@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "nowebasewindow.h"
 #include <QXmppClient.h>
+#include <QXmppMessage.h>
 
 namespace Ui {
 class NotificationPanel;
@@ -28,8 +29,9 @@ public:
     void setAgreeButtonTitle(QString title);
     void setRejectButtonTitle(QString title);
     void setIconForMessage();
-    void setMessageReceiveMode(QString id, QString content);
+    void setMessageReceiveMode(QString id, QString content, const QXmppMessage &message);
     bool messageMode=false;
+    QXmppMessage message;
 
 private slots:
     void on_agreeBtn_clicked();

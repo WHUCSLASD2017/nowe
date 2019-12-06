@@ -3,6 +3,9 @@
 #include "mainwindow.h"
 #include <QXmppRosterManager.h>
 #include <QPropertyAnimation>
+#include <QXmppMessage.h>
+#include "chatdialog.h"
+#include "QXmppUtils.h"
 
 NotificationPanel::NotificationPanel(QWidget *parent, QXmppClient *client) :
     NoweBaseWindow(parent),
@@ -92,7 +95,7 @@ void NotificationPanel::setIconForMessage()
     ui->icon->setPixmap(QPixmap(":/images/mail.png"));
 }
 
-void NotificationPanel::setMessageReceiveMode(QString id,QString content)
+void NotificationPanel::setMessageReceiveMode(QString id,QString content,const QXmppMessage &message)
 {
     setIconForMessage();
     setTitle("新消息");
@@ -102,6 +105,7 @@ void NotificationPanel::setMessageReceiveMode(QString id,QString content)
     setID(content);
     setAgreeButtonTitle("查看消息");
     setRejectButtonTitle("忽略消息");
+    this->message=message;
     messageMode=true;
 }
 
@@ -114,7 +118,6 @@ void NotificationPanel::on_agreeBtn_clicked()
      close();
     }
     else{
-        close();
     }
 }
 

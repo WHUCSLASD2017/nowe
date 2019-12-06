@@ -517,7 +517,7 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     if((!msg.body().isEmpty())&&(!ChatDialog::ifChatDialogExist(senderID)))
     {
     NotificationPanel *notice=new NotificationPanel(this,client);
-    notice->setMessageReceiveMode(senderID,msgBody);
+    notice->setMessageReceiveMode(senderID,msgBody,msg);
     notice->show();
     notice->startAnimation();
     }

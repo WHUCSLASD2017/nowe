@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>RegistWindow</class>
- <widget class="QMainWindow" name="RegistWindow">
+ <widget class="QWidget" name="RegistWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,12 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>账户注册</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <property name="spacing">
      <number>0</number>
@@ -360,7 +359,6 @@ bottom:10px
      </layout>
     </item>
    </layout>
-  </widget>
  </widget>
  <resources/>
  <connections/>

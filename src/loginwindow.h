@@ -1,14 +1,16 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 
+#include "nowebasewindow.h"
 #include <QDialog>
 #include <QXmppClient.h>
+#include <QEventLoop>
 
 namespace Ui {
 class LoginWindow;
 }
 
-class LoginWindow : public QDialog
+class LoginWindow : public NoweBaseWindow
 {
     Q_OBJECT
 
@@ -16,22 +18,22 @@ public:
     explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow();
 
-    void mousePressEvent(QMouseEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private:
     Ui::LoginWindow *ui;
     QXmppClient *const client;
-    QPoint last;
-
-    //DataBase myDatabase;
+    QEventLoop *m_eventLoop;
+    int m_result = QDialog::Rejected;
 
 public slots:
+    int exec();
+    void accept();
+    void reject();
     void Login();
     void Regist();
     void windowclosed();
-    void windowmin();
     void loginSucceed();
 };
 

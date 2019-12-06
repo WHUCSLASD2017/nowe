@@ -36,7 +36,8 @@ SOURCES += \
     dataframe.cpp \
     chatdialog.cpp \
     ChangeHeaderWnd.cpp \
-    noweglobal.cpp
+    noweglobal.cpp \
+    nowebasewindow.cpp
 
 HEADERS += \
     addnewfriend.h \
@@ -49,7 +50,8 @@ HEADERS += \
     dataframe.h \
     chatdialog.h \
     ChangeHeaderWnd.h \
-    NoweGlobal.h
+    NoweGlobal.h \
+    nowebasewindow.h
 
 FORMS += \
     addnewfriend.ui \
@@ -60,11 +62,21 @@ FORMS += \
     chatdialog.ui \
     ChangeHeaderWnd.ui
 
-unix:INCLUDEPATH += /usr/local/include/qxmpp
-win32:INCLUDEPATH += "C:/Program Files (x86)/qxmpp/include/qxmpp/"
+unix {
+    INCLUDEPATH += /usr/local/include/qxmpp
+    LIBS += -lqxmpp
+}
 
-unix:LIBS += -lqxmpp
-win32:LIBS += "C:/Program Files (x86)/qxmpp/lib/libqxmpp.dll.a"
+win32-g++ {
+    INCLUDEPATH += "C:/Program Files (x86)/qxmpp/include/qxmpp/"
+    LIBS += "C:/Program Files (x86)/qxmpp/lib/libqxmpp.dll.a"
+}
+
+win32-msvc {
+    INCLUDEPATH += "C:/Program Files (x86)/qxmpp/include/qxmpp/"
+    LIBS += "C:/Program Files (x86)/qxmpp/lib/qxmpp.lib"
+    QMAKE_CXXFLAGS += /utf-8
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

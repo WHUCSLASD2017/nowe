@@ -73,7 +73,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::presenceChanged,
             this, &MainWindow::on_presenceChanged);
 
-
+    connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::subscriptionReceived,
+            this, &MainWindow::on_subscriptionReceived);
 
     loadDone=false;
 
@@ -321,6 +322,7 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     ui->switchPanel->setCurrentIndex(1);
+    updateAllFriends();
 }
 
 
@@ -502,5 +504,10 @@ void MainWindow::on_AddItemBtn_clicked()
     dialog->show();
     dialog->setWindowModality(Qt::ApplicationModal);
     updateAllFriends();
+}
+
+void MainWindow::on_subscriptionReceived(const QString &bareJid)
+{
+    qDebug()<<"aaaaaaaaaaaaaaaaaaaaa"<<bareJid;
 }
 

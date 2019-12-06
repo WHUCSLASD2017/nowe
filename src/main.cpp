@@ -1,12 +1,16 @@
 #include <QApplication>
 #include "loginwindow.h"
 #include "mainwindow.h"
+#include "notificationpanel.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
     QXmppClient client;
+
+    NotificationPanel k;
+    k.show();
 
     LoginWindow w;
     MainWindow m;

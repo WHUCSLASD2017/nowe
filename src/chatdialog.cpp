@@ -174,7 +174,7 @@ void ChatDialog::setOutMsgFormat(QFont target,Qt::GlobalColor color)
 
 void ChatDialog::on_messageReceived(const QXmppMessage &msg)
 {
-    if (QXmppUtils::jidToBareJid(msg.from()) == sender) {
+    if (QXmppUtils::jidToBareJid(msg.from()) == bareJid) {
         auto time = msg.stamp();
         insertInMessage(msg.body(), &time);
     }
@@ -205,6 +205,16 @@ QPixmap ChatDialog::PixmapToRound(const QPixmap &src, int radius)
     return image;
 }
 
+QString ChatDialog::getBareJid() const
+{
+    return bareJid;
+}
+
+void ChatDialog::setBareJid(const QString &value)
+{
+    bareJid = value;
+}
+
 void ChatDialog::on_sendBtn_clicked()
 {
     //点击发送按钮后发射信号，清空文本区
@@ -233,6 +243,7 @@ ChatDialog *ChatDialog::getChatDialog(QString bareJid,QString username,QString s
     {
         ChatDialog *chat=new ChatDialog();
         chat->setUserName(username);
+        chat->setBareJid(bareJid);
         chat->setSignature(signature);
         chat->setReceiver(receiver);
         chat->setAvatar(avatar,80,80,45);

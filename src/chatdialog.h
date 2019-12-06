@@ -31,10 +31,13 @@ public:
     void setOutMsgFormat(QFont target,Qt::GlobalColor color);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
     static QMap<QString,ChatDialog *> openedDialogs;
-
+    QString bareJid;
     static ChatDialog *getChatDialog(QString bareJid, QString username, QString signature, QString receiver, QPixmap avatar);
     static bool ifChatDialogExist(QString jid);
     static void closeChatDialog(ChatDialog *dialog);
+    QString getBareJid() const;
+    void setBareJid(const QString &value);
+
 private:
     Ui::ChatDialog *ui;
     QTextDocument *document;

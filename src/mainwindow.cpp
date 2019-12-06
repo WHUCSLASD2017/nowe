@@ -514,7 +514,7 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
 {
     auto senderID=QXmppUtils::jidToBareJid(msg.from());
     auto msgBody=msg.body();
-    if(!msg.body().isEmpty())
+    if((!msg.body().isEmpty())&&(!ChatDialog::ifChatDialogExist(senderID)))
     {
     NotificationPanel *notice=new NotificationPanel(this,client);
     notice->setMessageReceiveMode(senderID,msgBody);

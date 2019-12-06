@@ -6,7 +6,7 @@ GroupManager::GroupManager()
 
 }
 
-QTreeWidgetItem *GroupManager::getGrpAddr(QString grpName,QMainWindow *window)
+QTreeWidgetItem *GroupManager::getGrpAddr(QString grpName,QWidget *window)
 {
     QMap<QString,QTreeWidgetItem *>::const_iterator i =groups.find(grpName);
     if(i==groups.end())

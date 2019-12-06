@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <NoweGlobal.h>
 #include <QXmppUtils.h>
+#include <QScrollBar>
 
 QMap<QString,ChatDialog *> ChatDialog::openedDialogs;
 
@@ -90,6 +91,7 @@ void ChatDialog::insertOutMessage(QString msg)
     //cursor.insertText("\n");
     save=ui->messBox->textCursor();
     savepos=ui->messBox->textCursor().position();
+    scrollBarAdjust();
 }
 
 void ChatDialog::insertInMessage(QString msg,QDateTime *time)
@@ -112,6 +114,7 @@ void ChatDialog::insertInMessage(QString msg,QDateTime *time)
     cursor.setCharFormat(plainFormat);
     cursor.insertText(msg);
     //cursor.insertText("\n");
+    scrollBarAdjust();
 }
 
 void ChatDialog::setUserName(QString usr)
@@ -213,6 +216,15 @@ QString ChatDialog::getBareJid() const
 void ChatDialog::setBareJid(const QString &value)
 {
     bareJid = value;
+}
+
+void ChatDialog::scrollBarAdjust()
+{
+    QScrollBar *scrollBar=ui->messBox->verticalScrollBar();
+    if (scrollBar)
+    {
+        scrollBar->setSliderPosition(scrollBar->maximum());
+    }
 }
 
 void ChatDialog::on_sendBtn_clicked()

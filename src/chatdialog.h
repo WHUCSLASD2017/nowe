@@ -37,6 +37,7 @@ public:
     static void closeChatDialog(ChatDialog *dialog);
     QString getBareJid() const;
     void setBareJid(const QString &value);
+    void scrollBarAdjust();
 
 private:
     Ui::ChatDialog *ui;

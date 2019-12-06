@@ -92,10 +92,16 @@ void NotificationPanel::setIconForMessage()
     ui->icon->setPixmap(QPixmap(":/images/mail.png"));
 }
 
-void NotificationPanel::setMessageReceiveMode()
+void NotificationPanel::setMessageReceiveMode(QString id,QString content)
 {
     setIconForMessage();
-
+    setTitle("新消息");
+    setExplanation("您收到了一条新消息！");
+    setInstruction("您收到了一条新消息。\n消息详细信息如下：");
+    setHint(id);
+    setID(content);
+    setAgreeButtonTitle("查看消息");
+    setRejectButtonTitle("忽略消息");
 }
 
 void NotificationPanel::on_agreeBtn_clicked()

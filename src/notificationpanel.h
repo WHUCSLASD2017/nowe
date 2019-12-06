@@ -28,7 +28,7 @@ public:
     void setAgreeButtonTitle(QString title);
     void setRejectButtonTitle(QString title);
     void setIconForMessage();
-    void setMessageReceiveMode();
+    void setMessageReceiveMode(QString id, QString content);
 
 private slots:
     void on_agreeBtn_clicked();

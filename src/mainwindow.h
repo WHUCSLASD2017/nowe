@@ -40,6 +40,9 @@ public:
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
     void createRoom(QString roomName);
 
+
+    void createBookMark(QString markName);
+
     void setAvatar(QPixmap &avatar, int length, int width, int radius);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
     void setMainTitle(QString string);

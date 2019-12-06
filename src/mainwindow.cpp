@@ -545,18 +545,23 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     notice->startAnimation();
     }
 }
+
 //更新群组列表
 void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
 {
     /*
     QList<QXmppDiscoveryIq::Item>items =  iq.items();
-    QString avad = "11";    //群组列表头像
+
+
+    QString avad = "11";    //群组列表头像【头像路径在addRoom函数中已写死，在此留出接口方便之后修改】
     foreach(QXmppDiscoveryIq::Item it, items)
     {
+
         addRoom(it.name(),avad);
     }
 */
 }
+
 
 
 //创建一个新的群组
@@ -589,6 +594,32 @@ void MainWindow::createRoom(QString roomName)
         //进入群
         m_pRoom->join();
     }
+}
+
+
+//创建聊天室书签
+void MainWindow::createBookMark(QString markName)
+{
+    //加载已存在的书签
+    auto markMsg = client->findExtension<QXmppBookmarkManager>();
+    QXmppBookmarkSet markset = markMsg->bookmarks();
+
+    //服务器书签列表
+    QList<QXmppBookmarkConference> markList= markset.conferences();
+
+    //服务器名
+    QString serverName = "chirsz.cc";
+    //聊天室JID
+    QString jid=markName+"@conference."+serverName;
+
+    //增加书签，暂时注释
+    QXmppBookmarkConference * bm = new QXmppBookmarkConference;
+
+    bm->setJid(jid);
+    markList.append(*bm);
+    markset.setConferences(markList);
+    qDebug()<<markMsg->setBookmarks(markset);
+
 }
 
 

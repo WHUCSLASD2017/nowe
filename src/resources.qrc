@@ -11,5 +11,6 @@
         <file>images/b.png</file>
         <file>images/a.png</file>
         <file>images/room.png</file>
+        <file>images/find.png</file>
     </qresource>
 </RCC>

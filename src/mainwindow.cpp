@@ -22,6 +22,7 @@
 #include <QBuffer>
 #include <QImageReader>
 #include <QXmppRosterManager.h>
+#include <QXmppDiscoveryManager.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -69,6 +70,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::rosterReceived,
             this, &MainWindow::on_rosterReceived);
 
+    connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::presenceChanged,
+            this, &MainWindow::on_presenceChanged);
+
+
+
+    loadDone=false;
 
     //这一部分测试用的，试着添加一部分内容
 //    QTreeWidgetItem *a=createFriendGroup("123发");
@@ -440,13 +447,60 @@ void MainWindow::on_clientVCardReceived()
 // 初始化好友列表
 void MainWindow::on_rosterReceived()
 {
+    loadDone=false;
     auto rstMng = client->findExtension<QXmppRosterManager>();
     foreach(const QString& bareJid, rstMng->getRosterBareJids()) {
+       // qDebug()<<"■■■■■■■■■■■■■■■"<<"item!";
         auto item = rstMng->getRosterEntry(bareJid);
+       // qDebug()<<"■■■■■■■■■■■■■■■"<<"res!";
         auto resources = rstMng->getResources(bareJid);
         QString res = resources.isEmpty() ? "" : resources[0];
+       // qDebug()<<"■■■■■■■■■■■■■■■"<<"pres!";
         auto presence = rstMng->getPresence(bareJid,res);
+       // qDebug()<<"■■■■■■■■■■■■■■■"<<"create!";
         createMessage(item.bareJid(), presence.statusText(), ":/images/1.png");
+        //qDebug()<<"■■■■■■■■■■■■■■■"<<"add!";
+        qDebug()<<item.groups()<<"\n\n\n\n\n\n\n\n\n\n\n\n";
+        if(item.groups().empty())
+            addFriendtoGroup(grpMng.getGrpAddr("单向好友",this),item.bareJid(),presence.statusText(),":/images/1.png");
+        else
+            addFriendtoGroup(grpMng.getGrpAddr(*(item.groups().begin()),this),item.bareJid(),presence.statusText(),":/images/1.png");
+
     }
+    loadDone=true;
+}
+
+void MainWindow::on_presenceChanged()
+{
+
+}
+
+void MainWindow::addFriend()
+{
+    //auto rstMng = client->findExtension<QXmppRosterManager>();
+    //rstMng->subscribe("b@chirsz.cc");
+}
+
+
+
+void MainWindow::flushAllFriends()
+{
+    ui->friendTree->clear();
+}
+
+void MainWindow::updateAllFriends()
+{
+    flushAllFriends();
+    grpMng.flush();
+    on_rosterReceived();
+}
+
+
+void MainWindow::on_AddItemBtn_clicked()
+{
+    AddNewFriend *dialog=new AddNewFriend(client,this);
+    dialog->show();
+    dialog->setWindowModality(Qt::ApplicationModal);
+    updateAllFriends();
 }
 

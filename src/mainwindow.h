@@ -6,6 +6,8 @@
 #include <QWidget>
 #include <QTreeWidgetItem>
 #include <QXmppClient.h>
+#include "groupmanager.h"
+#include "addnewfriend.h"
 
 
 namespace Ui {
@@ -41,12 +43,19 @@ public:
     void setMenu();
     void displayProfilePanel();
     void displayAvatarChangePanel();
+    GroupManager grpMng;
+
+    void on_presenceChanged();
+    void addFriend();
+    void flushAllFriends();
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
+    bool loadDone=false;
 
 public slots:
     void windowclosed();
+    void updateAllFriends();
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();
@@ -64,6 +73,8 @@ private slots:
     void on_clientVCardReceived();
 
     void on_rosterReceived();
+
+    void on_AddItemBtn_clicked();
 
 signals:
     void friendClicked(QString usrName);

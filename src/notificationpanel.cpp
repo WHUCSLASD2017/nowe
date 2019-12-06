@@ -52,6 +52,52 @@ void NotificationPanel::startAnimation()
 
 }
 
+void NotificationPanel::setTitle(QString title)
+{
+    ui->title->setText(title);
+}
+
+void NotificationPanel::setExplanation(QString explain)
+{
+    ui->explanation->setText(explain);
+}
+
+void NotificationPanel::setHint(QString hint)
+{
+    ui->hint->setText(hint);
+}
+
+void NotificationPanel::setID(QString id)
+{
+    ui->id->setText(id);
+}
+
+void NotificationPanel::setInstruction(QString instruction)
+{
+    ui->instruction->setText(instruction);
+}
+
+void NotificationPanel::setAgreeButtonTitle(QString title)
+{
+    ui->agreeBtn->setText(title);
+}
+
+void NotificationPanel::setRejectButtonTitle(QString title)
+{
+    ui->rejectBtn->setText(title);
+}
+
+void NotificationPanel::setIconForMessage()
+{
+    ui->icon->setPixmap(QPixmap(":/images/mail.png"));
+}
+
+void NotificationPanel::setMessageReceiveMode()
+{
+    setIconForMessage();
+
+}
+
 void NotificationPanel::on_agreeBtn_clicked()
 {
      QXmppRosterManager* rstMng = client->findExtension<QXmppRosterManager>();

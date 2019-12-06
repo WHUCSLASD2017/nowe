@@ -66,7 +66,6 @@ void NoweBaseWindow::mouseReleaseEvent(QMouseEvent *e)
     move(x()+dx, y()+dy);
 }
 
-
 void NoweBaseWindow::windowclosed()
 {
     this->close();

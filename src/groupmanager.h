@@ -1,6 +1,5 @@
 #ifndef GROUPMANAGER_H
 #define GROUPMANAGER_H
-#include <set>
 #include <QMap>
 #include <QTreeWidgetItem>
 #include <QMainWindow>

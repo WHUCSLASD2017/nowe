@@ -24,6 +24,8 @@
 #include <QXmppRosterManager.h>
 #include <QXmppDiscoveryManager.h>
 #include "notificationpanel.h"
+#include <QPropertyAnimation>
+#include <QXmppUtils.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -76,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::subscriptionReceived,
             this, &MainWindow::on_subscriptionReceived);
+
+    connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &MainWindow::on_messageReceived);
 
     loadDone=false;
 
@@ -512,6 +516,19 @@ void MainWindow::on_subscriptionReceived(const QString &bareJid)
     NotificationPanel *notice=new NotificationPanel(this,client);
     notice->show();
     notice->setJid(bareJid);
+    notice->startAnimation();
     updateAllFriends();
 }
 
+void MainWindow::on_messageReceived(const QXmppMessage &msg)
+{
+    auto senderID=QXmppUtils::jidToBareJid(msg.from());
+    auto msgBody=msg.body();
+    if(!msg.body().isEmpty())
+    {
+    NotificationPanel *notice=new NotificationPanel(this,client);
+    notice->setMessageReceiveMode(senderID,msgBody);
+    notice->show();
+    notice->startAnimation();
+    }
+}

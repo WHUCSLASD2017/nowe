@@ -47,7 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //设置下面按钮的图标
     QPixmap icon4(":/images/more.png");
+    QPixmap iconAdd(":/images/add.png");
     ui->pushButton_4->setIcon(icon4);
+    ui->AddItemBtn->setIcon(iconAdd);
     //ui->pushButton->setFixedSize(icon1.size());
 
     //设置三个面板的表头、列数（被隐藏，但必须设置）

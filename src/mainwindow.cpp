@@ -491,7 +491,7 @@ void MainWindow::showAddNewFriendPanel(QString jid)
 {
     AddNewFriend *dialog=new AddNewFriend(client,this);
     dialog->show();
-    qDebug()<<"                  !!!!!!!!!!!!!!";
+    dialog->setLineEditContent(jid);
 }
 
 void MainWindow::updateAllFriends()

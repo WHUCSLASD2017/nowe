@@ -19,6 +19,10 @@ AddNewFriend::~AddNewFriend()
     delete ui;
 }
 
+void AddNewFriend::setLineEditContent(QString jid)
+{
+    ui->lineEdit->setText(jid);
+}
 
 void AddNewFriend::on_cancelButton_clicked()
 {

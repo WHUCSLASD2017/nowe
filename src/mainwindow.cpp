@@ -24,6 +24,7 @@
 #include <QXmppRosterManager.h>
 #include <QXmppDiscoveryManager.h>
 #include "notificationpanel.h"
+#include <QPropertyAnimation>
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -512,6 +513,7 @@ void MainWindow::on_subscriptionReceived(const QString &bareJid)
     NotificationPanel *notice=new NotificationPanel(this,client);
     notice->show();
     notice->setJid(bareJid);
+    notice->startAnimation();
     updateAllFriends();
 }
 

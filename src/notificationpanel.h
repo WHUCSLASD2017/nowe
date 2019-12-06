@@ -19,6 +19,7 @@ public:
     QXmppClient * client;
     QString jid;
     void setJid(QString jid);
+    void startAnimation();
 
 private slots:
     void on_agreeBtn_clicked();

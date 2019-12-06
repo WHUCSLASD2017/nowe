@@ -28,6 +28,7 @@ SOURCES += \
     addnewfriend.cpp \
     groupentry.cpp \
     groupmanager.cpp \
+    notificationpanel.cpp \
     registwindow.cpp \
     mainwindow.cpp \
     main.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     addnewfriend.h \
     groupentry.h \
     groupmanager.h \
+    notificationpanel.h \
     registwindow.h \
     mainwindow.h \
     loginwindow.h \
@@ -55,6 +57,7 @@ HEADERS += \
 
 FORMS += \
     addnewfriend.ui \
+    notificationpanel.ui \
     registwindow.ui \
     mainwindow.ui \
     loginwindow.ui \

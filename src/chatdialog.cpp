@@ -8,6 +8,8 @@
 #include <NoweGlobal.h>
 #include <QXmppUtils.h>
 
+QMap<QString,ChatDialog *> ChatDialog::openedDialogs;
+
 ChatDialog::ChatDialog(QWidget *parent) :
     NoweBaseWindow(parent),
     ui(new Ui::ChatDialog)
@@ -178,6 +180,12 @@ void ChatDialog::on_messageReceived(const QXmppMessage &msg)
     }
 }
 
+void ChatDialog::windowclosed()
+{
+    closeChatDialog(this);
+    close();
+}
+
 QPixmap ChatDialog::PixmapToRound(const QPixmap &src, int radius)
 {
     //图片变圆的
@@ -207,10 +215,47 @@ void ChatDialog::on_sendBtn_clicked()
 
 void ChatDialog::on_cancleBtn_clicked()
 {
+    closeChatDialog(this);
     close();
 }
 
 void ChatDialog::on_messBox_cursorPositionChanged()
 {
     //ui->messBox->moveCursor(QTextCursor::End);
+}
+
+// 获取聊天窗口的指针，如果不存在，则打开一个新的聊天窗口
+ChatDialog *ChatDialog::getChatDialog(QString bareJid,QString username,QString signature,QString receiver,QPixmap avatar)
+{
+
+    QMap<QString,ChatDialog *>::const_iterator i= openedDialogs.find(bareJid);
+    if(i==openedDialogs.end())
+    {
+        ChatDialog *chat=new ChatDialog();
+        chat->setUserName(username);
+        chat->setSignature(signature);
+        chat->setReceiver(receiver);
+        chat->setAvatar(avatar,80,80,45);
+        chat->show();
+        openedDialogs.insert(bareJid,chat);
+        return chat;
+    }
+    else {
+        return i.value();
+    }
+}
+
+bool ChatDialog::ifChatDialogExist(QString jid)
+{
+    QMap<QString,ChatDialog *>::const_iterator i= openedDialogs.find(jid);
+    return !(i==openedDialogs.end());
+
+}
+
+void ChatDialog::closeChatDialog(ChatDialog *dialog)
+{
+    QString jid=openedDialogs.key(dialog);
+    QMap<QString,ChatDialog *>::iterator i= openedDialogs.find(jid);
+    openedDialogs.erase(i);
+    qDebug()<<"             erase!";
 }

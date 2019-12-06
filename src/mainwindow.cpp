@@ -143,13 +143,13 @@ QTreeWidgetItem *MainWindow::createFriendGroup(QString grpName)
     return item1;
 }
 //在消息面板添加一个消息
-QTreeWidgetItem *MainWindow::createMessage(QString mainTitle,QString subTitle,QString avatarAddr)
+QTreeWidgetItem *MainWindow::createMessage(QString mainTitle,QString subTitle,QString avatarAddr,QString jid)
 {
     //先添加一个表项到消息列表
     QTreeWidgetItem *item1=new QTreeWidgetItem;
     ui->messageTree->addTopLevelItem(item1);
     //再把这个表项里的控件插入进去，下面都是这样
-    ui->messageTree->setItemWidget(item1,0,createItem(mainTitle,avatarAddr,subTitle,true,true));
+    ui->messageTree->setItemWidget(item1,0,createItem(jid,mainTitle,avatarAddr,subTitle,true,true));
     return item1;
 }
 
@@ -167,19 +167,19 @@ QTreeWidgetItem *MainWindow::addRoom(QString roomName,QString avatarAddr)
     return item1;
 }
 
-QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr)
+QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr,QString jid)
 {
     //向一个分组里添加一个好友，也就是向二级表项里插入一个三级表项
     QTreeWidgetItem *item11=new QTreeWidgetItem(grp);
-    ui->friendTree->setItemWidget(item11,0,createItem(mainTitle,avatarAddr,subTitle,true,true));
+    ui->friendTree->setItemWidget(item11,0,createItem(jid,mainTitle,avatarAddr,subTitle,true,true));
     return item11;
 }
 
-QTreeWidgetItem *MainWindow::addFriendtoGroupAtTop(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr)
+QTreeWidgetItem *MainWindow::addFriendtoGroupAtTop(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr,QString jid)
 {
     //和上面函数功能一样，但是上面是在末尾插，这个在顶部插
     QTreeWidgetItem *item11=new QTreeWidgetItem(grp,nullptr);
-    QWidget *now=createItem(mainTitle,avatarAddr,subTitle,true,true);
+    QWidget *now=createItem(jid,mainTitle,avatarAddr,subTitle,true,true);
     ui->friendTree->setItemWidget(item11,0,now);
 
     return item11;
@@ -207,17 +207,17 @@ QTreeWidgetItem *MainWindow::removeFriendOrGroup(QTreeWidgetItem *toSet)
 }
 
 
-QTreeWidgetItem *MainWindow::setFriendToTop(QTreeWidgetItem *toSet,QString mainTitle,QString subTitle,QString avatarAddr,QTreeWidgetItem *grp)
+QTreeWidgetItem *MainWindow::setFriendToTop(QTreeWidgetItem *toSet,QString mainTitle,QString subTitle,QString avatarAddr,QTreeWidgetItem *grp,QString jid)
 {
     //把某个好友放到顶部去，就是删了再加
     if(grp==nullptr)
         grp=toSet->parent();
     removeFriendOrGroup(toSet);
-    return addFriendtoGroupAtTop(grp,mainTitle,subTitle,avatarAddr);
+    return addFriendtoGroupAtTop(grp,mainTitle,subTitle,avatarAddr,jid);
 }
 
 
-QWidget *MainWindow::createItem(QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP=false, bool ifOnline=false)
+QWidget *MainWindow::createItem(QString jid,QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP=false, bool ifOnline=false)
 {
     //本函数用于向一个已经存在的表项里添加控件
     QWidget *myItem=new QWidget(this);
@@ -226,7 +226,9 @@ QWidget *MainWindow::createItem(QString mainTitle, QString iconAddr, QString sub
     QLabel *iconLabel=new QLabel(this);
     QPixmap *avatar=new QPixmap(iconAddr);
     QLabel *addr=new QLabel(iconAddr,this);
+    QLabel *jidLabel=new QLabel(jid,this);
     addr->hide();
+    jidLabel->hide();
     QPixmap avatarAfter=avatar->scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     //分别代表一个消息条中的用户名、个性签名和头像，addr存头像地址，隐藏起来，发射信号用
@@ -242,6 +244,7 @@ QWidget *MainWindow::createItem(QString mainTitle, QString iconAddr, QString sub
     vLayout->addWidget(mainLabel);
     vLayout->addWidget(subLabel);
     vLayout->addWidget(addr);
+    vLayout->addWidget(jidLabel);
     vLayout->addStretch();
     vLayout->setSpacing(5);
     vLayout->setContentsMargins(0,0,0,0);
@@ -348,18 +351,12 @@ void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int col
     QList<QLabel *> labelList = now->findChildren<QLabel *>();
     //要找到用户点击了哪个面板，从其中的label里面找到用户名等信息，发射信号
     emit msgClicked(labelList[1]->text());
-
-    ChatDialog *chat=new ChatDialog();
     //不仅要发射信号，还要用获得的用户名等信息，创建一个聊天框
-    //qDebug()<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text();
-    chat->setUserName(ui->nickname->text());
-    chat->setSignature(labelList[2]->text());
-    chat->setReceiver(labelList[1]->text());
+    qDebug()<<"                                   "<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text()<<labelList[4]->text();
     QPixmap avatar;
     avatar.load(labelList[3]->text());
-    chat->setAvatar(avatar,80,80,45);
-    chat->show();
     //聊天框建立
+    ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
 }
 
 void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
@@ -369,17 +366,10 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
     if(item->parent())
     {
         QList<QLabel *> labelList = now->findChildren<QLabel *>();
-
         emit friendClicked(labelList[1]->text());
-        ChatDialog *chat=new ChatDialog();
-        //qDebug()<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text();
-        chat->setUserName(ui->nickname->text());
-        chat->setSignature(labelList[2]->text());
-        chat->setReceiver(labelList[1]->text());
         QPixmap avatar;
-        avatar.load(labelList[3]->text());
-        chat->setAvatar(avatar,80,80,45);
-        chat->show();
+        avatar.load(labelList[3]->text());        
+        ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
     }
 }
 
@@ -465,13 +455,13 @@ void MainWindow::on_rosterReceived()
        // qDebug()<<"■■■■■■■■■■■■■■■"<<"pres!";
         auto presence = rstMng->getPresence(bareJid,res);
        // qDebug()<<"■■■■■■■■■■■■■■■"<<"create!";
-        createMessage(item.bareJid(), presence.statusText(), ":/images/1.png");
+        createMessage(item.bareJid(), presence.statusText(), ":/images/1.png",bareJid);
         //qDebug()<<"■■■■■■■■■■■■■■■"<<"add!";
         qDebug()<<item.groups()<<"\n\n\n\n\n\n\n\n\n\n\n\n";
         if(item.groups().empty())
-            addFriendtoGroup(grpMng.getGrpAddr("单向好友",this),item.bareJid(),presence.statusText(),":/images/1.png");
+            addFriendtoGroup(grpMng.getGrpAddr("单向好友",this),item.bareJid(),presence.statusText(),":/images/1.png",bareJid);
         else
-            addFriendtoGroup(grpMng.getGrpAddr(*(item.groups().begin()),this),item.bareJid(),presence.statusText(),":/images/1.png");
+            addFriendtoGroup(grpMng.getGrpAddr(*(item.groups().begin()),this),item.bareJid(),presence.statusText(),":/images/1.png",bareJid);
 
     }
     loadDone=true;

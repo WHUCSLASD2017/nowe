@@ -24,15 +24,15 @@ public:
     QWidget *setItem(QString mainTitle,QString iconAddr,QString subTitle,bool ifVIP=false,bool ifOnline=true);
     QMenu *menu;
 
-    QWidget *createItem(QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
+    QWidget *createItem(QString jid, QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
     QWidget *createRoomItem(QString mainTitle, QString iconAddr);
 
     QTreeWidgetItem *createFriendGroup(QString grpName);
-    QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr);
+    QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
     QTreeWidgetItem *removeFriendOrGroup(QTreeWidgetItem *toSet);
-    QTreeWidgetItem *addFriendtoGroupAtTop(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr);
-    QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, QString avatarAddr, QTreeWidgetItem *grp = nullptr);
-    QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr);
+    QTreeWidgetItem *addFriendtoGroupAtTop(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
+    QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, QString avatarAddr, QTreeWidgetItem *grp = nullptr, QString jid=nullptr);
+    QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
 
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
 

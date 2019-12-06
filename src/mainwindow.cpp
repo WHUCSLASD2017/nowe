@@ -352,7 +352,7 @@ void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int col
     ChatDialog *chat=new ChatDialog();
     //不仅要发射信号，还要用获得的用户名等信息，创建一个聊天框
     //qDebug()<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text();
-    chat->setUserName(labelList[1]->text());
+    chat->setUserName(ui->nickname->text());
     chat->setSignature(labelList[2]->text());
     chat->setReceiver(labelList[1]->text());
     QPixmap avatar;
@@ -373,7 +373,7 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
         emit friendClicked(labelList[1]->text());
         ChatDialog *chat=new ChatDialog();
         //qDebug()<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text();
-        chat->setUserName(labelList[1]->text());
+        chat->setUserName(ui->nickname->text());
         chat->setSignature(labelList[2]->text());
         chat->setReceiver(labelList[1]->text());
         QPixmap avatar;

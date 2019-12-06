@@ -495,11 +495,12 @@ void MainWindow::updateAllFriends()
     on_rosterReceived();
 }
 
-void MainWindow::on_AddButton_clicked()
-{
 
+void MainWindow::on_AddItemBtn_clicked()
+{
     AddNewFriend *dialog=new AddNewFriend(client,this);
     dialog->show();
     dialog->setWindowModality(Qt::ApplicationModal);
     updateAllFriends();
 }
+

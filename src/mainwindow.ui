@@ -449,7 +449,7 @@ background:none;</string>
               <string/>
              </property>
             </widget>
-            <widget class="QPushButton" name="AddButton">
+            <widget class="QPushButton" name="AddItemBtn">
              <property name="geometry">
               <rect>
                <x>140</x>

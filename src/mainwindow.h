@@ -74,7 +74,7 @@ private slots:
 
     void on_rosterReceived();
 
-    void on_AddButton_clicked();
+    void on_AddItemBtn_clicked();
 
 signals:
     void friendClicked(QString usrName);

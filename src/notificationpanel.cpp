@@ -116,6 +116,7 @@ void NotificationPanel::on_agreeBtn_clicked()
      {
      QXmppRosterManager* rstMng = client->findExtension<QXmppRosterManager>();
      rstMng->acceptSubscription(jid);
+    ((MainWindow *)parent())->showAddNewFriendPanel(QXmppUtils::jidToBareJid(message.from()));
      close();
     }
     else{

@@ -487,6 +487,13 @@ void MainWindow::flushAllFriends()
     ui->friendTree->clear();
 }
 
+void MainWindow::showAddNewFriendPanel(QString jid)
+{
+    AddNewFriend *dialog=new AddNewFriend(client,this);
+    dialog->show();
+    qDebug()<<"                  !!!!!!!!!!!!!!";
+}
+
 void MainWindow::updateAllFriends()
 {
     flushAllFriends();

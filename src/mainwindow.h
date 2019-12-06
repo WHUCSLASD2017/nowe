@@ -49,6 +49,7 @@ public:
     void addFriend();
     void flushAllFriends();
     QString username;
+    void showAddNewFriendPanel(QString jid);
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
@@ -59,6 +60,7 @@ public slots:
     void updateAllFriends();
     void on_subscriptionReceived(const QString &bareJid);
     void on_messageReceived(const QXmppMessage &msg);
+    void on_AddItemBtn_clicked();
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();
@@ -76,8 +78,6 @@ private slots:
     void on_clientVCardReceived();
 
     void on_rosterReceived();
-
-    void on_AddItemBtn_clicked();
 
 signals:
     void friendClicked(QString usrName);

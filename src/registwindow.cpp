@@ -1,61 +1,22 @@
 #include "registwindow.h"
 #include "ui_registwindow.h"
 #include <QXmppRegisterIq.h>
-#include <QDesktopWidget>
-#include <QToolButton>
 #include <QMessageBox>
-#include <QMouseEvent>
 #include <QXmppVCardManager.h>
 #include <QXmppVCardIq.h>
 
 RegistWindow::RegistWindow(QWidget *parent) :
-    QMainWindow(parent),
+    NoweBaseWindow(parent),
     ui(new Ui::RegistWindow),
     client(new QXmppClient(this))
 {
     ui->setupUi(this);
 
-    setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
-    setAttribute(Qt::WA_DeleteOnClose);
-
-    QDesktopWidget *deskdop=QApplication::desktop();
-    move((deskdop->width()-this->width())/2, (deskdop->height()-this->height())/2);
+    NoweBaseWindow::initNoweStyle();
 
     setWindowTitle("帐号注册");       //设置窗口名称
     connect(ui->registBtn,&QPushButton::clicked,this,&RegistWindow::Regist);
     connect(ui->resetBtn,&QPushButton::clicked,this,&RegistWindow::Reset);
-
-    QToolButton *minButton = new QToolButton(this);
-    QToolButton *closeButton= new QToolButton(this);
-
-
-    //获取最小化、关闭按钮图标
-    QPixmap minPix= style()->standardPixmap(QStyle::SP_TitleBarMinButton);
-    QPixmap closePix = style()->standardPixmap(QStyle::SP_TitleBarCloseButton);
-
-
-    //设置最小化、关闭按钮图标
-    minButton->setIcon(minPix);
-    closeButton->setIcon(closePix);
-
-    //设置最小化、关闭按钮在界面的位置
-
-    minButton->setGeometry(this->width()-46,5,20,20);
-    closeButton->setGeometry(this->width()-25,5,20,20);
-
-
-    //设置鼠标移至按钮上的提示信息
-
-    minButton->setToolTip(tr("最小化"));
-
-    closeButton->setToolTip(tr("关闭"));
-
-    //设置最小化、关闭按钮的样式
-    minButton->setStyleSheet("background:none;border:none");
-    closeButton->setStyleSheet("background:none;border:none");
-
-    connect(closeButton, &QToolButton::clicked, this, &RegistWindow::windowclosed);
-    connect(minButton, &QToolButton::clicked, this, &RegistWindow::windowmin);
 
     //如果服务器收到注册的packet会返回iqReceived()信号，获取信号并处理
     connect(client, &QXmppClient::iqReceived, this, &RegistWindow::iqReceived);
@@ -111,38 +72,6 @@ void RegistWindow::Regist()
     iq.setPassword(passwd);
     client->sendPacket(iq);
 
-}
-
-
-
-//Mouse Move
-void RegistWindow::mousePressEvent(QMouseEvent *e)
-{
-    last=e->globalPos();
-}
-void RegistWindow::mouseMoveEvent(QMouseEvent *e)
-{
-    int dx = e->globalX() - last.x();
-    int dy = e->globalY() - last.y();
-    last = e->globalPos();
-    move(x()+dx, y()+dy);
-}
-void RegistWindow::mouseReleaseEvent(QMouseEvent *e)
-{
-    int dx = e->globalX() - last.x();
-    int dy = e->globalY() - last.y();
-    move(x()+dx, y()+dy);
-}
-
-
-//
-void RegistWindow::windowclosed()
-{
-    this->close();
-}
-void RegistWindow::windowmin()
-{
-    this->showMinimized();
 }
 
 void RegistWindow::iqReceived(const QXmppIq &recIq)

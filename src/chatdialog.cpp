@@ -2,22 +2,20 @@
 #include "ui_chatdialog.h"
 #include <QBitmap>
 #include <QPainter>
-#include <QToolButton>
-#include <QMouseEvent>
-#include <QToolButton>
 #include <QPixmap>
-#include <QStyle>
 #include <QDesktopWidget>
 #include <QMessageBox>
 #include <NoweGlobal.h>
 #include <QXmppUtils.h>
 
 ChatDialog::ChatDialog(QWidget *parent) :
-    QDialog(parent),
+    NoweBaseWindow(parent),
     ui(new Ui::ChatDialog)
 {
     //做一些默认设置，用户调用下面的函数能覆盖掉
     ui->setupUi(this);
+    NoweBaseWindow::initNoweStyle();
+
     document=ui->messBox->document();
     rootFrame=document->rootFrame();
     inMsgFormat.setAlignment(Qt::AlignLeft);
@@ -48,47 +46,6 @@ ChatDialog::ChatDialog(QWidget *parent) :
     ui->button2->setPixmap(button2);
     ui->button2->setScaledContents(true);
 
-    //不显示标题
-    setWindowFlags(Qt::FramelessWindowHint);
-
-    //Show in the center
-    QDesktopWidget *deskdop=QApplication::desktop();
-    move((deskdop->width()-this->width())/2, (deskdop->height()-this->height())/2);
-
-
-    QToolButton *minButton = new QToolButton(this);
-    QToolButton *closeButton= new QToolButton(this);
-
-
-    //获取最小化、关闭按钮图标
-    QPixmap minPix= style()->standardPixmap(QStyle::SP_TitleBarMinButton);
-    QPixmap closePix = style()->standardPixmap(QStyle::SP_TitleBarCloseButton);
-
-
-    //设置最小化、关闭按钮图标
-    minButton->setIcon(minPix);
-    closeButton->setIcon(closePix);
-
-    //设置最小化、关闭按钮在界面的位置
-
-    minButton->setGeometry(this->width()-46,5,20,20);
-    closeButton->setGeometry(this->width()-25,5,20,20);
-
-
-    //设置鼠标移至按钮上的提示信息
-
-    minButton->setToolTip(tr("最小化"));
-
-    closeButton->setToolTip(tr("关闭"));
-
-    //设置最小化、关闭按钮的样式
-    minButton->setStyleSheet("background:none;border:none");
-    closeButton->setStyleSheet("background:none;border:none");
-
-
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(windowclosed()) );
-    connect(minButton, SIGNAL(clicked()), this, SLOT(windowmin()));
-
     connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &ChatDialog::on_messageReceived);
     connect(this, &ChatDialog::newMessage, [=](QString sender,QString receiver,QDateTime time,QString content) {
         QXmppMessage msg(sender, receiver, content);
@@ -96,6 +53,9 @@ ChatDialog::ChatDialog(QWidget *parent) :
         msg.setStamp(time);
         Nowe::myClient()->sendPacket(msg);
     });
+
+    save=ui->messBox->textCursor();
+    savepos=ui->messBox->textCursor().position();
 }
 
 ChatDialog::~ChatDialog()
@@ -105,25 +65,38 @@ ChatDialog::~ChatDialog()
 
 void ChatDialog::insertOutMessage(QString msg)
 {
+    ui->messBox->moveCursor(QTextCursor::End);
     //插入对外发送消息，格式都一样，下同！
     QTextCursor cursor=ui->messBox->textCursor();
+    ui->messBox->moveCursor(QTextCursor::End);
+    qDebug()<<savepos<<"\n\n\n\n\n\n\n\n\n\n\n\n";
+    //cursor.setPosition(QTextCursor::Start);
+    //ui->messBox->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     cursor.insertBlock(outMsgFormat);
+    ui->messBox->moveCursor(QTextCursor::End);
     //插入文本块儿
     cursor.setCharFormat(outMsgCharFormat);
+    ui->messBox->moveCursor(QTextCursor::End);
     //设置字符模式
     cursor.insertText(sender);
     cursor.insertText("  ");
     cursor.insertText(QDateTime::currentDateTime().toString(timeFormat));
     cursor.insertText("\n");
     cursor.setCharFormat(plainFormat);
+    ui->messBox->moveCursor(QTextCursor::End);
     cursor.insertText(msg);
     //cursor.insertText("\n");
+    save=ui->messBox->textCursor();
+    savepos=ui->messBox->textCursor().position();
 }
 
 void ChatDialog::insertInMessage(QString msg,QDateTime *time)
 {
+    ui->messBox->moveCursor(QTextCursor::End);
     //插入接受消息，同上
     QTextCursor cursor=ui->messBox->textCursor();
+    //cursor.setPosition(QTextCursor::End);
+    //ui->messBox->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     cursor.insertBlock(inMsgFormat);
     cursor.setCharFormat(inMsgCharFormat);
     cursor.insertText(receiver);
@@ -224,34 +197,6 @@ QPixmap ChatDialog::PixmapToRound(const QPixmap &src, int radius)
     return image;
 }
 
-void ChatDialog::windowclosed()
-{
-    close();
-    //this->close();
-}
-void ChatDialog::windowmin()
-{
-    this->showMinimized();
-}
-
-void ChatDialog::mousePressEvent(QMouseEvent *e)
-{
-    last=e->globalPos();
-}
-void ChatDialog::mouseMoveEvent(QMouseEvent *e)
-{
-    int dx = e->globalX() - last.x();
-    int dy = e->globalY() - last.y();
-    last = e->globalPos();
-    move(x()+dx, y()+dy);
-}
-void ChatDialog::mouseReleaseEvent(QMouseEvent *e)
-{
-    int dx = e->globalX() - last.x();
-    int dy = e->globalY() - last.y();
-    move(x()+dx, y()+dy);
-}
-
 void ChatDialog::on_sendBtn_clicked()
 {
     //点击发送按钮后发射信号，清空文本区
@@ -263,4 +208,9 @@ void ChatDialog::on_sendBtn_clicked()
 void ChatDialog::on_cancleBtn_clicked()
 {
     close();
+}
+
+void ChatDialog::on_messBox_cursorPositionChanged()
+{
+    //ui->messBox->moveCursor(QTextCursor::End);
 }

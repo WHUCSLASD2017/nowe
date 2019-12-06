@@ -19,6 +19,7 @@ public:
     ~NotificationPanel();
     QXmppClient * client;
     QString jid;
+    QString username;
     void setJid(QString jid);
     void startAnimation();
     void setTitle(QString title);
@@ -29,7 +30,7 @@ public:
     void setAgreeButtonTitle(QString title);
     void setRejectButtonTitle(QString title);
     void setIconForMessage();
-    void setMessageReceiveMode(QString id, QString content, const QXmppMessage &message);
+    void setMessageReceiveMode(QString id, QString content, const QXmppMessage &message, QString username);
     bool messageMode=false;
     QXmppMessage message;
 

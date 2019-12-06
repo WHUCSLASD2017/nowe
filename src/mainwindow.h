@@ -48,6 +48,7 @@ public:
     void on_presenceChanged();
     void addFriend();
     void flushAllFriends();
+    QString username;
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;

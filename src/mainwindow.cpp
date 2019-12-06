@@ -512,12 +512,13 @@ void MainWindow::on_subscriptionReceived(const QString &bareJid)
 
 void MainWindow::on_messageReceived(const QXmppMessage &msg)
 {
+    username=ui->nickname->text();
     auto senderID=QXmppUtils::jidToBareJid(msg.from());
     auto msgBody=msg.body();
     if((!msg.body().isEmpty())&&(!ChatDialog::ifChatDialogExist(senderID)))
     {
     NotificationPanel *notice=new NotificationPanel(this,client);
-    notice->setMessageReceiveMode(senderID,msgBody,msg);
+    notice->setMessageReceiveMode(senderID,msgBody,msg,username);
     notice->show();
     notice->startAnimation();
     }

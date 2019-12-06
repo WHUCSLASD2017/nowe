@@ -95,7 +95,7 @@ void NotificationPanel::setIconForMessage()
     ui->icon->setPixmap(QPixmap(":/images/mail.png"));
 }
 
-void NotificationPanel::setMessageReceiveMode(QString id,QString content,const QXmppMessage &message)
+void NotificationPanel::setMessageReceiveMode(QString id,QString content,const QXmppMessage &message,QString username)
 {
     setIconForMessage();
     setTitle("新消息");
@@ -106,6 +106,7 @@ void NotificationPanel::setMessageReceiveMode(QString id,QString content,const Q
     setAgreeButtonTitle("查看消息");
     setRejectButtonTitle("忽略消息");
     this->message=message;
+    this->username=username;
     messageMode=true;
 }
 
@@ -118,6 +119,8 @@ void NotificationPanel::on_agreeBtn_clicked()
      close();
     }
     else{
+        ChatDialog::getChatDialog(QXmppUtils::jidToBareJid(message.from()),username,"",QXmppUtils::jidToBareJid(message.from()),QPixmap());
+        close();
     }
 }
 

@@ -449,6 +449,19 @@ background:none;</string>
               <string/>
              </property>
             </widget>
+            <widget class="QPushButton" name="pushButton_5">
+             <property name="geometry">
+              <rect>
+               <x>140</x>
+               <y>0</y>
+               <width>93</width>
+               <height>28</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>添加</string>
+             </property>
+            </widget>
            </widget>
           </item>
          </layout>

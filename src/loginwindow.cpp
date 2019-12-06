@@ -1,4 +1,4 @@
-#include "loginwindow.h"
+﻿#include "loginwindow.h"
 #include "ui_loginwindow.h"
 #include "NoweGlobal.h"
 #include "registwindow.h"
@@ -89,6 +89,8 @@ void LoginWindow::Login()
     QString jid = ui->jidLnEdt->text();
     QString passwd = ui->passwdLnEdt->text();
 
+    QXmppBookmarkManager *mybook = new QXmppBookmarkManager;
+    client->addExtension(mybook);
 
     QPropertyAnimation *anime=new QPropertyAnimation(ui->loginLabel,"geometry");
     anime->setDuration(1000);

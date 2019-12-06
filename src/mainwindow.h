@@ -8,6 +8,13 @@
 #include <QXmppClient.h>
 #include "groupmanager.h"
 #include "addnewfriend.h"
+#include <QXmppMucManager.h>
+#include <QXmppBookmarkManager.h>
+#include <QXmppBookmarkSet.h>
+#include <QXmppDiscoveryManager.h>
+#include <QXmppPubSubIq.h>
+#include "groupmanager.h"
+#include "addnewfriend.h"
 
 
 namespace Ui {
@@ -36,6 +43,10 @@ public:
 
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
 
+    void createRoom(QString roomName);
+
+    void createBookMark(QString markName);
+
     void setAvatar(QPixmap &avatar, int length, int width, int radius);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
     void setMainTitle(QString string);
@@ -53,6 +64,9 @@ public:
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
+
+    QXmppBookmarkManager *myBookMarkManager;
+    QXmppMucManager *myRoomManager;
     bool loadDone=false;
 
 public slots:
@@ -78,6 +92,13 @@ private slots:
     void on_clientVCardReceived();
 
     void on_rosterReceived();
+
+    void on_roomReceived(const QXmppBookmarkSet &bookmarks);
+
+
+    void setMucManager();
+
+
 
 signals:
     void friendClicked(QString usrName);

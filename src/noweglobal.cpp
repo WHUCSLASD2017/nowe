@@ -1,4 +1,4 @@
-#include <NoweGlobal.h>
+﻿#include <NoweGlobal.h>
 #include <QXmppVCardManager.h>
 
 namespace Nowe {
@@ -26,6 +26,17 @@ QString myJid() {
 
 QString myJidBare() {
     return myClient()->configuration().jidBare();
+}
+
+void sendBookMarkRequest()
+{
+    QXmppPubSubIq pbiq;
+    pbiq.setQueryType(QXmppPubSubIq::ItemsQuery);
+    pbiq.setQueryNode("storage:bookmarks");
+    pbiq.setType(QXmppIq::Get);
+    pbiq.setFrom(Nowe::myJid());
+    myClient()->sendPacket(pbiq);
+
 }
 
 }

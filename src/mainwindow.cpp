@@ -23,6 +23,7 @@
 #include <QImageReader>
 #include <QXmppRosterManager.h>
 #include <QXmppDiscoveryManager.h>
+#include "notificationpanel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -508,6 +509,9 @@ void MainWindow::on_AddItemBtn_clicked()
 
 void MainWindow::on_subscriptionReceived(const QString &bareJid)
 {
-    qDebug()<<"aaaaaaaaaaaaaaaaaaaaa"<<bareJid;
+    NotificationPanel *notice=new NotificationPanel(this,client);
+    notice->show();
+    notice->setJid(bareJid);
+    updateAllFriends();
 }
 

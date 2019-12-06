@@ -8,7 +8,10 @@
 #include <QXmppClient.h>
 #include "groupmanager.h"
 #include "addnewfriend.h"
-
+#include <QXmppMucManager.h>
+#include <QXmppBookmarkManager.h>
+#include <QXmppBookmarkSet.h>
+#include <QXmppDiscoveryManager.h>
 
 namespace Ui {
 class MainWindow;
@@ -35,6 +38,9 @@ public:
     QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
 
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
+    void createRoom(QString roomName);
+
+    void createBookMark(QString markName);
 
     void setAvatar(QPixmap &avatar, int length, int width, int radius);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
@@ -54,6 +60,8 @@ private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
     bool loadDone=false;
+    QXmppBookmarkManager *bookMarkManager;
+    QXmppMucManager *roomManager;
 
 public slots:
     void windowclosed();
@@ -78,6 +86,9 @@ private slots:
     void on_clientVCardReceived();
 
     void on_rosterReceived();
+
+    void on_roomReceived(const QXmppDiscoveryIq& iq);
+
 
 signals:
     void friendClicked(QString usrName);

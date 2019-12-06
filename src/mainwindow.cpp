@@ -66,8 +66,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->messageTree->setIndentation(0);
     setMenu();
 
+    //添加扩展
+    bookMarkManager = new QXmppBookmarkManager();
+    roomManager = new QXmppMucManager();
+
+
     client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
 
+    client->addExtension(bookMarkManager);
+    client->addExtension(roomManager);
     // 当服务器发送 VCard 时更新主窗口上个人资料
     connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::clientVCardReceived,
             this, &MainWindow::on_clientVCardReceived);
@@ -84,6 +91,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &MainWindow::on_messageReceived);
 
     loadDone=false;
+/*
+    connect(client->findExtension<QXmppBookmarkManager>(), &QXmppBookmarkManager::bookmarksReceived,
+            this, &MainWindow::on_roomReceived);
+*/
+
+    //向服务器请求发送群组列表
+    auto discov = client->findExtension<QXmppDiscoveryManager>();
+    discov->requestItems("conference.chirsz.cc");
+
+    connect(discov, &QXmppDiscoveryManager::itemsReceived,this, &MainWindow::on_roomReceived);
+
 
     //这一部分测试用的，试着添加一部分内容
 //    QTreeWidgetItem *a=createFriendGroup("123发");
@@ -95,12 +113,13 @@ MainWindow::MainWindow(QWidget *parent) :
 //    setFriendToTop(f,"new","new",":/images/4.png",a);
 
     //createMessage("5555","66666",":/images/3.png");
-    addRoom("11","22");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    if(!bookMarkManager) delete bookMarkManager;
+    if(!roomManager)    delete roomManager;
 }
 
 void MainWindow::setMenu()
@@ -261,7 +280,6 @@ QWidget *MainWindow::createItem(QString jid,QString mainTitle, QString iconAddr,
 
     hLayout->setMargin(10);
     myItem->setLayout(hLayout);
-
 
     return myItem;
 }
@@ -526,3 +544,85 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     notice->startAnimation();
     }
 }
+//更新群组列表
+void MainWindow::on_roomReceived(const QXmppDiscoveryIq& iq)
+{
+    QList<QXmppDiscoveryIq::Item>items =  iq.items();
+    QString avad = "11";    //群组列表头像
+    foreach(QXmppDiscoveryIq::Item it, items)
+    {
+        addRoom(it.name(),avad);
+    }
+    /*-------------------书签操作-------------------------*/
+
+
+
+    /*-----------------------------------*/
+    /*auto discov = client->findExtension<QXmppDiscoveryManager>();
+    qDebug()<<discov->clientCapabilitiesNode();*/
+    //qDebug()<<discov->requestItems("conference.chirsz.cc");
+
+
+
+}
+
+void MainWindow::createBookMark(QString markName)
+{
+    //加载已存在的书签
+    auto markMsg = client->findExtension<QXmppBookmarkManager>();
+    QXmppBookmarkSet markset = markMsg->bookmarks();
+
+    //服务器书签列表
+    QList<QXmppBookmarkConference> markList= markset.conferences();
+
+    //服务器名
+    QString serverName = "chirsz.cc";
+    //聊天室JID
+    QString jid=markName+"@conference."+serverName;
+
+    //增加书签，暂时注释
+    QXmppBookmarkConference * bm = new QXmppBookmarkConference;
+
+    bm->setJid(jid);
+    markList.append(*bm);
+    markset.setConferences(markList);
+    qDebug()<<markMsg->setBookmarks(markset);
+
+}
+
+
+//创建一个新的群组
+void MainWindow::createRoom(QString roomName)
+{
+    auto roomMsg = client->findExtension<QXmppMucManager>();
+    //服务器名
+    QString serverName = "chirsz.cc";
+    //聊天室JID
+    QString jid=roomName+"@conference."+serverName;
+
+    QList<QXmppMucRoom*> rooms = roomMsg->rooms();
+
+    //查询聊天室JID是否冲突
+    foreach(QXmppMucRoom* r, rooms)
+    {
+        qDebug()<<r->jid();
+        if(r->jid() == jid)
+        {
+            return ;
+        }
+    }
+
+    //添加群组
+    QXmppMucRoom*  m_pRoom = roomMsg->addRoom(jid);
+    if(m_pRoom)
+    {
+        //群名片
+        m_pRoom->setNickName("theDip");
+        //进入群
+        m_pRoom->join();
+    }
+}
+
+
+
+

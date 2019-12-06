@@ -482,14 +482,6 @@ void MainWindow::addFriend()
 }
 
 
-void MainWindow::on_pushButton_5_clicked()
-{
-
-    AddNewFriend *dialog=new AddNewFriend(client,this);
-    dialog->show();
-    dialog->setWindowModality(Qt::ApplicationModal);
-    updateAllFriends();
-}
 
 void MainWindow::flushAllFriends()
 {
@@ -501,4 +493,13 @@ void MainWindow::updateAllFriends()
     flushAllFriends();
     grpMng.flush();
     on_rosterReceived();
+}
+
+void MainWindow::on_AddButton_clicked()
+{
+
+    AddNewFriend *dialog=new AddNewFriend(client,this);
+    dialog->show();
+    dialog->setWindowModality(Qt::ApplicationModal);
+    updateAllFriends();
 }

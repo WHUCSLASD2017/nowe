@@ -10,7 +10,7 @@ class GroupManager
 public:
     GroupManager();
     QMap<QString,QTreeWidgetItem *> groups;
-    QTreeWidgetItem *getGrpAddr(QString grpName,QMainWindow *window);
+    QTreeWidgetItem *getGrpAddr(QString grpName,QWidget *window);
 
     void flush();
 };

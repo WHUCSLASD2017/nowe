@@ -298,12 +298,6 @@ QWidget *MainWindow::createRoomItem(QString mainTitle, QString iconAddr)
 }
 
 //
-void MainWindow::windowclosed()
-{
-    client->disconnectFromServer();
-    this->close();
-    QApplication::exit();
-}
 
 
 //主面板跳转页面

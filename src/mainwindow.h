@@ -54,8 +54,6 @@ private:
     bool loadDone=false;
 
 public slots:
-    void windowclosed();
-    void windowmin();
     void updateAllFriends();
 private slots:
     void on_pushButton_3_clicked();

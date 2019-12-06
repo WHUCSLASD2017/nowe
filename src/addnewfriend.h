@@ -3,12 +3,13 @@
 
 #include <QDialog>
 #include <QXmppClient.h>
+#include "nowebasewindow.h"
 
 namespace Ui {
 class AddNewFriend;
 }
 
-class AddNewFriend : public QWidget
+class AddNewFriend : public NoweBaseWindow
 {
     Q_OBJECT
 

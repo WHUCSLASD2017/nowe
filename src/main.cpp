@@ -2,7 +2,6 @@
 #include "loginwindow.h"
 #include "mainwindow.h"
 #include "groupmanager.h"
-#include "addnewfriend.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,8 +11,6 @@ int main(int argc, char *argv[])
 
     LoginWindow w;
     MainWindow m;
-
-
 
     if (w.exec() == QDialog::Accepted) {
         // 登录成功，则转到主窗口

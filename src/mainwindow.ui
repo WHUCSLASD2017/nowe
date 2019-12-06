@@ -120,7 +120,6 @@ color:white;</string>
          </property>
         </widget>
        </widget>
-      </widget>
      </item>
      <item>
       <widget class="QWidget" name="widget_2" native="true">

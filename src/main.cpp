@@ -1,7 +1,6 @@
 #include <QApplication>
 #include "loginwindow.h"
 #include "mainwindow.h"
-#include "groupmanager.h"
 
 int main(int argc, char *argv[])
 {

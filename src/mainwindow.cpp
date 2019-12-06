@@ -69,12 +69,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //添加扩展
     bookMarkManager = new QXmppBookmarkManager();
     roomManager = new QXmppMucManager();
-
+    client->addExtension(bookMarkManager);
+    client->addExtension(roomManager);
 
     client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
 
-    client->addExtension(bookMarkManager);
-    client->addExtension(roomManager);
+
 
     // 当服务器发送 VCard 时更新主窗口上个人资料
     connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::clientVCardReceived,
@@ -113,7 +113,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //    QTreeWidgetItem *e=addFriendtoGroup(a,"1","dfgd",":/images/1.png");
 //    QTreeWidgetItem *f=addFriendtoGroup(a,"2","dfgd",":/images/1.png");
 //    setFriendToTop(f,"new","new",":/images/4.png",a);
-
     //createMessage("5555","66666",":/images/3.png");
 }
 
@@ -556,46 +555,7 @@ void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
     {
         addRoom(it.name(),avad);
     }
-
-    */
-
-    createBookMark("11");
-
-    /*-------------------书签操作-------------------------*/
-
-
-
-    /*-----------------------------------*/
-    /*auto discov = client->findExtension<QXmppDiscoveryManager>();
-    qDebug()<<discov->clientCapabilitiesNode();*/
-    //qDebug()<<discov->requestItems("conference.chirsz.cc");
-
-
-
-}
-
-void MainWindow::createBookMark(QString markName)
-{
-    //加载已存在的书签
-    auto markMsg = client->findExtension<QXmppBookmarkManager>();
-    QXmppBookmarkSet markset = markMsg->bookmarks();
-
-    //服务器书签列表
-    QList<QXmppBookmarkConference> markList= markset.conferences();
-
-    //服务器名
-    QString serverName = "chirsz.cc";
-    //聊天室JID
-    QString jid=markName+"@conference."+serverName;
-
-    //增加书签，暂时注释
-    QXmppBookmarkConference * bm = new QXmppBookmarkConference;
-
-    bm->setJid(jid);
-    markList.append(*bm);
-    markset.setConferences(markList);
-    qDebug()<<markMsg->setBookmarks(markset);
-
+*/
 }
 
 

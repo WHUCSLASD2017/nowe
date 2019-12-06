@@ -57,6 +57,7 @@ public slots:
     void windowclosed();
     void updateAllFriends();
     void on_subscriptionReceived(const QString &bareJid);
+    void on_messageReceived(const QXmppMessage &msg);
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();

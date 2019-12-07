@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>498</width>
+    <width>500</width>
     <height>322</height>
    </rect>
   </property>
@@ -65,7 +65,8 @@ QComboBox {
 QFrame{
 };
 background-color:rgb(255, 255, 255);
-border-image:none;
+border:1px solid rgb(34, 204, 254);
+background-color: rgb(255, 255, 255);
 </string>
        </property>
        <property name="frameShape">
@@ -74,138 +75,257 @@ border-image:none;
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <widget class="QPushButton" name="loginBtn">
+       <widget class="QFrame" name="colorBar">
         <property name="geometry">
          <rect>
-          <x>140</x>
-          <y>200</y>
-          <width>81</width>
-          <height>51</height>
+          <x>0</x>
+          <y>0</y>
+          <width>500</width>
+          <height>91</height>
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">QPushButton{
-background-color:rgb(0, 170, 255);
-font:  15pt &quot;微软雅黑&quot;;
-color:rgb(255,255,255);
-border-radius: 5px;
-}QPushButton::hover{
-background-color:rgb(0, 150, 225);
-}
-QPushButton::pressed{
-background-color:rgb(0, 150, 225);
-}</string>
+         <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(76, 139, 255), stop:1 rgba(0, 162, 132, 255));</string>
         </property>
-        <property name="text">
-         <string>登录</string>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
         </property>
-       </widget>
-       <widget class="QPushButton" name="registBtn">
-        <property name="geometry">
-         <rect>
-          <x>280</x>
-          <y>200</y>
-          <width>81</width>
-          <height>51</height>
-         </rect>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
         </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton{
-background-color:rgb(0, 170, 255);
-font:  15pt &quot;微软雅黑&quot;;
-color:rgb(255,255,255);
-border-radius: 5px;
-}QPushButton::hover{
-background-color:rgb(0, 150, 225);
-}
-QPushButton::pressed{
-background-color:rgb(0, 150, 225);
-}</string>
-        </property>
-        <property name="text">
-         <string>注册</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>80</y>
-          <width>81</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-image:none;
+        <widget class="QLabel" name="loginLabel">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>10</y>
+           <width>61</width>
+           <height>61</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>18</pointsize>
+           <weight>12</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-image:none;
 font:100 18pt &quot;微软雅黑&quot;;
-bottom:10px
+bottom:10px;
+border: none;
+background:none;
+</string>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ffffff;&quot;&gt;登录&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="ingLabel">
+         <property name="geometry">
+          <rect>
+           <x>-31</x>
+           <y>10</y>
+           <width>61</width>
+           <height>61</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>18</pointsize>
+           <weight>12</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-image:none;
+font:100 18pt &quot;微软雅黑&quot;;
+bottom:10px;
+border: none;
+background:none;
+</string>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ffffff;&quot;&gt;正在&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QFrame" name="mainFrame">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>100</y>
+          <width>451</width>
+          <height>211</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: none;</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QLabel" name="label">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>40</y>
+           <width>81</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>18</pointsize>
+           <weight>12</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-image:none;
+font:100 18pt &quot;微软雅黑&quot;;
+bottom:10px;
+border: none;
 
 </string>
-        </property>
-        <property name="text">
-         <string>账户</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_2">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>150</y>
-          <width>61</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-image:none;
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;账户&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="jidLnEdt">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>30</y>
+           <width>331</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: 2px solid;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="readOnly">
+          <bool>false</bool>
+         </property>
+         <property name="clearButtonEnabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_2">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>100</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-image:none;
 font:100 18pt &quot;微软雅黑&quot;;
-bottom:10px
+bottom:10px;
+border: none;
 
 </string>
-        </property>
-        <property name="text">
-         <string>密码：</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="jidLnEdt">
-        <property name="geometry">
-         <rect>
-          <x>140</x>
-          <y>80</y>
-          <width>221</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="readOnly">
-         <bool>false</bool>
-        </property>
-        <property name="clearButtonEnabled">
-         <bool>false</bool>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="passwdLnEdt">
-        <property name="geometry">
-         <rect>
-          <x>140</x>
-          <y>140</y>
-          <width>221</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="readOnly">
-         <bool>false</bool>
-        </property>
-        <property name="clearButtonEnabled">
-         <bool>false</bool>
-        </property>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;密码&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="passwdLnEdt">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>90</y>
+           <width>331</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: 2px solid;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="echoMode">
+          <enum>QLineEdit::Password</enum>
+         </property>
+         <property name="readOnly">
+          <bool>false</bool>
+         </property>
+         <property name="clearButtonEnabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="loginBtn">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>150</y>
+           <width>171</width>
+           <height>51</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(75,140,254, 255), stop:1 rgba(31, 205, 255, 255));
+font: bold 10pt &quot;微软雅黑&quot;;
+color:rgb(255,255,255);
+border-radius: 5px;
+border:none;
+}QPushButton::hover{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:1 rgba(75,140,254, 255), stop:0 rgba(31, 205, 255, 255));
+}
+QPushButton::pressed{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0rgba(75,140,254, 255), stop:1 rgba(31, 205, 255, 255));
+}
+</string>
+         </property>
+         <property name="text">
+          <string>登录</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="registBtn">
+         <property name="geometry">
+          <rect>
+           <x>240</x>
+           <y>150</y>
+           <width>181</width>
+           <height>51</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(75,140,254, 255), stop:1 rgba(31, 205, 255, 255));
+font: bold 10pt &quot;微软雅黑&quot;;
+color:rgb(255,255,255);
+border-radius: 5px;
+border:none;
+}QPushButton::hover{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:1 rgba(75,140,254, 255), stop:0 rgba(31, 205, 255, 255));
+}
+QPushButton::pressed{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0rgba(75,140,254, 255), stop:1 rgba(31, 205, 255, 255));
+}
+</string>
+         </property>
+         <property name="text">
+          <string>注册</string>
+         </property>
+        </widget>
        </widget>
       </widget>
      </item>

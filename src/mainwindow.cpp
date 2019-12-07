@@ -75,7 +75,6 @@ MainWindow::MainWindow(QWidget *parent) :
     client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
 
 
-
     // 当服务器发送 VCard 时更新主窗口上个人资料
     connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::clientVCardReceived,
             this, &MainWindow::on_clientVCardReceived);
@@ -482,6 +481,22 @@ void MainWindow::on_rosterReceived()
     loadDone=true;
 }
 
+
+//更新群组列表
+void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
+{
+    /*
+    QList<QXmppDiscoveryIq::Item>items =  iq.items();
+    QString avad = "11";    //群组列表头像
+    foreach(QXmppDiscoveryIq::Item it, items)
+    {
+        addRoom(it.name(),avad);
+    }
+
+    */
+
+}
+    /*-------------------书签操作-------------------------*/
 void MainWindow::on_presenceChanged()
 {
 
@@ -547,7 +562,8 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
 }
 
 //更新群组列表
-void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
+  /*
+void MainWindow::on_roomReceived(const QXmppDiscoveryIq& iq)
 {
     /*
     QList<QXmppDiscoveryIq::Item>items =  iq.items();
@@ -560,8 +576,15 @@ void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
         addRoom(it.name(),avad);
     }
 */
-}
 
+
+
+
+void MainWindow::initRoomList(QXmppBookmarkManager *bookmarkm)
+{
+    QXmppBookmarkSet markset = bookmarkm->bookmarks();
+
+}
 
 
 //创建一个新的群组
@@ -598,11 +621,11 @@ void MainWindow::createRoom(QString roomName)
 
 
 //创建聊天室书签
-void MainWindow::createBookMark(QString markName)
+void MainWindow::createBookMark(QXmppBookmarkManager *bookmarkm, QString markName)
 {
     //加载已存在的书签
-    auto markMsg = client->findExtension<QXmppBookmarkManager>();
-    QXmppBookmarkSet markset = markMsg->bookmarks();
+    //auto markMsg = client->findExtension<QXmppBookmarkManager>();
+    QXmppBookmarkSet markset = bookmarkm->bookmarks();
 
     //服务器书签列表
     QList<QXmppBookmarkConference> markList= markset.conferences();
@@ -618,7 +641,7 @@ void MainWindow::createBookMark(QString markName)
     bm->setJid(jid);
     markList.append(*bm);
     markset.setConferences(markList);
-    qDebug()<<markMsg->setBookmarks(markset);
+    qDebug()<<bookmarkm->setBookmarks(markset);
 
 }
 

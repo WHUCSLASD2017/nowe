@@ -38,10 +38,11 @@ public:
     QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
 
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
+
     void createRoom(QString roomName);
+    void initRoomList(QXmppBookmarkManager *bookmarkm);
 
-
-    void createBookMark(QString markName);
+    void createBookMark(QXmppBookmarkManager *bookmarkm,QString markName);
 
     void setAvatar(QPixmap &avatar, int length, int width, int radius);
     QPixmap PixmapToRound(const QPixmap &src, int radius);

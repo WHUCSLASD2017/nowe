@@ -24,15 +24,15 @@ public:
     QWidget *setItem(QString mainTitle,QString iconAddr,QString subTitle,bool ifVIP=false,bool ifOnline=true);
     QMenu *menu;
 
-    QWidget *createItem(QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
+    QWidget *createItem(QString jid, QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
     QWidget *createRoomItem(QString mainTitle, QString iconAddr);
 
     QTreeWidgetItem *createFriendGroup(QString grpName);
-    QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr);
+    QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
     QTreeWidgetItem *removeFriendOrGroup(QTreeWidgetItem *toSet);
-    QTreeWidgetItem *addFriendtoGroupAtTop(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr);
-    QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, QString avatarAddr, QTreeWidgetItem *grp = nullptr);
-    QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr);
+    QTreeWidgetItem *addFriendtoGroupAtTop(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
+    QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, QString avatarAddr, QTreeWidgetItem *grp = nullptr, QString jid=nullptr);
+    QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
 
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
 
@@ -48,6 +48,8 @@ public:
     void on_presenceChanged();
     void addFriend();
     void flushAllFriends();
+    QString username;
+    void showAddNewFriendPanel(QString jid);
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
@@ -58,6 +60,7 @@ public slots:
     void updateAllFriends();
     void on_subscriptionReceived(const QString &bareJid);
     void on_messageReceived(const QXmppMessage &msg);
+    void on_AddItemBtn_clicked();
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();
@@ -75,8 +78,6 @@ private slots:
     void on_clientVCardReceived();
 
     void on_rosterReceived();
-
-    void on_AddItemBtn_clicked();
 
 signals:
     void friendClicked(QString usrName);

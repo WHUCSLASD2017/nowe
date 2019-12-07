@@ -452,14 +452,18 @@ background:none;</string>
             <widget class="QPushButton" name="AddItemBtn">
              <property name="geometry">
               <rect>
-               <x>140</x>
+               <x>210</x>
                <y>0</y>
-               <width>93</width>
-               <height>28</height>
+               <width>31</width>
+               <height>31</height>
               </rect>
              </property>
+             <property name="styleSheet">
+              <string notr="true">border:none;
+background:none;</string>
+             </property>
              <property name="text">
-              <string>添加</string>
+              <string/>
              </property>
             </widget>
            </widget>

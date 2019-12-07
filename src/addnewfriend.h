@@ -16,6 +16,7 @@ class AddNewFriend : public NoweBaseWindow
 public:
     explicit AddNewFriend(QXmppClient *client,QWidget *parent = nullptr);
     ~AddNewFriend();
+    void setLineEditContent(QString jid);
 
 private:
     Ui::AddNewFriend *ui;

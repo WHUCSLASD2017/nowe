@@ -7,6 +7,9 @@
 #include <QMessageBox>
 #include <NoweGlobal.h>
 #include <QXmppUtils.h>
+#include <QScrollBar>
+
+QMap<QString,ChatDialog *> ChatDialog::openedDialogs;
 
 ChatDialog::ChatDialog(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -88,6 +91,7 @@ void ChatDialog::insertOutMessage(QString msg)
     //cursor.insertText("\n");
     save=ui->messBox->textCursor();
     savepos=ui->messBox->textCursor().position();
+    scrollBarAdjust();
 }
 
 void ChatDialog::insertInMessage(QString msg,QDateTime *time)
@@ -110,6 +114,7 @@ void ChatDialog::insertInMessage(QString msg,QDateTime *time)
     cursor.setCharFormat(plainFormat);
     cursor.insertText(msg);
     //cursor.insertText("\n");
+    scrollBarAdjust();
 }
 
 void ChatDialog::setUserName(QString usr)
@@ -172,10 +177,16 @@ void ChatDialog::setOutMsgFormat(QFont target,Qt::GlobalColor color)
 
 void ChatDialog::on_messageReceived(const QXmppMessage &msg)
 {
-    if (QXmppUtils::jidToBareJid(msg.from()) == sender) {
+    if (QXmppUtils::jidToBareJid(msg.from()) == bareJid) {
         auto time = msg.stamp();
         insertInMessage(msg.body(), &time);
     }
+}
+
+void ChatDialog::windowclosed()
+{
+    closeChatDialog(this);
+    close();
 }
 
 QPixmap ChatDialog::PixmapToRound(const QPixmap &src, int radius)
@@ -197,6 +208,25 @@ QPixmap ChatDialog::PixmapToRound(const QPixmap &src, int radius)
     return image;
 }
 
+QString ChatDialog::getBareJid() const
+{
+    return bareJid;
+}
+
+void ChatDialog::setBareJid(const QString &value)
+{
+    bareJid = value;
+}
+
+void ChatDialog::scrollBarAdjust()
+{
+    QScrollBar *scrollBar=ui->messBox->verticalScrollBar();
+    if (scrollBar)
+    {
+        scrollBar->setSliderPosition(scrollBar->maximum());
+    }
+}
+
 void ChatDialog::on_sendBtn_clicked()
 {
     //点击发送按钮后发射信号，清空文本区
@@ -207,10 +237,48 @@ void ChatDialog::on_sendBtn_clicked()
 
 void ChatDialog::on_cancleBtn_clicked()
 {
+    closeChatDialog(this);
     close();
 }
 
 void ChatDialog::on_messBox_cursorPositionChanged()
 {
     //ui->messBox->moveCursor(QTextCursor::End);
+}
+
+// 获取聊天窗口的指针，如果不存在，则打开一个新的聊天窗口
+ChatDialog *ChatDialog::getChatDialog(QString bareJid,QString username,QString signature,QString receiver,QPixmap avatar)
+{
+
+    QMap<QString,ChatDialog *>::const_iterator i= openedDialogs.find(bareJid);
+    if(i==openedDialogs.end())
+    {
+        ChatDialog *chat=new ChatDialog();
+        chat->setUserName(username);
+        chat->setBareJid(bareJid);
+        chat->setSignature(signature);
+        chat->setReceiver(receiver);
+        chat->setAvatar(avatar,80,80,45);
+        chat->show();
+        openedDialogs.insert(bareJid,chat);
+        return chat;
+    }
+    else {
+        return i.value();
+    }
+}
+
+bool ChatDialog::ifChatDialogExist(QString jid)
+{
+    QMap<QString,ChatDialog *>::const_iterator i= openedDialogs.find(jid);
+    return !(i==openedDialogs.end());
+
+}
+
+void ChatDialog::closeChatDialog(ChatDialog *dialog)
+{
+    QString jid=openedDialogs.key(dialog);
+    QMap<QString,ChatDialog *>::iterator i= openedDialogs.find(jid);
+    openedDialogs.erase(i);
+    qDebug()<<"             erase!";
 }

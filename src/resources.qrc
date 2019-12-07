@@ -12,5 +12,8 @@
         <file>images/a.png</file>
         <file>images/room.png</file>
         <file>images/find.png</file>
+        <file>images/notice.png</file>
+        <file>images/mail.png</file>
+        <file>images/add.png</file>
     </qresource>
 </RCC>

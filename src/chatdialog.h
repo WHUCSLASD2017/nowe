@@ -30,6 +30,14 @@ public:
     void setInMsgFormat(QFont target,Qt::GlobalColor color);
     void setOutMsgFormat(QFont target,Qt::GlobalColor color);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
+    static QMap<QString,ChatDialog *> openedDialogs;
+    QString bareJid;
+    static ChatDialog *getChatDialog(QString bareJid, QString username, QString signature, QString receiver, QPixmap avatar);
+    static bool ifChatDialogExist(QString jid);
+    static void closeChatDialog(ChatDialog *dialog);
+    QString getBareJid() const;
+    void setBareJid(const QString &value);
+    void scrollBarAdjust();
 
 private:
     Ui::ChatDialog *ui;
@@ -49,6 +57,7 @@ private:
 
 public slots:
     void on_messageReceived(const QXmppMessage &msg);
+    void windowclosed() override;
 
 signals:
     void newMessage(QString sender,QString receiver,QDateTime time,QString content);

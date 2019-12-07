@@ -28,6 +28,7 @@ public slots:
 private slots:
     void on_ok_clicked();
     void sendNewVCard();
+    void on_change_clicked();
 };
 
 #endif // DATAFRAME_H

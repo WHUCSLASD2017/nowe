@@ -100,7 +100,7 @@ bool ChangeHeaderWnd::eventFilter(QObject* watched, QEvent* event)
 
 void ChangeHeaderWnd::onUpload()
 {
-    QString strFilePath = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择上传图片"), "./", tr("Image files(*.bmp *.jpg *.pbm *.pgm *.png *.ppm *.xbm *.xpm);;All files (*.*)"));
+    QString strFilePath = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择上传图片"), "./", tr("Image files(*.bmp *.jpg *.pbm *.pgm *.png *.ppm *.xbm *.xpm *.jpeg);;All files (*.*)"));
     if (strFilePath.isEmpty())
     {
         return;

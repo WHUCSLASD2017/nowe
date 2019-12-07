@@ -91,14 +91,14 @@ void LoginWindow::Login()
 
 
     QPropertyAnimation *anime=new QPropertyAnimation(ui->loginLabel,"geometry");
-    anime->setDuration(3000);
+    anime->setDuration(1000);
     anime->setStartValue(QRect(75,23,61,61));
     anime->setEndValue(QRect(-70,23,61,61));
     anime->setEasingCurve(QEasingCurve::OutCubic);
     anime->start();
 
     QPropertyAnimation *anime2=new QPropertyAnimation(ui->ingLabel,"geometry");
-    anime2->setDuration(3000);
+    anime2->setDuration(1000);
     anime2->setStartValue(QRect(15,22,61,61));
     anime2->setEndValue(QRect(-180,22,61,61));
     anime2->setEasingCurve(QEasingCurve::OutCubic);
@@ -109,7 +109,7 @@ void LoginWindow::Login()
     ui->ingLabel->setGraphicsEffect(m_pGraphicsOpacityEffect1);
 
     QPropertyAnimation *anime3=new QPropertyAnimation(m_pGraphicsOpacityEffect1,"opacity");
-    anime3->setDuration(500);
+    anime3->setDuration(200);
     anime3->setStartValue(0);
     anime3->setEndValue(1);
     anime3->setEasingCurve(QEasingCurve::OutCubic);

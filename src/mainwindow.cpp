@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     client->addExtension(bookMarkManager);
     client->addExtension(roomManager);
+
     // 当服务器发送 VCard 时更新主窗口上个人资料
     connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::clientVCardReceived,
             this, &MainWindow::on_clientVCardReceived);
@@ -91,16 +92,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &MainWindow::on_messageReceived);
 
     loadDone=false;
-/*
+
+
     connect(client->findExtension<QXmppBookmarkManager>(), &QXmppBookmarkManager::bookmarksReceived,
             this, &MainWindow::on_roomReceived);
-*/
+
 
     //向服务器请求发送群组列表
     auto discov = client->findExtension<QXmppDiscoveryManager>();
     discov->requestItems("conference.chirsz.cc");
 
-    connect(discov, &QXmppDiscoveryManager::itemsReceived,this, &MainWindow::on_roomReceived);
+    //connect(discov, &QXmppDiscoveryManager::itemsReceived,this, &MainWindow::on_roomReceived);
 
 
     //这一部分测试用的，试着添加一部分内容
@@ -388,7 +390,7 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
         QList<QLabel *> labelList = now->findChildren<QLabel *>();
         emit friendClicked(labelList[1]->text());
         QPixmap avatar;
-        avatar.load(labelList[3]->text());        
+        avatar.load(labelList[3]->text());
         ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
     }
 }
@@ -545,14 +547,20 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     }
 }
 //更新群组列表
-void MainWindow::on_roomReceived(const QXmppDiscoveryIq& iq)
+void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
 {
+    /*
     QList<QXmppDiscoveryIq::Item>items =  iq.items();
     QString avad = "11";    //群组列表头像
     foreach(QXmppDiscoveryIq::Item it, items)
     {
         addRoom(it.name(),avad);
     }
+
+    */
+
+    createBookMark("11");
+
     /*-------------------书签操作-------------------------*/
 
 

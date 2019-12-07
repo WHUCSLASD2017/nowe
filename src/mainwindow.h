@@ -87,7 +87,7 @@ private slots:
 
     void on_rosterReceived();
 
-    void on_roomReceived(const QXmppDiscoveryIq& iq);
+    void on_roomReceived(const QXmppBookmarkSet &bookmarks);
 
 
 signals:

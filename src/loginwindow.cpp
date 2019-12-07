@@ -84,20 +84,23 @@ void LoginWindow::reject()
 // 登录
 void LoginWindow::Login()
 {
+    ui->colorBar->setVisible(true);
+    ui->colorBar_2->setVisible(false);
     QString jid = ui->jidLnEdt->text();
     QString passwd = ui->passwdLnEdt->text();
 
+
     QPropertyAnimation *anime=new QPropertyAnimation(ui->loginLabel,"geometry");
-    anime->setDuration(1000);
-    anime->setStartValue(QRect(30,10,61,61));
-    anime->setEndValue(QRect(91,35,61,61));
+    anime->setDuration(3000);
+    anime->setStartValue(QRect(75,23,61,61));
+    anime->setEndValue(QRect(-70,23,61,61));
     anime->setEasingCurve(QEasingCurve::OutCubic);
     anime->start();
 
     QPropertyAnimation *anime2=new QPropertyAnimation(ui->ingLabel,"geometry");
-    anime2->setDuration(1000);
-    anime2->setStartValue(QRect(-31,10,61,61));
-    anime2->setEndValue(QRect(30,35,61,61));
+    anime2->setDuration(3000);
+    anime2->setStartValue(QRect(15,22,61,61));
+    anime2->setEndValue(QRect(-180,22,61,61));
     anime2->setEasingCurve(QEasingCurve::OutCubic);
     anime2->start();
 
@@ -112,21 +115,34 @@ void LoginWindow::Login()
     anime3->setEasingCurve(QEasingCurve::OutCubic);
     anime3->start();
 
-    QPropertyAnimation *anime4=new QPropertyAnimation(ui->colorBar,"geometry");
-    anime4->setDuration(500);
-    anime4->setStartValue(QRect(0,0,500,91));
-    anime4->setEndValue(QRect(0,-40,500,91));
-    anime4->setEasingCurve(QEasingCurve::OutCubic);
-    anime4->start();
-
     QPropertyAnimation *anime5=new QPropertyAnimation(ui->mainFrame,"geometry");
-    anime5->setDuration(2000);
+    anime5->setDuration(1000);
     anime5->setStartValue(QRect(20,100,451,211));
     anime5->setEndValue(QRect(20,100,451,211));
-    anime5->setKeyValueAt(0.5,QRect(20,500,451,211));
+    anime5->setKeyValueAt(0.0001,QRect(20,500,451,211));
     anime5->setKeyValueAt(0.9,QRect(20,500,451,211));
     anime5->setEasingCurve(QEasingCurve::InCubic);
     anime5->start();
+
+    QPropertyAnimation *anime4=new QPropertyAnimation(ui->colorBar,"geometry");
+    anime4->setDuration(1);
+    anime4->setStartValue(QRect(0,0,500,91));
+    anime4->setEndValue(QRect(0,0,500,322));
+    anime4->setEasingCurve(QEasingCurve::OutCubic);
+    anime4->start();
+
+    QEventLoop eventloop2;
+    QTimer::singleShot(200, &eventloop2, SLOT(quit())); //wait 2s
+    eventloop2.exec();
+
+    QPropertyAnimation *anime50=new QPropertyAnimation(ui->colorBar,"geometry");
+    anime50->setDuration(500);
+    anime50->setStartValue(QRect(0,0,500,322));
+    anime50->setKeyValueAt(0.5,QRect(-400,0,1000,322));
+    anime50->setEndValue(QRect(0,0,500,322));
+    anime50->setEasingCurve(QEasingCurve::Linear);
+    anime50->setLoopCount(10);
+    anime50->start();
 
     QPropertyAnimation *animation4=new QPropertyAnimation(this,"geometry");
     animation4->setDuration(200);
@@ -139,7 +155,7 @@ void LoginWindow::Login()
     animation4->setEndValue(QRect(x,y,500,400));
     animation4->setEasingCurve(QEasingCurve::OutBounce);
     animation4->setLoopCount(10);
-    animation4->start();
+    //animation4->start();
 
     QEventLoop eventloop;
     QTimer::singleShot(700, &eventloop, SLOT(quit())); //wait 2s
@@ -151,6 +167,9 @@ void LoginWindow::Login()
     config.setPort(5222);
     config.setIgnoreSslErrors(true);
     client->connectToServer(config);
+
+    ui->colorBar->setVisible(false);
+    ui->colorBar_2->setVisible(true);
 }
 
 // 跳转注册界面

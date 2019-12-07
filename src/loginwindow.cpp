@@ -128,6 +128,19 @@ void LoginWindow::Login()
     anime5->setEasingCurve(QEasingCurve::InCubic);
     anime5->start();
 
+    QPropertyAnimation *animation4=new QPropertyAnimation(this,"geometry");
+    animation4->setDuration(200);
+    int x=frameGeometry().x();
+    int y=frameGeometry().y();
+    animation4->setStartValue(QRect(x,y,500,400));
+    animation4->setKeyValueAt(0.25,QRect(x+30,y+30,500,400));
+    animation4->setKeyValueAt(0.5,QRect(x,y+30,500,400));
+    animation4->setKeyValueAt(0.75,QRect(x+30,y,500,400));
+    animation4->setEndValue(QRect(x,y,500,400));
+    animation4->setEasingCurve(QEasingCurve::OutBounce);
+    animation4->setLoopCount(10);
+    animation4->start();
+
     QEventLoop eventloop;
     QTimer::singleShot(700, &eventloop, SLOT(quit())); //wait 2s
     eventloop.exec();

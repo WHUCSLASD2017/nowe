@@ -176,7 +176,7 @@ bottom:10px
          </rect>
         </property>
         <property name="text">
-         <string>q@chirsz.cc</string>
+         <string/>
         </property>
         <property name="readOnly">
          <bool>false</bool>
@@ -195,7 +195,7 @@ bottom:10px
          </rect>
         </property>
         <property name="text">
-         <string>q</string>
+         <string/>
         </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>

@@ -12,6 +12,10 @@
 #include <QXmppBookmarkManager.h>
 #include <QXmppBookmarkSet.h>
 #include <QXmppDiscoveryManager.h>
+#include <QXmppPubSubIq.h>
+#include "groupmanager.h"
+#include "addnewfriend.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -40,9 +44,8 @@ public:
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
 
     void createRoom(QString roomName);
-    void initRoomList(QXmppBookmarkManager *bookmarkm);
 
-    void createBookMark(QXmppBookmarkManager *bookmarkm,QString markName);
+    void createBookMark(QString markName);
 
     void setAvatar(QPixmap &avatar, int length, int width, int radius);
     QPixmap PixmapToRound(const QPixmap &src, int radius);
@@ -61,9 +64,10 @@ public:
 private:
     Ui::MainWindow *ui;
     QXmppClient *const client;
+
+    QXmppBookmarkManager *myBookMarkManager;
+    QXmppMucManager *myRoomManager;
     bool loadDone=false;
-    QXmppBookmarkManager *bookMarkManager;
-    QXmppMucManager *roomManager;
 
 public slots:
     void windowclosed();
@@ -91,6 +95,11 @@ private slots:
 
     void on_roomReceived(const QXmppBookmarkSet &bookmarks);
 
+
+    void setMucManager();
+
+
+    void on_pushButton_5_clicked();
 
 signals:
     void friendClicked(QString usrName);

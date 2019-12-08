@@ -1,10 +1,12 @@
-#ifndef LOGINWINDOW_H
+﻿#ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 
 #include "nowebasewindow.h"
 #include <QDialog>
 #include <QXmppClient.h>
 #include <QEventLoop>
+#include <QXmppBookmarkManager.h>
+#include <QXmppMucManager.h>
 
 namespace Ui {
 class LoginWindow;

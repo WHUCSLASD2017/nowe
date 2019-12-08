@@ -1,4 +1,4 @@
-#include "loginwindow.h"
+﻿#include "loginwindow.h"
 #include "ui_loginwindow.h"
 #include "NoweGlobal.h"
 #include "registwindow.h"
@@ -160,6 +160,9 @@ void LoginWindow::Login()
     QEventLoop eventloop;
     QTimer::singleShot(700, &eventloop, SLOT(quit())); //wait 2s
     eventloop.exec();
+    QXmppBookmarkManager *mybook = new QXmppBookmarkManager;
+
+    client->addExtension(mybook);
 
     QXmppConfiguration config;
     config.setJid(jid);

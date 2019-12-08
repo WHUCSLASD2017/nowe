@@ -66,13 +66,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->messageTree->setIndentation(0);
     setMenu();
 
-    //添加扩展
-    bookMarkManager = new QXmppBookmarkManager();
-    roomManager = new QXmppMucManager();
-    client->addExtension(bookMarkManager);
-    client->addExtension(roomManager);
-
     client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
+
+    //添加扩展
+    myBookMarkManager = new QXmppBookmarkManager();
+    myRoomManager = new QXmppMucManager();
+    myBookMarkManager = client->findExtension<QXmppBookmarkManager>();
+    client->addExtension(myRoomManager);
+
 
 
     // 当服务器发送 VCard 时更新主窗口上个人资料
@@ -93,16 +94,24 @@ MainWindow::MainWindow(QWidget *parent) :
     loadDone=false;
 
 
+    //向服务器请求并发送群组列表
+
     connect(client->findExtension<QXmppBookmarkManager>(), &QXmppBookmarkManager::bookmarksReceived,
             this, &MainWindow::on_roomReceived);
 
 
-    //向服务器请求发送群组列表
-    auto discov = client->findExtension<QXmppDiscoveryManager>();
-    discov->requestItems("conference.chirsz.cc");
+    //auto discov = client->findExtension<QXmppDiscoveryManager>();
+    //discov->requestItems("conference.chirsz.cc");
+
+
+
+    //initRoomList(bookMarkManager);
 
     //connect(discov, &QXmppDiscoveryManager::itemsReceived,this, &MainWindow::on_roomReceived);
 
+
+
+    loadDone=false;
 
     //这一部分测试用的，试着添加一部分内容
 //    QTreeWidgetItem *a=createFriendGroup("123发");
@@ -115,11 +124,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //createMessage("5555","66666",":/images/3.png");
 }
 
+
 MainWindow::~MainWindow()
 {
     delete ui;
-    if(!bookMarkManager) delete bookMarkManager;
-    if(!roomManager)    delete roomManager;
+    if(!myBookMarkManager) delete myBookMarkManager;
+    if(myRoomManager)    delete myRoomManager;
 }
 
 void MainWindow::setMenu()
@@ -174,19 +184,6 @@ QTreeWidgetItem *MainWindow::createMessage(QString mainTitle,QString subTitle,QS
     return item1;
 }
 
-//在群组面板添加一个群组
-QTreeWidgetItem *MainWindow::addRoom(QString roomName,QString avatarAddr)
-{
-    //暂时把头像文件写死
-    avatarAddr = ":/images/room.png";
-
-    //先添加一个表项到群组列表
-    QTreeWidgetItem *item1=new QTreeWidgetItem;
-    ui->roomTree->addTopLevelItem(item1);
-    //再把这个表项里的控件插入进去
-    ui->roomTree->setItemWidget(item1,0,createRoomItem(roomName,avatarAddr));
-    return item1;
-}
 
 QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr,QString jid)
 {
@@ -464,6 +461,8 @@ void MainWindow::on_clientVCardReceived()
 // 初始化好友列表
 void MainWindow::on_rosterReceived()
 {
+    Nowe::sendBookMarkRequest();
+
     loadDone=false;
     auto rstMng = client->findExtension<QXmppRosterManager>();
     foreach(const QString& bareJid, rstMng->getRosterBareJids()) {
@@ -471,8 +470,11 @@ void MainWindow::on_rosterReceived()
         auto resources = rstMng->getResources(bareJid);
         QString res = resources.isEmpty() ? "" : resources[0];
         auto presence = rstMng->getPresence(bareJid,res);
-        createMessage(item.bareJid(), presence.statusText(), ":/images/1.png",bareJid);
-        qDebug()<<item.groups()<<"\n\n\n\n\n\n\n\n\n\n\n\n";
+
+       // qDebug()<<"■■■■■■■■■■■■■■■"<<"create!";
+        createMessage(item.bareJid(), presence.statusText(), ":/images/1.png",item.bareJid());
+        //qDebug()<<"■■■■■■■■■■■■■■■"<<"add!";
+        //qDebug()<<item.groups()<<"\n\n\n\n\n\n\n\n\n\n\n\n";
         if(item.groups().empty())
             addFriendtoGroup(grpMng.getGrpAddr("未分组好友",this),item.bareJid(),presence.statusText(),":/images/1.png",bareJid);
         else
@@ -482,21 +484,6 @@ void MainWindow::on_rosterReceived()
 }
 
 
-//更新群组列表
-void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
-{
-    /*
-    QList<QXmppDiscoveryIq::Item>items =  iq.items();
-    QString avad = "11";    //群组列表头像
-    foreach(QXmppDiscoveryIq::Item it, items)
-    {
-        addRoom(it.name(),avad);
-    }
-
-    */
-
-}
-    /*-------------------书签操作-------------------------*/
 void MainWindow::on_presenceChanged()
 {
 
@@ -561,28 +548,93 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     }
 }
 
-//更新群组列表
-  /*
-void MainWindow::on_roomReceived(const QXmppDiscoveryIq& iq)
+
+
+//在聊天室面板添加一个聊天室
+QTreeWidgetItem *MainWindow::addRoom(QString roomName,QString avatarAddr)
 {
-    /*
-    QList<QXmppDiscoveryIq::Item>items =  iq.items();
+
+    //暂时把头像文件写死
+    avatarAddr = ":/images/room.png";
+    //先添加一个表项到群组列表
+    QTreeWidgetItem *item1=new QTreeWidgetItem;
+    ui->roomTree->addTopLevelItem(item1);
+    //再把这个表项里的控件插入进去
+    ui->roomTree->setItemWidget(item1,0,createRoomItem(roomName,avatarAddr));
+    return item1;
+}
 
 
-    QString avad = "11";    //群组列表头像【头像路径在addRoom函数中已写死，在此留出接口方便之后修改】
-    foreach(QXmppDiscoveryIq::Item it, items)
+//创建聊天室书签
+void MainWindow::createBookMark( QString markName)
+{
+    //加载已存在的书签
+    auto markMsg = client->findExtension<QXmppBookmarkManager>();
+    QXmppBookmarkSet markset = markMsg->bookmarks();
+
+    //服务器书签列表
+    QList<QXmppBookmarkConference> markList= markset.conferences();
+    //服务器名
+    QString serverName = "chirsz.cc";
+    //聊天室JID
+    QString jid=markName+"@conference."+serverName;
+
+
+    //若该书签已经存在则返回
+    foreach(QXmppBookmarkConference mark, markList)
     {
-
-        addRoom(it.name(),avad);
+        if(mark.jid() == jid)
+            return ;
     }
-*/
 
+    //增加书签
+    QXmppBookmarkConference * bm = new QXmppBookmarkConference;
+    bm->setJid(jid);
+    bm->setName(markName);
+    bm->setAutoJoin(true);      //设置登陆时自动加入
+    markList.append(*bm);
+    markset.setConferences(markList);
 
+    markMsg->setBookmarks(markset);
 
+}
 
-void MainWindow::initRoomList(QXmppBookmarkManager *bookmarkm)
+//初始化及更新聊天室书签列表
+void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
 {
-    QXmppBookmarkSet markset = bookmarkm->bookmarks();
+    foreach(QXmppBookmarkConference c,myBookMarkManager->bookmarks().conferences())
+    {
+        qDebug()<<"\n\n\n"<<c.jid();
+    }
+
+    //清空群组面板
+    ui->roomTree->clear();
+
+    //更新本地聊天室书签管理
+    QList<QXmppBookmarkConference> markList= bookmarks.conferences();
+    foreach(QXmppBookmarkConference mark, markList)
+    {
+        QString avad = "11";    //群组列表头像【头像路径在addRoom函数中已写死，在此留出接口方便之后修改】
+        addRoom(mark.name(),avad);
+    }
+}
+
+//处理群组,设置群组管理器
+void MainWindow::setMucManager()
+{
+    auto roomMsg = client->findExtension<QXmppMucManager>();
+    auto bookmMsg = client->findExtension<QXmppBookmarkManager>();
+
+    QXmppBookmarkSet bookmarks = bookmMsg->bookmarks();
+
+    QList<QXmppBookmarkConference> markList= bookmarks.conferences();
+    foreach(QXmppBookmarkConference mark, markList)
+    {
+        createRoom(mark.name());
+        QXmppMucRoom* m_pRoom = roomMsg->addRoom(mark.jid());
+        m_pRoom->setNickName(mark.nickName());
+        m_pRoom->join();
+    }
 
 }
 
@@ -590,7 +642,7 @@ void MainWindow::initRoomList(QXmppBookmarkManager *bookmarkm)
 //创建一个新的群组
 void MainWindow::createRoom(QString roomName)
 {
-    auto roomMsg = client->findExtension<QXmppMucManager>();
+    QXmppMucManager* roomMsg = client->findExtension<QXmppMucManager>();
     //服务器名
     QString serverName = "chirsz.cc";
     //聊天室JID
@@ -610,6 +662,7 @@ void MainWindow::createRoom(QString roomName)
 
     //添加群组
     QXmppMucRoom*  m_pRoom = roomMsg->addRoom(jid);
+
     if(m_pRoom)
     {
         //群名片
@@ -617,34 +670,12 @@ void MainWindow::createRoom(QString roomName)
         //进入群
         m_pRoom->join();
     }
+
 }
 
 
-//创建聊天室书签
-void MainWindow::createBookMark(QXmppBookmarkManager *bookmarkm, QString markName)
+
+void MainWindow::on_pushButton_5_clicked()
 {
-    //加载已存在的书签
-    //auto markMsg = client->findExtension<QXmppBookmarkManager>();
-    QXmppBookmarkSet markset = bookmarkm->bookmarks();
-
-    //服务器书签列表
-    QList<QXmppBookmarkConference> markList= markset.conferences();
-
-    //服务器名
-    QString serverName = "chirsz.cc";
-    //聊天室JID
-    QString jid=markName+"@conference."+serverName;
-
-    //增加书签，暂时注释
-    QXmppBookmarkConference * bm = new QXmppBookmarkConference;
-
-    bm->setJid(jid);
-    markList.append(*bm);
-    markset.setConferences(markList);
-    qDebug()<<bookmarkm->setBookmarks(markset);
-
+    setMucManager();
 }
-
-
-
-

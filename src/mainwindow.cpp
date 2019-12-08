@@ -674,8 +674,3 @@ void MainWindow::createRoom(QString roomName)
 }
 
 
-
-void MainWindow::on_pushButton_5_clicked()
-{
-    setMucManager();
-}

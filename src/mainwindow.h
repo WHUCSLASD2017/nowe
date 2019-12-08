@@ -99,7 +99,6 @@ private slots:
     void setMucManager();
 
 
-    void on_pushButton_5_clicked();
 
 signals:
     void friendClicked(QString usrName);

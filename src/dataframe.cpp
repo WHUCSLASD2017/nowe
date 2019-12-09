@@ -1,4 +1,4 @@
-#include "dataframe.h"
+﻿#include "dataframe.h"
 #include "ui_dataframe.h"
 #include "NoweGlobal.h"
 #include <QToolButton>
@@ -29,8 +29,9 @@ DataFrame::DataFrame(QWidget *parent) :
     updatePanel(Nowe::myVCard());
 
     // JID 设置为不可编辑状态
-    ui->jid->setText(Nowe::myJid());
+    ui->jid->setText(Nowe::myJidBare());
     ui->jid->setDisabled(true);
+    ui->jid->setAlignment(Qt::AlignLeft);
 }
 
 DataFrame::~DataFrame()

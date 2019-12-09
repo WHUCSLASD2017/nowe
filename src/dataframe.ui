@@ -26,7 +26,10 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
+   <string notr="true">QWidget#DataFrame{
+border:1px solid rgb(0, 155, 219);
+background-color:rgb(255, 255, 255);
+}
 QLineEdit {
     border-width: 1px;
     border-style: solid;
@@ -42,10 +45,8 @@ QComboBox {
 	background-color:rgb(255, 255, 255);
 	font: 13pt &quot;微软雅黑&quot;;
 }
-QFrame{
-};
-background-color:rgb(255, 255, 255);
-border-image:none;
+
+
 </string>
   </property>
   <widget class="QLineEdit" name="jid">

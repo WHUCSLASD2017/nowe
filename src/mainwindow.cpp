@@ -137,14 +137,14 @@ void MainWindow::setMenu()
     //设置左下角弹出菜单的
     menu=new QMenu(this);
     QAction *setProfile=new QAction("设置个人资料",this);
-    QAction *setAvatar=new QAction("设置头像",this);
+    //QAction *setAvatar=new QAction("设置头像",this);
     //把建立的动作添加到菜单
     menu->addAction(setProfile);
     menu->addSeparator();
-    menu->addAction(setAvatar);
+    //menu->addAction(setAvatar);
 
     connect(setProfile,&QAction::triggered,this,&MainWindow::displayProfilePanel);
-    connect(setAvatar,&QAction::triggered,this,&MainWindow::displayAvatarChangePanel);
+    //connect(setAvatar,&QAction::triggered,this,&MainWindow::displayAvatarChangePanel);
 
 
 }

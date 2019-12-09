@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>532</width>
-    <height>421</height>
+    <width>533</width>
+    <height>381</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -174,7 +174,7 @@ color:white;</string>
      <x>0</x>
      <y>90</y>
      <width>532</width>
-     <height>331</height>
+     <height>291</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -210,9 +210,9 @@ border:1px solid rgb(0, 155, 219);
     <widget class="QLineEdit" name="lineEdit">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>100</x>
        <y>110</y>
-       <width>481</width>
+       <width>321</width>
        <height>41</height>
       </rect>
      </property>
@@ -225,15 +225,21 @@ border:1px solid rgb(0, 155, 219);
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:2px solid rgb(0, 0, 0);</string>
+      <string notr="true">border: 2px solid;    
+border-width: 1px;
+    border-style: solid;
+    border-radius: 4px;
+	border-color:rgb(170, 170, 170);
+	background-color:rgb(255, 255, 255);
+</string>
      </property>
     </widget>
     <widget class="QPushButton" name="confirmButton">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>230</y>
-       <width>231</width>
+       <x>100</x>
+       <y>190</y>
+       <width>131</width>
        <height>41</height>
       </rect>
      </property>
@@ -244,9 +250,9 @@ border:1px solid rgb(0, 155, 219);
     <widget class="QPushButton" name="cancelButton">
      <property name="geometry">
       <rect>
-       <x>270</x>
-       <y>230</y>
-       <width>231</width>
+       <x>300</x>
+       <y>190</y>
+       <width>121</width>
        <height>41</height>
       </rect>
      </property>

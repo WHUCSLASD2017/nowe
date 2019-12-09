@@ -80,7 +80,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
          <string notr="true">background: none</string>
         </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
        <widget class="QLabel" name="nickname">
@@ -98,7 +98,7 @@ font: bold 15pt &quot;微软雅黑&quot;;
 color:white;</string>
         </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
        <widget class="QLabel" name="signature">
@@ -116,20 +116,7 @@ font: 11pt &quot;微软雅黑&quot;;
 color:white;</string>
         </property>
         <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_5">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>20</y>
-          <width>93</width>
-          <height>28</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>PushButton</string>
+         <string/>
         </property>
        </widget>
       </widget>

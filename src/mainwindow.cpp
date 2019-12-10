@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->switchPanel->setCurrentIndex(0);
     ui->messageTree->setIndentation(0);
     setMenu();
+    setAddMenu();
 
     client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
 
@@ -72,7 +73,8 @@ MainWindow::MainWindow(QWidget *parent) :
     myBookMarkManager = new QXmppBookmarkManager();
     myRoomManager = new QXmppMucManager();
     myBookMarkManager = client->findExtension<QXmppBookmarkManager>();
-    client->addExtension(myRoomManager);
+    //client->addExtension(myRoomManager);
+    myRoomManager = client->findExtension<QXmppMucManager>();
 
 
 
@@ -98,6 +100,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(client->findExtension<QXmppBookmarkManager>(), &QXmppBookmarkManager::bookmarksReceived,
             this, &MainWindow::on_roomReceived);
+
+    //设置群组管理
+    //setMucManager();
 
 
     //auto discov = client->findExtension<QXmppDiscoveryManager>();
@@ -146,6 +151,35 @@ void MainWindow::setMenu()
     connect(setProfile,&QAction::triggered,this,&MainWindow::displayProfilePanel);
     //connect(setAvatar,&QAction::triggered,this,&MainWindow::displayAvatarChangePanel);
 
+    //设置右下角弹出菜单
+    addMenu=new QMenu(this);
+    QAction *addFriendOrRoom=new QAction("添加好友或群里",this);
+    //QAction *setAvatar=new QAction("设置头像",this);
+    //把建立的动作添加到菜单
+    addMenu->addAction(addFriendOrRoom);
+    addMenu->addSeparator();
+    //menu->addAction(setAvatar);
+
+    connect(addFriendOrRoom,&QAction::triggered,this,&MainWindow::displayProfilePanel);
+    //connect(setAvatar,&QAction::triggered,this,&MainWindow::displayAvatarChangePanel);
+
+}
+
+
+void MainWindow::setAddMenu()
+{
+    //设置右下角弹出菜单
+    addMenu=new QMenu(this);
+    QAction *addFriendOrRoom=new QAction("添加好友或群组",this);
+    QAction *createRoom=new QAction("创建群组",this);
+    //把建立的动作添加到菜单
+    addMenu->addAction(addFriendOrRoom);
+    addMenu->addAction(createRoom);
+    addMenu->addSeparator();
+    //menu->addAction(setAvatar);
+
+    connect(addFriendOrRoom,&QAction::triggered,this,&MainWindow::displayAddPanel);
+    connect(createRoom,&QAction::triggered,this,&MainWindow::displayCreateRoomPanel);
 
 }
 
@@ -516,13 +550,39 @@ void MainWindow::updateAllFriends()
     on_rosterReceived();
 }
 
-
-void MainWindow::on_AddItemBtn_clicked()
+//显示添加好友和群组面板
+void MainWindow::displayAddPanel()
 {
     AddNewFriend *dialog=new AddNewFriend(client,this);
     dialog->show();
     dialog->setWindowModality(Qt::ApplicationModal);
     updateAllFriends();
+}
+
+//显示创建群组面板
+void MainWindow::displayCreateRoomPanel()
+{
+    CreateRoom *dialog=new CreateRoom(client,this);
+    dialog->show();
+    dialog->setWindowModality(Qt::ApplicationModal);
+    //updateAllFriends();
+}
+
+void MainWindow::on_AddItemBtn_clicked()
+{
+
+    //这个按钮时左下角的菜单
+    QPoint pos;
+    //菜单在540像素位置弹出
+    pos.setY(540);
+    pos.setX(80);
+    addMenu->exec(this->mapToGlobal(pos));
+/*
+    AddNewFriend *dialog=new AddNewFriend(client,this);
+    dialog->show();
+    dialog->setWindowModality(Qt::ApplicationModal);
+    updateAllFriends();
+    */
 }
 
 void MainWindow::on_subscriptionReceived(const QString &bareJid)
@@ -543,7 +603,7 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     {
     NotificationPanel *notice=new NotificationPanel(this,client);
     notice->setMessageReceiveMode(senderID,msgBody,msg,username);
-    notice->show();
+    //notice->show();
     notice->startAnimation();
     }
 }
@@ -591,6 +651,7 @@ void MainWindow::createBookMark( QString markName)
     QXmppBookmarkConference * bm = new QXmppBookmarkConference;
     bm->setJid(jid);
     bm->setName(markName);
+    bm->setNickName(Nowe::myJidBare());
     bm->setAutoJoin(true);      //设置登陆时自动加入
     markList.append(*bm);
     markset.setConferences(markList);
@@ -599,13 +660,16 @@ void MainWindow::createBookMark( QString markName)
 
 }
 
+
+
 //初始化及更新聊天室书签列表
 void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
 {
-    foreach(QXmppBookmarkConference c,myBookMarkManager->bookmarks().conferences())
+    //打印当前书签
+    /*foreach(QXmppBookmarkConference c,myBookMarkManager->bookmarks().conferences())
     {
         qDebug()<<"\n\n\n"<<c.jid();
-    }
+    }*/
 
     //清空群组面板
     ui->roomTree->clear();
@@ -617,6 +681,9 @@ void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
         QString avad = "11";    //群组列表头像【头像路径在addRoom函数中已写死，在此留出接口方便之后修改】
         addRoom(mark.name(),avad);
     }
+
+    //设置群管理
+    setMucManager();
 }
 
 //处理群组,设置群组管理器
@@ -630,15 +697,15 @@ void MainWindow::setMucManager()
     QList<QXmppBookmarkConference> markList= bookmarks.conferences();
     foreach(QXmppBookmarkConference mark, markList)
     {
-        createRoom(mark.name());
+        //createRoom(mark.name());
         QXmppMucRoom* m_pRoom = roomMsg->addRoom(mark.jid());
         m_pRoom->setNickName(mark.nickName());
         m_pRoom->join();
     }
-
+    //createRoom("zff");
 }
 
-
+/*
 //创建一个新的群组
 void MainWindow::createRoom(QString roomName)
 {
@@ -669,8 +736,11 @@ void MainWindow::createRoom(QString roomName)
         m_pRoom->setNickName("theDip");
         //进入群
         m_pRoom->join();
+       // createBookMark(roomName);
     }
 
-}
 
+
+}
+*/
 

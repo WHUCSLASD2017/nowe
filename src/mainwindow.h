@@ -15,6 +15,7 @@
 #include <QXmppPubSubIq.h>
 #include "groupmanager.h"
 #include "addnewfriend.h"
+#include "createroom.h"
 
 
 namespace Ui {
@@ -30,6 +31,7 @@ public:
     ~MainWindow();
     QWidget *setItem(QString mainTitle,QString iconAddr,QString subTitle,bool ifVIP=false,bool ifOnline=true);
     QMenu *menu;
+    QMenu *addMenu;
 
     QWidget *createItem(QString jid, QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
     QWidget *createRoomItem(QString mainTitle, QString iconAddr);
@@ -52,6 +54,10 @@ public:
     void setMainTitle(QString string);
     void setSubTitle(QString string);
     void setMenu();
+    void setAddMenu();
+    void displayAddPanel();
+    void displayCreateRoomPanel();
+
     void displayProfilePanel();
     void displayAvatarChangePanel();
     GroupManager grpMng;

@@ -15,5 +15,6 @@
         <file>images/notice.png</file>
         <file>images/mail.png</file>
         <file>images/add.png</file>
+        <file>images/createroom.png</file>
     </qresource>
 </RCC>

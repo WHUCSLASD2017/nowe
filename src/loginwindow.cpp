@@ -95,6 +95,7 @@ void LoginWindow::Login()
     client->addExtension(mybook);
     client->addExtension(myroom);
 
+
     QPropertyAnimation *anime=new QPropertyAnimation(ui->loginLabel,"geometry");
     anime->setDuration(1000);
     anime->setStartValue(QRect(75,23,61,61));

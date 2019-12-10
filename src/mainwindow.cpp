@@ -73,8 +73,8 @@ MainWindow::MainWindow(QWidget *parent) :
     myBookMarkManager = new QXmppBookmarkManager();
     myRoomManager = new QXmppMucManager();
     myBookMarkManager = client->findExtension<QXmppBookmarkManager>();
-    //client->addExtension(myRoomManager);
     myRoomManager = client->findExtension<QXmppMucManager>();
+
 
 
 
@@ -100,10 +100,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(client->findExtension<QXmppBookmarkManager>(), &QXmppBookmarkManager::bookmarksReceived,
             this, &MainWindow::on_roomReceived);
-
-    //设置群组管理
-    //setMucManager();
-
 
     //auto discov = client->findExtension<QXmppDiscoveryManager>();
     //discov->requestItems("conference.chirsz.cc");
@@ -652,6 +648,7 @@ void MainWindow::createBookMark( QString markName)
     bm->setJid(jid);
     bm->setName(markName);
     bm->setNickName(Nowe::myJidBare());
+
     bm->setAutoJoin(true);      //设置登陆时自动加入
     markList.append(*bm);
     markset.setConferences(markList);
@@ -670,6 +667,7 @@ void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
     {
         qDebug()<<"\n\n\n"<<c.jid();
     }*/
+
 
     //清空群组面板
     ui->roomTree->clear();
@@ -697,7 +695,6 @@ void MainWindow::setMucManager()
     QList<QXmppBookmarkConference> markList= bookmarks.conferences();
     foreach(QXmppBookmarkConference mark, markList)
     {
-        //createRoom(mark.name());
         QXmppMucRoom* m_pRoom = roomMsg->addRoom(mark.jid());
         m_pRoom->setNickName(mark.nickName());
         m_pRoom->join();
@@ -706,6 +703,7 @@ void MainWindow::setMucManager()
 }
 
 /*
+
 //创建一个新的群组
 void MainWindow::createRoom(QString roomName)
 {
@@ -743,4 +741,5 @@ void MainWindow::createRoom(QString roomName)
 
 }
 */
+
 

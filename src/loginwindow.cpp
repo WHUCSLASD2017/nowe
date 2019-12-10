@@ -9,6 +9,7 @@
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
 #include <QTimer>
+#include <QXmppMucManager.h>
 
 LoginWindow::LoginWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -90,7 +91,9 @@ void LoginWindow::Login()
     QString passwd = ui->passwdLnEdt->text();
 
     QXmppBookmarkManager *mybook = new QXmppBookmarkManager;
+    QXmppMucManager *myroom = new QXmppMucManager;
     client->addExtension(mybook);
+    client->addExtension(myroom);
 
     QPropertyAnimation *anime=new QPropertyAnimation(ui->loginLabel,"geometry");
     anime->setDuration(1000);

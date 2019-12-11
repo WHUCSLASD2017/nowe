@@ -35,22 +35,14 @@ ChatDialog::ChatDialog(QWidget *parent) :
     plainFormat.setFont(QFont("微软雅黑",10));
     plainFormat.setForeground(Qt::black);
 
-    //设置按钮1，默认是表情按钮
-    QPixmap button1;
-    button1.load(":/images/1.png");
-    button1.scaled(20,20);
-    ui->button1->setPixmap(button1);
-    ui->button1->setScaledContents(true);
-
-    //设置按钮2，图片按钮
-    QPixmap button2;
-    button2.load(":/images/2.png");
-    button2.scaled(20,20);
-    ui->button2->setPixmap(button2);
-    ui->button2->setScaledContents(true);
-
     connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &ChatDialog::on_messageReceived);
     connect(this, &ChatDialog::newMessage, [=](QString sender,QString receiver,QDateTime time,QString content) {
+        QXmppMessage msg(sender, receiver, content);
+        msg.setType(QXmppMessage::Chat);
+        msg.setStamp(time);
+        Nowe::myClient()->sendPacket(msg);
+    });
+    connect(this, &ChatDialog::newPicture, [=](QString sender,QString receiver,QDateTime time,QString content) {
         QXmppMessage msg(sender, receiver, content);
         msg.setType(QXmppMessage::Chat);
         msg.setStamp(time);
@@ -88,7 +80,7 @@ void ChatDialog::insertOutMessage(QString msg)
     cursor.setCharFormat(plainFormat);
     ui->messBox->moveCursor(QTextCursor::End);
     cursor.insertText(msg);
-    //cursor.insertText("\n");
+    cursor.insertText("\n");
     save=ui->messBox->textCursor();
     savepos=ui->messBox->textCursor().position();
     scrollBarAdjust();
@@ -114,6 +106,40 @@ void ChatDialog::insertInMessage(QString msg,QDateTime *time)
     cursor.setCharFormat(plainFormat);
     cursor.insertText(msg);
     //cursor.insertText("\n");
+    scrollBarAdjust();
+}
+
+void ChatDialog::insertOutPicture(QImage *image)
+{
+    ui->messBox->moveCursor(QTextCursor::End);
+    QTextCursor cursor=ui->messBox->textCursor();
+    ui->messBox->moveCursor(QTextCursor::End);
+    cursor.insertBlock(outMsgFormat);
+    ui->messBox->moveCursor(QTextCursor::End);
+    cursor.insertImage(*image);
+    cursor.insertText("\n");
+    save=ui->messBox->textCursor();
+    savepos=ui->messBox->textCursor().position();
+    scrollBarAdjust();
+}
+
+void ChatDialog::insertInPicture(QImage *image,QDateTime *time)
+{
+    ui->messBox->moveCursor(QTextCursor::End);
+    QTextCursor cursor=ui->messBox->textCursor();
+    cursor.insertBlock(inMsgFormat);
+    cursor.setCharFormat(inMsgCharFormat);
+    cursor.insertText(receiver);
+    cursor.insertText("  ");
+    if(time==nullptr)
+        //如果没有传入时间，就用系统当前时间
+        cursor.insertText(QDateTime::currentDateTime().toString(timeFormat));
+    else
+        cursor.insertText(time->toString(timeFormat));
+    cursor.insertText("\n");
+
+    cursor.insertImage(*image);
+    cursor.insertText("\n");
     scrollBarAdjust();
 }
 
@@ -177,9 +203,29 @@ void ChatDialog::setOutMsgFormat(QFont target,Qt::GlobalColor color)
 
 void ChatDialog::on_messageReceived(const QXmppMessage &msg)
 {
-    if (QXmppUtils::jidToBareJid(msg.from()) == bareJid) {
+    if (QXmppUtils::jidToBareJid(msg.from()) == bareJid)
+    {
         auto time = msg.stamp();
-        insertInMessage(msg.body(), &time);
+
+        if(msg.body().mid(0,3)=="URL")
+        {
+            QString url_string=msg.body().mid(4,-1);
+            QUrl url(url_string);
+            qDebug()<<"QUrl="<<url;
+
+            QNetworkRequest request;
+            request.setUrl(url);
+
+            //网络载体
+            QNetworkAccessManager *networkAccessManager2=new QNetworkAccessManager(this);
+            //网络载体的响应接收信号，与响应接收槽绑定
+            connect(networkAccessManager2, SIGNAL(finished(QNetworkReply*)), this, SLOT(LoadPicture(QNetworkReply*)));
+            networkAccessManager2->get(request);
+        }
+        else
+        {
+            insertInMessage(msg.body(), &time);
+        }
     }
 }
 
@@ -230,9 +276,48 @@ void ChatDialog::scrollBarAdjust()
 void ChatDialog::on_sendBtn_clicked()
 {
     //点击发送按钮后发射信号，清空文本区
-    insertOutMessage(ui->contentBox->toPlainText());
-    emit newMessage(sender,receiver,QDateTime::currentDateTime(),ui->contentBox->toPlainText());
+    QString text=ui->contentBox->toPlainText();
+    if(text!="")
+    {
+        qDebug()<<"Send Text is not Empty!";
+        qDebug()<<text;
+        insertOutMessage(text);
+        emit newMessage(sender,receiver,QDateTime::currentDateTime(),text);
+    }
+
+    if(!strFilePath.isEmpty())
+    {
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+        QHttpPart imagePart;
+        imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
+        imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"smfile\"; filename=\"image.png\""));
+
+        QFile *file = new QFile(strFilePath);
+        if(!file->open(QIODevice::ReadOnly))
+        {
+            qDebug()<<"Open file failed!";
+        }
+        else
+        {
+            imagePart.setBodyDevice(file);
+            multiPart->append(imagePart);
+        }
+
+        QNetworkRequest request;
+        request.setUrl(QUrl("https://sm.ms/api/upload"));
+        //网络载体
+        QNetworkAccessManager *networkAccessManager1=new QNetworkAccessManager(this);
+        //网络载体的响应接收信号，与响应接收槽绑定
+        connect(networkAccessManager1, SIGNAL(finished(QNetworkReply*)), this, SLOT(Generatelink(QNetworkReply*)));
+        networkAccessManager1->post(request,multiPart);
+        insertOutPicture(image);
+    }
+
+    //clear
     ui->contentBox->clear();
+    picUrl="";
+    strFilePath="";
 }
 
 void ChatDialog::on_cancleBtn_clicked()
@@ -282,3 +367,81 @@ void ChatDialog::closeChatDialog(ChatDialog *dialog)
     openedDialogs.erase(i);
     qDebug()<<"             erase!";
 }
+
+void ChatDialog::on_photoBtn_clicked()
+{
+    strFilePath = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择上传图片"), "./", tr("Image files(*.bmp *.jpg *.pbm *.pgm *.png *.ppm *.xbm *.xpm *.jpeg);;All files (*.*)"));
+    if (strFilePath.isEmpty())
+    {
+        return;
+    }
+    image=new QImage();
+    image->load(strFilePath);
+    image->scaled(40,30,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+    ui->contentBox->moveCursor(QTextCursor::End);
+    QTextCursor cursor=ui->contentBox->textCursor();
+    cursor.insertImage(*image);
+
+}
+
+void ChatDialog::Generatelink(QNetworkReply* reply)
+{
+    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    qDebug() << "statusCode:" << statusCode;
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QByteArray allData = reply->readAll();
+        QJsonParseError json_error;
+        QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &json_error));
+        if(json_error.error != QJsonParseError::NoError)
+        {
+            qDebug() << "json error!";
+            return;
+        }
+        QJsonObject rootObj = jsonDoc.object();
+
+        QString content;
+        if(rootObj.contains("data"))
+        {
+            QJsonObject subObj = rootObj.value("data").toObject();
+            picUrl=subObj["url"].toString();
+            content.append("URL=");
+            content.append(picUrl);
+            emit newPicture(sender,receiver,QDateTime::currentDateTime(),content);
+            qDebug()<<"answer:"<<picUrl;
+        }
+        else
+        {
+            picUrl=rootObj["images"].toString();
+            content.append("URL=");
+            content.append(picUrl);
+            emit newPicture(sender,receiver,QDateTime::currentDateTime(),content);
+            qDebug()<<"answer:"<<picUrl;
+        }
+    }
+    else
+    {
+        qDebug() << "NetworkReply Error!";
+    }
+
+    reply->deleteLater();
+}
+
+void ChatDialog::LoadPicture(QNetworkReply *reply)
+{
+    qDebug() << "reply :" << reply<< endl;
+
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QByteArray data_bytes = reply->readAll();
+
+        QImage *image_in=new QImage();
+        image_in->loadFromData(data_bytes);
+        image_in->scaled(40,30,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        insertInPicture(image_in,nullptr);
+    }
+    reply->deleteLater();
+
+}
+

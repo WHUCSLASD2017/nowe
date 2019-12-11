@@ -19,6 +19,8 @@ AddNewFriend::AddNewFriend(QXmppClient *client,QWidget *parent) :
     this->client=client;
     connect(client->findExtension<QXmppDiscoveryManager>(), &QXmppDiscoveryManager::infoReceived,
             this, &AddNewFriend::judgeAddRoom);
+    //connect(client->findExtension<QXmppDiscoveryManager>(), &QXmppDiscoveryManager::itemsReceived,
+            //this, &AddNewFriend::test);
 }
 
 AddNewFriend::~AddNewFriend()
@@ -129,13 +131,16 @@ void AddNewFriend::on_confirmButton_3_clicked()
     QString serverName = "chirsz.cc";
     //聊天室JID
     QString jid=roomName+"@conference."+serverName;
+    jid = jid.toLower();
+    QRegExp regx("[a-zA-Z0-9\\x4e00-\\x9fa5]+");
 
-    if(roomName.simplified().length()==0)
-        QMessageBox::critical(this,"输入非法","您输入的群聊名称非法");
+    if(!regx.exactMatch(roomName))
+        QMessageBox::critical(this,"输入非法","您输入的群聊名称非法!");
     else {
         //发送查看群组信号
         QXmppDiscoveryManager * mydisc = client->findExtension<QXmppDiscoveryManager>();
         mydisc->requestInfo(jid);
+        //mydisc->requestItems("conference.chirsz.cc");
         firstAdd = true;
     }
 }
@@ -146,11 +151,24 @@ void AddNewFriend::on_confirmButton_3_clicked()
 void AddNewFriend::judgeAddRoom(const QXmppDiscoveryIq &iq)
 {
     QList<QXmppDiscoveryIq::Identity> identities = iq.identities();
-    if(identities.size()&&firstAdd)
+
+    if(identities.size() &&firstAdd)
     {
-        addRoom(roomName);
+        QXmppDiscoveryIq::Identity identity = identities.at(0);
+        if(identity.name() == roomName)
+        {
+            addRoom(roomName);
+        }
+        else {
+            QMessageBox::critical(this,"加入失败","该群聊不存在！");
+        }
     }
     else if(!identities.size()){
         QMessageBox::critical(this,"加入失败","该群聊不存在！");
     }
+}
+
+void AddNewFriend::test(const QXmppDiscoveryIq &iq)
+{
+    iq.items();
 }

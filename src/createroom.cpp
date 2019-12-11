@@ -25,8 +25,9 @@ void CreateRoom::on_cancelBtn_clicked()
 void CreateRoom::on_createBtn_clicked()
 {
     QString  roomName = ui->nameLnEdt->text();
-    if(roomName == ""){
-        QMessageBox::critical(this,"输入非法","请输入群名称！");
+    QRegExp regx("[a-zA-Z0-9\\x4e00-\\x9fa5]+");
+    if(!regx.exactMatch(roomName)){
+        QMessageBox::critical(this,"输入非法","请输入合法群名称！");
     }
     else {
         createRoom(roomName);

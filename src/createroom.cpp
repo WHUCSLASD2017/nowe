@@ -100,7 +100,7 @@ void CreateRoom::createRoom(QString roomName)
         //The dataform ends here.
         m_pRoom->setConfiguration(form);
 
-        createBookMark(roomName);
+        Nowe::createBookMark(roomName);
     }
 
 
@@ -108,39 +108,4 @@ void CreateRoom::createRoom(QString roomName)
 
 }
 
-
-//创建聊天室书签
-void CreateRoom::createBookMark( QString markName)
-{
-    //加载已存在的书签
-    auto markMsg = client->findExtension<QXmppBookmarkManager>();
-    QXmppBookmarkSet markset = markMsg->bookmarks();
-
-    //服务器书签列表
-    QList<QXmppBookmarkConference> markList= markset.conferences();
-    //服务器名
-    QString serverName = "chirsz.cc";
-    //聊天室JID
-    QString jid=markName+"@conference."+serverName;
-
-
-    //若该书签已经存在则返回
-    foreach(QXmppBookmarkConference mark, markList)
-    {
-        if(mark.jid() == jid)
-            return ;
-    }
-
-    //增加书签
-    QXmppBookmarkConference * bm = new QXmppBookmarkConference;
-    bm->setJid(jid);
-    bm->setName(markName);
-    bm->setAutoJoin(true);      //设置登陆时自动加入
-    bm->setNickName(Nowe::myJidBare()); //必须设置
-    markList.append(*bm);
-    markset.setConferences(markList);
-
-    markMsg->setBookmarks(markset);
-
-}
 

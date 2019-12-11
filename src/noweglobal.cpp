@@ -1,5 +1,7 @@
 ﻿#include <NoweGlobal.h>
 #include <QXmppVCardManager.h>
+#include <QXmppBookmarkManager.h>
+#include <QXmppBookmarkSet.h>
 
 namespace Nowe {
 
@@ -38,5 +40,41 @@ void sendBookMarkRequest()
     myClient()->sendPacket(pbiq);
 
 }
+
+//创建聊天室书签
+void createBookMark( QString markName)
+{
+    //加载已存在的书签
+    auto markMsg = myClient()->findExtension<QXmppBookmarkManager>();
+    QXmppBookmarkSet markset = markMsg->bookmarks();
+
+    //服务器书签列表
+    QList<QXmppBookmarkConference> markList= markset.conferences();
+    //服务器名
+    QString serverName = "chirsz.cc";
+    //聊天室JID
+    QString jid=markName+"@conference."+serverName;
+
+
+    //若该书签已经存在则返回
+    foreach(QXmppBookmarkConference mark, markList)
+    {
+        if(mark.jid() == jid)
+            return ;
+    }
+
+    //增加书签
+    QXmppBookmarkConference * bm = new QXmppBookmarkConference;
+    bm->setJid(jid);
+    bm->setName(markName);
+    bm->setAutoJoin(true);      //设置登陆时自动加入
+    bm->setNickName(Nowe::myJidBare()); //必须设置
+    markList.append(*bm);
+    markset.setConferences(markList);
+
+    markMsg->setBookmarks(markset);
+
+}
+
 
 }

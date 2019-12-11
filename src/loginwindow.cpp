@@ -10,6 +10,7 @@
 #include <QGraphicsOpacityEffect>
 #include <QTimer>
 #include <QXmppMucManager.h>
+#include <QXmppDiscoveryManager.h>
 
 LoginWindow::LoginWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -92,8 +93,10 @@ void LoginWindow::Login()
 
     QXmppBookmarkManager *mybook = new QXmppBookmarkManager;
     QXmppMucManager *myroom = new QXmppMucManager;
+    QXmppDiscoveryManager *mydiscov = new QXmppDiscoveryManager;
     client->addExtension(mybook);
     client->addExtension(myroom);
+    client->addExtension(mydiscov);
 
     QPropertyAnimation *anime=new QPropertyAnimation(ui->loginLabel,"geometry");
     anime->setDuration(1000);

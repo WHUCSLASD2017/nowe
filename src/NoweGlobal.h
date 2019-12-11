@@ -12,6 +12,7 @@ const QXmppVCardIq& myVCard();
 QString myJid();
 QString myJidBare();
 void sendBookMarkRequest();
+void createBookMark(QString markName);
 }
 
 

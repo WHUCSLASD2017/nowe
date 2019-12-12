@@ -34,6 +34,8 @@ private slots:
     void on_cancelButton_3_clicked();
     void on_confirmButton_3_clicked();
     void judgeAddRoom(const QXmppDiscoveryIq & iq);
+    void test(const QXmppDiscoveryIq & iq);
+
 };
 
 #endif // ADDNEWFRIEND_H

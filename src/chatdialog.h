@@ -5,9 +5,7 @@
 #include <QDialog>
 #include <QTextDocument>
 #include <QTextFrame>
-#include <QDateTime>
 #include <QXmppMessage.h>
-#include <QFileDialog>
 #include <QNetworkReply>
 #include <QHttpMultiPart>
 #include <QJsonObject>
@@ -65,10 +63,7 @@ private:
     QString receiver;
     QString timeFormat;
     QPixmap *avatar;
-    QTextCursor save;
-    int savepos;
 
-    QString strFilePath;
     QImage *image;
     QString picUrl;
 

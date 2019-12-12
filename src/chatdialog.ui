@@ -433,6 +433,9 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
    <property name="text">
     <string>发送</string>
    </property>
+   <property name="shortcut">
+    <string>Return</string>
+   </property>
   </widget>
   <widget class="QPushButton" name="cancleBtn">
    <property name="geometry">

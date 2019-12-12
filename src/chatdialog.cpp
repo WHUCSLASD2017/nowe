@@ -8,7 +8,11 @@
 #include <NoweGlobal.h>
 #include <QXmppUtils.h>
 #include <QScrollBar>
+#include <QFileDialog>
 
+QString strFilePath;
+int savepos;
+QTextCursor save;
 QMap<QString,ChatDialog *> ChatDialog::openedDialogs;
 
 ChatDialog::ChatDialog(QWidget *parent) :
@@ -48,6 +52,7 @@ ChatDialog::ChatDialog(QWidget *parent) :
         msg.setStamp(time);
         Nowe::myClient()->sendPacket(msg);
     });
+
 
     save=ui->messBox->textCursor();
     savepos=ui->messBox->textCursor().position();
@@ -277,13 +282,12 @@ void ChatDialog::on_sendBtn_clicked()
 {
     //点击发送按钮后发射信号，清空文本区
     QString text=ui->contentBox->toPlainText();
-    if(text!="")
-    {
-        qDebug()<<"Send Text is not Empty!";
-        qDebug()<<text;
-        insertOutMessage(text);
-        emit newMessage(sender,receiver,QDateTime::currentDateTime(),text);
-    }
+
+    insertOutMessage(text);
+    if(!strFilePath.isEmpty())
+        text=QString("发送了一个图片 ")+text;
+    emit newMessage(sender,receiver,QDateTime::currentDateTime(),text);
+
 
     if(!strFilePath.isEmpty())
     {
@@ -296,7 +300,7 @@ void ChatDialog::on_sendBtn_clicked()
         QFile *file = new QFile(strFilePath);
         if(!file->open(QIODevice::ReadOnly))
         {
-            qDebug()<<"Open file failed!";
+            qDebug()<<QString("Open file failed!");
         }
         else
         {
@@ -365,12 +369,12 @@ void ChatDialog::closeChatDialog(ChatDialog *dialog)
     QString jid=openedDialogs.key(dialog);
     QMap<QString,ChatDialog *>::iterator i= openedDialogs.find(jid);
     openedDialogs.erase(i);
-    qDebug()<<"             erase!";
+    qDebug()<<QString("             erase!");
 }
 
 void ChatDialog::on_photoBtn_clicked()
 {
-    strFilePath = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择上传图片"), "./", tr("Image files(*.bmp *.jpg *.pbm *.pgm *.png *.ppm *.xbm *.xpm *.jpeg);;All files (*.*)"));
+    strFilePath = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择上传图片"), "./", QString("Image files(*.bmp *.jpg *.pbm *.pgm *.png *.ppm *.xbm *.xpm *.jpeg);;All files (*.*)"));
     if (strFilePath.isEmpty())
     {
         return;
@@ -388,7 +392,7 @@ void ChatDialog::on_photoBtn_clicked()
 void ChatDialog::Generatelink(QNetworkReply* reply)
 {
     int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    qDebug() << "statusCode:" << statusCode;
+    qDebug() <<QString( "statusCode:" )<< statusCode;
     if(reply->error() == QNetworkReply::NoError)
     {
         QByteArray allData = reply->readAll();
@@ -396,7 +400,7 @@ void ChatDialog::Generatelink(QNetworkReply* reply)
         QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &json_error));
         if(json_error.error != QJsonParseError::NoError)
         {
-            qDebug() << "json error!";
+            qDebug() <<QString( "json error!");
             return;
         }
         QJsonObject rootObj = jsonDoc.object();
@@ -417,12 +421,12 @@ void ChatDialog::Generatelink(QNetworkReply* reply)
             content.append("URL=");
             content.append(picUrl);
             emit newPicture(sender,receiver,QDateTime::currentDateTime(),content);
-            qDebug()<<"answer:"<<picUrl;
+            qDebug()<<QString("answer:")<<picUrl;
         }
     }
     else
     {
-        qDebug() << "NetworkReply Error!";
+        qDebug() << QString("NetworkReply Error!");
     }
 
     reply->deleteLater();
@@ -430,7 +434,7 @@ void ChatDialog::Generatelink(QNetworkReply* reply)
 
 void ChatDialog::LoadPicture(QNetworkReply *reply)
 {
-    qDebug() << "reply :" << reply<< endl;
+    qDebug() << QString("reply :") << reply<< endl;
 
     if(reply->error() == QNetworkReply::NoError)
     {

@@ -1,4 +1,4 @@
-#include "ChangeHeaderWnd.h"
+﻿#include "ChangeHeaderWnd.h"
 #include "NoweGlobal.h"
 #include <QDesktopWidget>
 #include <QBuffer>
@@ -6,8 +6,10 @@
 
 
 ChangeHeaderWnd::ChangeHeaderWnd(QWidget *parent)
-    : QWidget(parent, Qt::FramelessWindowHint)
+    :  NoweBaseWindow(parent)
 {
+    NoweBaseWindow::initNoweStyle();
+
     ui.setupUi(this);
     ui.horizontalSlider->setEnabled(false);
 
@@ -20,13 +22,13 @@ ChangeHeaderWnd::ChangeHeaderWnd(QWidget *parent)
     m_pDivWidget->hide();
     m_pDivWidget->installEventFilter(this);
 
-    connect(ui.pushButton_close, &QPushButton::clicked, this, &QWidget::close);
-    connect(ui.pushButton_upload, &QPushButton::clicked, this, &ChangeHeaderWnd::onUpload);
+    connect(ui.pushButton_close, &QPushButton::pressed, this, &QWidget::close);
+    connect(ui.pushButton_upload, &QPushButton::pressed, this, &ChangeHeaderWnd::onUpload);
     connect(ui.horizontalSlider, &QSlider::valueChanged, this, &ChangeHeaderWnd::onScaledChanged);
-    connect(ui.pushButton_anti, &QPushButton::clicked, std::bind(&ChangeHeaderWnd::RotateHeader, this, false));
-    connect(ui.pushButton_clock, &QPushButton::clicked, std::bind(&ChangeHeaderWnd::RotateHeader, this, true));
-    connect(ui.pushButton_ok, &QPushButton::clicked, this, &ChangeHeaderWnd::onOk);
-    connect(ui.pushButton_cancel, &QPushButton::clicked, this, &ChangeHeaderWnd::onCancel);
+    //connect(ui.pushButton_anti, &QPushButton::clicked, std::bind(&ChangeHeaderWnd::RotateHeader, this, false));
+    //connect(ui.pushButton_clock, &QPushButton::clicked, std::bind(&ChangeHeaderWnd::RotateHeader, this, true));
+    connect(ui.pushButton_ok, &QPushButton::pressed, this, &ChangeHeaderWnd::onOk);
+    connect(ui.pushButton_cancel, &QPushButton::pressed, this, &ChangeHeaderWnd::onCancel);
 
     connect(this, &ChangeHeaderWnd::updateHeader, [](const QPixmap& avatar) {
         auto myVCard =  Nowe::myVCard();
@@ -95,6 +97,9 @@ bool ChangeHeaderWnd::eventFilter(QObject* watched, QEvent* event)
         p.setClipPath(path);
         p.drawRect(m_pDivWidget->geometry());
     }
+    /*if(ui.horizontalSlider == watched && QEvent::DragMove){
+        event->ignore();
+    }*/
     return QWidget::eventFilter(watched, event);
 }
 
@@ -120,38 +125,40 @@ void ChangeHeaderWnd::onOk()
     if (const QPixmap* pHeader = ui.label_header->pixmap())
     {
         emit updateHeader(*pHeader);
-        ui.label_tip->setText(QString::fromLocal8Bit("修改头像成功"));
+        //ui.label_tip->setText(QString::fromLocal8Bit(u8"修改头像成功"));
     }
     else
     {
-        ui.label_tip->setText(QString::fromLocal8Bit("还未加载头像"));
+        //ui.label_tip->setText(QString::fromLocal8Bit(u8"还未加载头像"));
     }
 }
 
 void ChangeHeaderWnd::onCancel()
 {
-    ui.label_tip->setText(QString::fromLocal8Bit("取消修改头像"));
+    //ui.label_tip->setText(QString::fromLocal8Bit("取消修改头像"));
     m_pDivWidget->hide();
     ui.label_header->clear();
     this->hide();
 }
 
 //Mouse Move
+/*
 void ChangeHeaderWnd::mousePressEvent(QMouseEvent *e)
 {
-    /* last=e->globalPos();*/
+     last=e->globalPos();
 }
 void ChangeHeaderWnd::mouseMoveEvent(QMouseEvent *e)
 {
-    /* int dx = e->globalX() - last.x();
+     int dx = e->globalX() - last.x();
          int dy = e->globalY() - last.y();
          last = e->globalPos();
-         move(x()+dx, y()+dy);*/
+         move(x()+dx, y()+dy);
 }
 void ChangeHeaderWnd::mouseReleaseEvent(QMouseEvent *e)
 {
-    /* int dx = e->globalX() - last.x();
+     int dx = e->globalX() - last.x();
      int dy = e->globalY() - last.y();
-     move(x()+dx, y()+dy);*/
+     move(x()+dx, y()+dy);
 }
+*/
 

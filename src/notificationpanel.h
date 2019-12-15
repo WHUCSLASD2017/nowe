@@ -30,7 +30,9 @@ public:
     void setAgreeButtonTitle(QString title);
     void setRejectButtonTitle(QString title);
     void setIconForMessage();
+    void setIconForInvitation();
     void setMessageReceiveMode(QString id, QString content, const QXmppMessage &message, QString username);
+    void setInvitationReceiveMode(const QString &roomJid, const QString &inviter, const QString &reason)
     bool messageMode=false;
     QXmppMessage message;
 

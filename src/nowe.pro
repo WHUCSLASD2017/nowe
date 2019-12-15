@@ -26,9 +26,12 @@ CONFIG += c++11
 
 SOURCES += \
     addnewfriend.cpp \
+    group.cpp \
     groupchatdialog.cpp \
+    createroom.cpp \
     groupentry.cpp \
     groupmanager.cpp \
+    groups.cpp \
     notificationpanel.cpp \
     registwindow.cpp \
     mainwindow.cpp \
@@ -43,9 +46,12 @@ SOURCES += \
 
 HEADERS += \
     addnewfriend.h \
+    group.h \
     groupchatdialog.h \
+    createroom.h \
     groupentry.h \
     groupmanager.h \
+    groups.h \
     notificationpanel.h \
     registwindow.h \
     mainwindow.h \
@@ -60,6 +66,7 @@ HEADERS += \
 FORMS += \
     addnewfriend.ui \
     groupchatdialog.ui \
+    createroom.ui \
     notificationpanel.ui \
     registwindow.ui \
     mainwindow.ui \

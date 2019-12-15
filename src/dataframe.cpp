@@ -1,4 +1,4 @@
-#include "dataframe.h"
+﻿#include "dataframe.h"
 #include "ui_dataframe.h"
 #include "NoweGlobal.h"
 #include <QToolButton>
@@ -7,6 +7,7 @@
 #include <QXmppVCardManager.h>
 #include <QBuffer>
 #include <QImageReader>
+#include <ChangeHeaderWnd.h>
 
 DataFrame::DataFrame(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -28,8 +29,9 @@ DataFrame::DataFrame(QWidget *parent) :
     updatePanel(Nowe::myVCard());
 
     // JID 设置为不可编辑状态
-    ui->jid->setText(Nowe::myJid());
+    ui->jid->setText(Nowe::myJidBare());
     ui->jid->setDisabled(true);
+    ui->jid->setAlignment(Qt::AlignLeft);
 }
 
 DataFrame::~DataFrame()
@@ -65,14 +67,25 @@ void DataFrame::sendNewVCard()
 // 根据传入的 VCard 更新个人资料面板
 void DataFrame::updatePanel(const QXmppVCardIq &vcard)
 {
-    QBuffer buffer;
-    buffer.setData(vcard.photo());
-    buffer.open(QIODevice::ReadOnly);
-    QImageReader avaterReader(&buffer);
-    QPixmap avatar = QPixmap::fromImage(avaterReader.read());
+       QLabel *image = new QLabel();
+       QIcon icon;
+       QBuffer buffer;
+       buffer.setData(vcard.photo());
+       buffer.open(QIODevice::ReadOnly);
+       QImageReader avaterReader(&buffer);
+       QPixmap avatar = QPixmap::fromImage(avaterReader.read());
 
-    ui->name->setText(vcard.fullName());
-    ui->instruction->setText(vcard.description());
-    ui->avatar->setPixmap(avatar.scaled(ui->avatar->size()));
+       ui->name->setText(vcard.fullName());
+       ui->instruction->setText(vcard.description());
+       image->setPixmap(avatar.scaled(image->size()));
+       icon.addPixmap(avatar);
+       ui->change->setIcon(icon);
+       ui->change->setIconSize(QSize(101,101));
 }
 
+
+void DataFrame::on_change_clicked()
+{
+    ChangeHeaderWnd *d =new ChangeHeaderWnd();
+    d->show();
+}

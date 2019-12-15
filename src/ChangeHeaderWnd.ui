@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>586</height>
+    <width>418</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,8 @@
   <property name="styleSheet">
    <string notr="true">QWidget
 {
-	font-size:24px;
+	font: 24px &quot;微软雅黑&quot;
+
 }
 QWidget#ChangeHeaderWnd
 {
@@ -24,18 +25,16 @@ QWidget#ChangeHeaderWnd
 }
 QWidget#widget_title
 {
-	background:rgb(156,175,189);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(76, 139, 254, 255), stop:1 rgba(31, 209, 254, 255))
 }
-QWidget#widget_status
-{
-	background:rgb(243,244,246);
-}
+
 QPushButton
 {
 	border:1px solid gray;
 	border-radius:2px;
 	background:white;
-	font-size:22px;
+	font: 20px &quot;微软雅黑&quot;
+
 }
 QPushButton#pushButton_close
 {
@@ -47,24 +46,25 @@ QPushButton#pushButton_anti
 	border:none;
 	background-image:url(:/QRC/UI/Image/rotate_anti_normal.png);
 }
-QPushButton#pushButton_anti:hover
-{
-	background-image:url(:/QRC/UI/Image/rotate_anti_hover.png);
-}
+
 QPushButton#pushButton_clock
 {
 	border:none;
 	background-image:url(:/QRC/UI/Image/rotate_clock_normal.png);
 }
-QPushButton#pushButton_clock:hover
-{
-	background-image:url(:/QRC/UI/Image/rotate_clock_hover.png);
+
+
+
+
+QLineEdit {
+    border-width: 1px;
+    border-style: solid;
+	border-color:rgb(199, 199, 199);
+	background-color:rgb(255, 255, 255);
 }
-QPushButton#pushButton_ok
-{
-	color:white;
-	background:rgb(18,183,245);
-}</string>
+
+
+</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1,0">
    <property name="spacing">
@@ -102,6 +102,15 @@ QPushButton#pushButton_ok
       </property>
       <item>
        <widget class="QLabel" name="label_title">
+        <property name="styleSheet">
+         <string notr="true">border-image:none;
+font:100 15pt &quot;微软雅黑&quot;;
+color:rgb(255,255,255);
+bottom:10px;
+border: none;
+
+</string>
+        </property>
         <property name="text">
          <string>更换头像</string>
         </property>
@@ -179,6 +188,9 @@ QPushButton#pushButton_ok
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color:rgb(100, 100, 100)</string>
+         </property>
          <property name="text">
           <string>上传头像</string>
          </property>
@@ -215,8 +227,8 @@ QPushButton#pushButton_ok
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>400</width>
-          <height>329</height>
+          <width>396</width>
+          <height>321</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
@@ -312,7 +324,19 @@ QPushButton#pushButton_ok
      </item>
      <item>
       <widget class="QWidget" name="widget_status" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
@@ -334,6 +358,27 @@ QPushButton#pushButton_ok
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>35</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(75,140,254, 255), stop:1 rgba(31, 205, 255, 255));
+font: bold 10pt &quot;微软雅黑&quot;;
+color:rgb(255,255,255);
+border-radius: 5px;
+border:none;
+}QPushButton::hover{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:1 rgba(75,140,254, 255), stop:0 rgba(31, 205, 255, 255));
+}
+QPushButton::pressed{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(75,140,254, 255), stop:1 rgba(31, 205, 255, 255));
+}
+</string>
+          </property>
           <property name="text">
            <string>确定</string>
           </property>
@@ -347,6 +392,27 @@ QPushButton#pushButton_ok
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>35</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(75,140,254, 255), stop:1 rgba(31, 205, 255, 255));
+font: bold 10pt &quot;微软雅黑&quot;;
+color:rgb(255,255,255);
+border-radius: 5px;
+border:none;
+}QPushButton::hover{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:1 rgba(75,140,254, 255), stop:0 rgba(31, 205, 255, 255));
+}
+QPushButton::pressed{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(75,140,254, 255), stop:1 rgba(31, 205, 255, 255));
+}
+</string>
+          </property>
           <property name="text">
            <string>取消</string>
           </property>
@@ -359,6 +425,12 @@ QPushButton#pushButton_ok
    </item>
    <item>
     <widget class="QLabel" name="label_tip">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>10</height>
+      </size>
+     </property>
      <property name="text">
       <string/>
      </property>

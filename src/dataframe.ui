@@ -26,7 +26,10 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
+   <string notr="true">QWidget#DataFrame{
+border:1px solid rgb(0, 155, 219);
+background-color:rgb(255, 255, 255);
+}
 QLineEdit {
     border-width: 1px;
     border-style: solid;
@@ -42,10 +45,8 @@ QComboBox {
 	background-color:rgb(255, 255, 255);
 	font: 13pt &quot;微软雅黑&quot;;
 }
-QFrame{
-};
-background-color:rgb(255, 255, 255);
-border-image:none;
+
+
 </string>
   </property>
   <widget class="QLineEdit" name="jid">
@@ -155,19 +156,6 @@ background-color:rgb(0, 150, 225);
     <string>确定</string>
    </property>
   </widget>
-  <widget class="QLabel" name="avatar">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>40</y>
-     <width>101</width>
-     <height>101</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="stateLabel">
    <property name="geometry">
     <rect>
@@ -179,6 +167,25 @@ background-color:rgb(0, 150, 225);
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="change">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>101</width>
+     <height>101</height>
+    </size>
    </property>
   </widget>
  </widget>

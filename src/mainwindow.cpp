@@ -28,7 +28,6 @@
 #include <QXmppUtils.h>
 #include <QtWebEngineWidgets>
 
-
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
     ui(new Ui::MainWindow),

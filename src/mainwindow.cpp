@@ -26,6 +26,8 @@
 #include "notificationpanel.h"
 #include <QPropertyAnimation>
 #include <QXmppUtils.h>
+#include <QtWebEngineWidgets>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -102,6 +104,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // 去掉主页标签的关闭按钮
     ui->mainTabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
+
+    QWebEngineView *a=new QWebEngineView();
+    a->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
+    ui->webContainer->addWidget(a);
+    a->show();
+
+    connect(a,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
+}
+
+void MainWindow::onTitleChanged(const QString &title)
+{
+    if(title!="chirsz.cc/nowe/moban3914/")
+    {
+        qDebug()<<"\n\n\n\n"<<title;
+    }
 }
 
 
@@ -137,7 +154,6 @@ void MainWindow::setMenu()
 
     connect(addFriendOrRoom,&QAction::triggered,this,&MainWindow::displayProfilePanel);
     //connect(setAvatar,&QAction::triggered,this,&MainWindow::displayAvatarChangePanel);
-
 }
 
 

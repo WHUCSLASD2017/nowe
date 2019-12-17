@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>702</width>
-    <height>463</height>
+    <width>1416</width>
+    <height>639</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -65,6 +65,17 @@
          <attribute name="title">
           <string>主页</string>
          </attribute>
+         <widget class="QWidget" name="verticalLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>1131</width>
+            <height>591</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="webContainer"/>
+         </widget>
         </widget>
        </widget>
       </item>
@@ -280,7 +291,7 @@ color:white;</string>
              <item>
               <widget class="QStackedWidget" name="switchPanel">
                <property name="currentIndex">
-                <number>2</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="page_2">
                 <layout class="QVBoxLayout" name="verticalLayout_8">

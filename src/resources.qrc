@@ -16,5 +16,7 @@
         <file>images/mail.png</file>
         <file>images/add.png</file>
         <file>images/createroom.png</file>
+        <file>images/invitation.png</file>
+        <file>images/invitefriend.png</file>
     </qresource>
 </RCC>

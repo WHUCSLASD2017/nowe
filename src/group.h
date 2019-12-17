@@ -7,11 +7,12 @@
 
 #include "NoweGlobal.h"
 
-class Group : QObject
+class Group : public QObject
 {
     Q_OBJECT
 public:
     Group(QString jid);
+    ~Group();
 
     bool obtainMemberList(QString affiliation);
     bool obtainInactiveMemberList();
@@ -48,8 +49,9 @@ public slots:
     void removeMember(QString jid);
 
 signals:
-    void renderMemberList();
-    void modifyMemberStatus(QString jid);
+    void timeToRenderMemberList();
+    void memberJoin(QString jid);
+    void memberLeave(QString jid);
 };
 
 QXmppMucRoom * Group::getRoom()

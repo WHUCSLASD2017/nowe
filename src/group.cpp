@@ -16,14 +16,22 @@ Group::Group(QString jid)
             this->roomJid = jid;
 
             this->isRefreshList = true;
+            this->room->join();
 
             connect(Nowe::myClient(), &QXmppClient::iqReceived, this, &Group::on_iqReceived);
             connect(this->room, &QXmppMucRoom::joined, this, &Group::registerWithRoom);
-            connect(this->room, &QXmppMucRoom::left, this, &Group::removeMember);
+            connect(this->room, &QXmppMucRoom::left, this, [=]() {
+                removeMember(Nowe::myJid());
+            });
             connect(this->room, &QXmppMucRoom::participantAdded, this, &Group::addMember);
             connect(this->room, &QXmppMucRoom::participantRemoved, this, &Group::removeMember);
         }
     }
+}
+
+Group::~Group()
+{
+
 }
 
 bool Group::obtainMemberList(QString affiliation)
@@ -54,6 +62,8 @@ bool Group::obtainMemberList(QString affiliation)
         activeMembers = room->participants();
 
         this->isRefreshList = false;
+
+        emit timeToRenderMemberList();
         return true;
     }
 
@@ -73,6 +83,7 @@ bool Group::obtainInactiveMemberList()
         this->inactiveMembers.append(member);
     }
 
+    emit timeToRenderMemberList();
     return true;
 }
 
@@ -107,6 +118,9 @@ void Group::registerWithRoom()
 
 bool Group::on_iqReceived(const QXmppIq &iq)
 {
+    qDebug() << "Group::on_iqReceived iq.from() " << iq.from() << endl;
+    qDebug() << "Group::on_iqReceived iq.to() " << iq.from() << endl;
+
     if (iq.from() != this->roomJid) {
         return false;
     }
@@ -293,7 +307,7 @@ bool Group::updateMembership(QXmppElement xEl)
 void Group::addMember(QString jid)
 {
     this->activeMembers.append(jid);
-    emit modifyMemberStatus(jid);
+    emit memberJoin(jid);
 }
 
 void Group::removeMember(QString jid)
@@ -306,5 +320,5 @@ void Group::removeMember(QString jid)
     }
 
     this->activeMembers.removeAt(i);
-    emit modifyMemberStatus(jid);
+    emit memberLeave(jid);
 }

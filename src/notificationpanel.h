@@ -6,6 +6,8 @@
 #include <QXmppClient.h>
 #include <QXmppMessage.h>
 
+#include "NoweGlobal.h"
+
 namespace Ui {
 class NotificationPanel;
 }
@@ -32,9 +34,11 @@ public:
     void setIconForMessage();
     void setIconForInvitation();
     void setMessageReceiveMode(QString id, QString content, const QXmppMessage &message, QString username);
-    void setInvitationReceiveMode(const QString &roomJid, const QString &inviter, const QString &reason)
+    void setInvitationReceiveMode(const QString &roomJid, const QString &inviter, const QString &reason);
     bool messageMode=false;
+    bool invitationMode = false;
     QXmppMessage message;
+    QString roomJid;
 
 private slots:
     void on_agreeBtn_clicked();
@@ -43,6 +47,8 @@ private slots:
 
 private:
     Ui::NotificationPanel *ui;
+
+    void addRoom();
 };
 
 #endif // NOTIFICATIONPANEL_H

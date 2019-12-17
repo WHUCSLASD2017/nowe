@@ -1,6 +1,7 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "chatdialog.h"
+#include "groupchatdialog.h"
 #include "dataframe.h"
 #include "ChangeHeaderWnd.h"
 #include "NoweGlobal.h"
@@ -386,6 +387,10 @@ void MainWindow::on_pushButton_3_clicked()
     updateAllFriends();
 }
 
+void MainWindow::on_roomTree_itemClicked(QTreeWidgetItem *item, int column)
+{
+
+}
 
 void MainWindow::on_friendTree_itemClicked(QTreeWidgetItem *item, int column)
 {
@@ -413,17 +418,52 @@ void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int col
 }
 
 void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
-{
+{    
     //和上面的on_messageTree_itemDoubleClicked类似，不过这个点击的是好友面板
     QWidget *now=ui->friendTree->itemWidget(item,0);
     if(item->parent())
     {
+        qDebug() << "MainWindow::on_roomTree_itemDoubleClicked entering" << endl;
+
         QList<QLabel *> labelList = now->findChildren<QLabel *>();
         emit friendClicked(labelList[1]->text());
         QPixmap avatar;
         avatar.load(labelList[3]->text());
         ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
     }
+}
+
+void MainWindow::on_roomTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    qDebug() << "MainWindow::on_roomTree_itemDoubleClicked starting" << endl;
+
+    //和上面的on_messageTree_itemDoubleClicked类似，不过这个点击的是群组面板
+    QWidget *now=ui->roomTree->itemWidget(item,0);
+
+    QList<QLabel *> labelList = now->findChildren<QLabel *>();
+
+    qDebug() << "labelList.size " << labelList.size() << endl;
+    qDebug() << "labelList<<labelList[0]->text() " << labelList[0]->text() << endl;
+    qDebug() << "labelList<<labelList[1]->text() " << labelList[1]->text() << endl;
+    qDebug() << "labelList<<labelList[2]->text() " << labelList[2]->text() << endl;
+
+    emit roomClicked(labelList[1]->text());
+    QPixmap avatar;
+    avatar.load(labelList[2]->text());
+
+    //服务器名
+    QString serverName = "chirsz.cc";
+    //聊天室JID
+    QString jid = labelList[1]->text() + "@conference." + serverName;
+
+    Group * myGroup = Groups::getMyGroups().getGroup(jid);
+    qDebug() << "MainWindow::on_roomTree_itemDoubleClicked myGroup->getRoomJid() " << myGroup->getRoomJid() << endl;
+
+    myGroup->obtainMemberList("admin");
+
+    GroupChatDialog::getChatDialog(myGroup, ui->nickname->text(), "", labelList[1]->text(), avatar);
+
+    qDebug() << "MainWindow::on_roomTree_itemDoubleClicked ending" << endl;
 }
 
 //设置头像
@@ -612,8 +652,8 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
 
 void MainWindow::on_invitationReceived(const QString &roomJid, const QString &inviter, const QString &reason)
 {
-    NotificationPanel *notice=new NotificationPanel(this,client);
-    notice->setInvitationReceiveMode(roomJid,inviter,reason);
+    NotificationPanel *notice=new NotificationPanel(this, client);
+    notice->setInvitationReceiveMode(roomJid, inviter, reason);
     notice->startAnimation();
 }
 
@@ -681,12 +721,16 @@ void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
     //清空群组面板
     ui->roomTree->clear();
 
+    QXmppMucManager * roomMsg = Nowe::myClient()->findExtension<QXmppMucManager>();
+
     //更新本地聊天室书签管理
     QList<QXmppBookmarkConference> markList= bookmarks.conferences();
     foreach(QXmppBookmarkConference mark, markList)
     {
         QString avad = "11";    //群组列表头像【头像路径在addRoom函数中已写死，在此留出接口方便之后修改】
         addRoom(mark.name(),avad);
+        roomMsg->addRoom(mark.jid());
+        Groups::getMyGroups().addGroup(mark.jid());
     }
 
     //设置群管理

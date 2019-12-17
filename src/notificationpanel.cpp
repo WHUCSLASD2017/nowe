@@ -141,7 +141,7 @@ void NotificationPanel::setMessageReceiveMode(QString id,QString content,const Q
     setRejectButtonTitle("忽略消息");
     this->message=message;
     this->username=username;
-    messageMode=true;
+    this->messageMode=true;
 }
 
 void NotificationPanel::setInvitationReceiveMode(const QString &roomJid, const QString &inviter, const QString &reason)
@@ -154,33 +154,77 @@ void NotificationPanel::setInvitationReceiveMode(const QString &roomJid, const Q
     setID(reason);
     setAgreeButtonTitle("同意");
     setRejectButtonTitle("拒绝");
+    this->invitationMode = true;
+    this->roomJid = roomJid;
 }
 
 void NotificationPanel::on_agreeBtn_clicked()
 {
-    if(messageMode==false)
-     {
-     QXmppRosterManager* rstMng = client->findExtension<QXmppRosterManager>();
-     rstMng->acceptSubscription(jid);
-    ((MainWindow *)parent())->showAddNewFriendPanel(jid);
-     close();
-    }
-    else{
+    if (messageMode == true) {
         ChatDialog::getChatDialog(QXmppUtils::jidToBareJid(message.from()),username,"",QXmppUtils::jidToBareJid(message.from()),QPixmap());
         close();
-    }
-}
 
+    } else if (invitationMode == true) {
+        addRoom();
+        close();
+
+    } else {
+        QXmppRosterManager* rstMng = client->findExtension<QXmppRosterManager>();
+        rstMng->acceptSubscription(jid);
+        ((MainWindow *)parent())->showAddNewFriendPanel(jid);
+        close();
+    }
+
+}
 
 void NotificationPanel::on_rejectBtn_clicked()
 {
     if(messageMode==false)
     {
         QXmppRosterManager* rstMng = client->findExtension<QXmppRosterManager>();
-    rstMng->refuseSubscription(jid);
-    close();
+        rstMng->refuseSubscription(jid);
+        close();
     }
     else {
         close();
     }
+}
+
+void NotificationPanel::addRoom()
+{
+    //服务器名
+    QString suffix = "@conference.chirsz.cc";
+    //聊天室JID
+    QString roomName = this->jid.replace(this->jid.indexOf('@'), suffix.length(), "");
+
+    QXmppMucManager * roomMsg = client->findExtension<QXmppMucManager>();
+    QXmppBookmarkManager * bookMsg = client->findExtension<QXmppBookmarkManager>();
+
+    //服务器书签列表
+    QXmppBookmarkSet markset = bookMsg->bookmarks();
+    QList<QXmppBookmarkConference> markList= markset.conferences();
+
+    QList<QXmppMucRoom*> rooms = roomMsg->rooms();
+
+    //若该书签已经存在则返回
+    foreach(QXmppBookmarkConference mark, markList)
+    {
+        if(mark.jid() == this->roomJid)
+        {
+            QMessageBox::critical(this,"加入失败","已加入该群聊！");
+            return ;
+        }
+    }
+
+    //将加入信息打包发送给服务器
+    QXmppPresence p;
+    QString to = this->roomJid + "/" + Nowe::myJidBare();
+    p.setTo(to);
+    p.setFrom(Nowe::myJid());
+    client -> sendPacket(p);
+
+    Nowe::createBookMark(roomName);
+
+    Groups groups = Groups::getMyGroups();
+    groups.addGroup(this->roomJid);
 }

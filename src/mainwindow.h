@@ -80,12 +80,15 @@ public slots:
     void updateAllFriends();
     void on_subscriptionReceived(const QString &bareJid);
     void on_messageReceived(const QXmppMessage &msg);
-    void on_invitationReceived(const QString &roomJid, const QString &inviter, const QString &reason)
+    void on_invitationReceived(const QString &roomJid, const QString &inviter, const QString &reason);
     void on_AddItemBtn_clicked();
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();
     void on_pushButton_clicked();
+
+    void on_roomTree_itemClicked(QTreeWidgetItem *item, int column);
+
     void on_friendTree_itemClicked(QTreeWidgetItem *item, int column);
 
     void on_messageTree_itemClicked(QTreeWidgetItem *item, int column);
@@ -93,6 +96,8 @@ private slots:
     void on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
     void on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column);
+
+    void on_roomTree_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
     void on_pushButton_4_clicked();
 
@@ -110,6 +115,7 @@ private slots:
 signals:
     void friendClicked(QString usrName);
     void msgClicked(QString usrName);
+    void roomClicked(QString roomName);
 };
 
 #endif // MAINWINDOW_H

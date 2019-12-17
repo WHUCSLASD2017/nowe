@@ -19,7 +19,6 @@ AddNewFriend::AddNewFriend(QXmppClient *client,QWidget *parent) :
     this->client=client;
     connect(client->findExtension<QXmppDiscoveryManager>(), &QXmppDiscoveryManager::infoReceived,
             this, &AddNewFriend::judgeAddRoom);
-    connect(client->)
 }
 
 AddNewFriend::~AddNewFriend()
@@ -104,21 +103,11 @@ void AddNewFriend::addRoom(QString roomName)
 
     Nowe::createBookMark(roomName);
 
+    Groups groups = Groups::getMyGroups();
+    groups.addGroup(jid);
+
     firstAdd = false;
-
     close();
-    /*QXmppMucRoom*  m_pRoom = roomMsg->addRoom(jid);
-
-    if(m_pRoom)
-    {
-        //群名片：必须设置，否则将创建失败
-        m_pRoom->setNickName(Nowe::myJidBare());
-
-        //进入群:此命令必须在设置房间属性之前，只有加入房间后才能设置属性
-        m_pRoom->join();
-
-    }*/
-
 }
 
 
@@ -155,3 +144,5 @@ void AddNewFriend::judgeAddRoom(const QXmppDiscoveryIq &iq)
         QMessageBox::critical(this,"加入失败","该群聊不存在！");
     }
 }
+
+

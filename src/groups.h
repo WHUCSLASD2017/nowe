@@ -1,15 +1,17 @@
 #ifndef GROUPS_H
 #define GROUPS_H
 
-#include <QObject>
-
 #include "group.h"
 
-class Groups : QObject
+class Groups
 {
-    Q_OBJECT
 public:
-    static Group & getMyGroups();
+    ~Groups();
+    static Groups & getMyGroups();
+    bool addGroup(QString roomJid);
+    bool removeGroup(QString roomJid);
+    Group * getGroup(QString roomJid);
+
 private:
     Groups();
     QMap<QString, Group *> groups;

@@ -4,7 +4,7 @@
 #include <QXmppClient.h>
 #include <QXmppVCardIq.h>
 #include <QXmppPubSubIq.h>
-#include<QXmppBookmarkManager.h>
+#include <QXmppBookmarkManager.h>
 #include <QXmppMucManager.h>
 #include <QString>
 

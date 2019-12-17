@@ -48,11 +48,25 @@ GroupChatDialog::GroupChatDialog(Group * myGroup, QWidget *parent) :
     ui->button2->setPixmap(button2);
     ui->button2->setScaledContents(true);
 
-    if (thisGroup != nullptr) {
+    if (myGroup != nullptr) {
         thisGroup = myGroup;
+
+        model = new QStandardItemModel(ui->contactTree);
+
+        activeItems = new QStandardItem("在线成员");
+        model->appendRow(activeItems);
+        inActiveItems = new QStandardItem("下线成员");
+        model->appendRow(inActiveItems);
+
+        renderMemberList();
+
+        ui->contactTree->header()->hide();
+        ui->contactTree->setModel(model);
+
         connect(thisGroup->getRoom(), &QXmppMucRoom::messageReceived, this, &GroupChatDialog::on_messageReceived);
-        connect(thisGroup, timeToRenderMemberList, this, renderMemberList);
-        connect(thisGroup, timeToModifyMemberStatus, this, modifyMemberStatus);
+        connect(thisGroup, &Group::timeToRenderMemberList, this, &GroupChatDialog::renderMemberList);
+        connect(thisGroup, &Group::memberJoin, this, &GroupChatDialog::someoneOnline);
+        connect(thisGroup, &Group::memberLeave, this, &GroupChatDialog::someoneOffline);
     }
 
     save=ui->messBox->textCursor();
@@ -176,8 +190,9 @@ void GroupChatDialog::on_messageReceived(const QXmppMessage &msg)
 {
     QString room = msg.from().split("/")[0];
     QString from = msg.from().split("/")[1];
+    QString to = msg.to();
 
-    if (room == thisGroup->getRoomJid()) {
+    if (to != Nowe::myJid() && room == thisGroup->getRoomJid()) {
         auto time = msg.stamp();
         insertInMessage(from, msg.body(), &time);
     }
@@ -247,7 +262,7 @@ void GroupChatDialog::on_messBox_cursorPositionChanged()
 }
 
 // 获取聊天窗口的指针，如果不存在，则打开一个新的聊天窗口
-GroupChatDialog *GroupChatDialog::getChatDialog(Group * myGroup, QString username, QString signature, QPixmap avatar)
+GroupChatDialog *GroupChatDialog::getChatDialog(Group * myGroup, QString username, QString signature, QString roomName, QPixmap avatar)
 {
     if (myGroup == nullptr) {
         qDebug() << "null Group" << endl;
@@ -261,9 +276,9 @@ GroupChatDialog *GroupChatDialog::getChatDialog(Group * myGroup, QString usernam
         chat->setBareJid(myGroup->getRoomJid());
         chat->setSignature(signature);
         chat->setAvatar(avatar,80,80,45);
-        chat->setRoom(QXmppUtils::jidToBareJid(myGroup->getRoomJid()));
+        chat->setRoom(roomName);
         chat->show();
-        openedGroupChatDialogs.insert(bareJid, chat);
+        openedGroupChatDialogs.insert(myGroup->getRoomJid(), chat);
         return chat;
     } else {
         return i.value();
@@ -283,4 +298,67 @@ void GroupChatDialog::closeChatDialog(GroupChatDialog *dialog)
     QMap<QString,GroupChatDialog *>::iterator i = openedGroupChatDialogs.find(jid);
     openedGroupChatDialogs.erase(i);
     qDebug()<<"             erase!";
+}
+
+void GroupChatDialog::renderMemberList()
+{
+    activeItems->removeRows(0, activeItems->columnCount());
+    inActiveItems->removeRows(0, inActiveItems->columnCount());
+
+    for (QString activeMember : thisGroup->getActiveMembers()) {
+        qDebug() << "GroupChatDialog::renderMemberList" << activeMember << endl;
+        QStandardItem * activeItem = new QStandardItem(QIcon(":/images/1.png"), activeMember);
+        activeItems->appendRow(activeItem);
+    }
+
+    for (QString inActiveMember : thisGroup->getInactiveMembers()) {
+        qDebug() << "GroupChatDialog::renderMemberList" << inActiveMember << endl;
+        QStandardItem * inActiveItem = new QStandardItem(QIcon(":/images/1.png"), inActiveMember);
+        inActiveItems->appendRow(inActiveItem);
+    }
+}
+
+void GroupChatDialog::someoneOnline(QString jid)
+{
+    QDataStream jidStream;
+    QString jidString;
+    int row;
+
+    for (row = 0; row < inActiveItems->rowCount(); row++) {
+        inActiveItems->child(row)->read(jidStream);
+        jidStream >> jidString;
+
+        if (jidString == jid) {
+            break;
+        }
+    }
+
+    activeItems->appendRow(new QStandardItem(QIcon(":/images/1.png"), jid));
+    inActiveItems->removeRow(row);
+}
+
+void GroupChatDialog::someoneOffline(QString jid)
+{
+    QDataStream jidStream;
+    QString jidString;
+    int row;
+
+    for (row = 0; row < activeItems->rowCount(); row++) {
+        activeItems->child(row)->read(jidStream);
+        jidStream >> jidString;
+
+        if (jidString == jid) {
+            break;
+        }
+    }
+
+    inActiveItems->appendRow(new QStandardItem(QIcon(":/images/1.png"), jid));
+    activeItems->removeRow(row);
+}
+
+
+void GroupChatDialog::on_invite_clicked()
+{
+    InviteFriend * inviteDialog = new InviteFriend(thisGroup);
+    inviteDialog->show();
 }

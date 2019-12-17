@@ -32,6 +32,7 @@ SOURCES += \
     groupentry.cpp \
     groupmanager.cpp \
     groups.cpp \
+    invitefriend.cpp \
     notificationpanel.cpp \
     registwindow.cpp \
     mainwindow.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     groupentry.h \
     groupmanager.h \
     groups.h \
+    invitefriend.h \
     notificationpanel.h \
     registwindow.h \
     mainwindow.h \
@@ -67,6 +69,7 @@ FORMS += \
     addnewfriend.ui \
     groupchatdialog.ui \
     createroom.ui \
+    invitefriend.ui \
     notificationpanel.ui \
     registwindow.ui \
     mainwindow.ui \

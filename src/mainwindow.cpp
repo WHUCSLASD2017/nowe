@@ -27,6 +27,7 @@
 #include <QPropertyAnimation>
 #include <QXmppUtils.h>
 #include <QtWebEngineWidgets>
+#include "chatarea.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -103,6 +104,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // 去掉主页标签的关闭按钮
     ui->mainTabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
+
+    ui->mainTabs->setMovable(true);
+
+    connect(ui->mainTabs, &QTabWidget::tabCloseRequested,[=](int index) {
+       ui->mainTabs->removeTab(index);
+    });
 
     QWebEngineView *a=new QWebEngineView();
     a->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
@@ -390,6 +397,12 @@ void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int col
     //双击了消息面板！
     QWidget *now=ui->messageTree->itemWidget(item,0);
     QList<QLabel *> labelList = now->findChildren<QLabel *>();
+    // labelList:[4]->bareJid [2]->signature
+
+    auto bareJID = labelList[4]->text();
+    auto nickName = labelList[1]->text();
+
+
     //要找到用户点击了哪个面板，从其中的label里面找到用户名等信息，发射信号
     emit msgClicked(labelList[1]->text());
     //不仅要发射信号，还要用获得的用户名等信息，创建一个聊天框
@@ -397,7 +410,8 @@ void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int col
     QPixmap avatar;
     avatar.load(labelList[3]->text());
     //聊天框建立
-    ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
+    //ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
+    popupChatTab(bareJID, nickName);
 }
 
 void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
@@ -679,6 +693,12 @@ void MainWindow::setMucManager()
         m_pRoom->join();
     }
     //createRoom("zff");
+}
+
+void MainWindow::popupChatTab(const QString &bareJID, const QString &nickName)
+{
+    int newtabi = ui->mainTabs->addTab(new ChatArea(bareJID, nickName), nickName);
+    ui->mainTabs->setCurrentIndex(newtabi);
 }
 
 /*

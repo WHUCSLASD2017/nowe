@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
-    <height>602</height>
+    <width>702</width>
+    <height>463</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,14 +18,14 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>250</width>
+    <width>16777215</width>
     <height>16777215</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -42,438 +42,495 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="spacing">
-      <number>0</number>
+    <widget class="QWidget" name="widget_2" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout_10">
+      <item>
+       <widget class="QTabWidget" name="mainTabs">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <property name="usesScrollButtons">
+         <bool>true</bool>
+        </property>
+        <property name="documentMode">
+         <bool>false</bool>
+        </property>
+        <property name="tabsClosable">
+         <bool>true</bool>
+        </property>
+        <property name="tabBarAutoHide">
+         <bool>false</bool>
+        </property>
+        <widget class="QWidget" name="mainWeb">
+         <attribute name="title">
+          <string>主页</string>
+         </attribute>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <property name="maximumSize">
+      <size>
+       <width>250</width>
+       <height>16777215</height>
+      </size>
      </property>
-     <item>
-      <widget class="QWidget" name="widget" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>130</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>130</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">#widget
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QWidget" name="widget_3" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>130</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>130</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#widget_3
  {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(76, 139, 254, 255), stop:1 rgba(31, 209, 254, 255))
 }
 </string>
-       </property>
-       <widget class="QLabel" name="avatar">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>30</y>
-          <width>91</width>
-          <height>91</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background: none</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-       <widget class="QLabel" name="nickname">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>30</y>
-          <width>131</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background: none;
+          </property>
+          <widget class="QLabel" name="avatar">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>30</y>
+             <width>91</width>
+             <height>91</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background: none</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+          <widget class="QLabel" name="nickname">
+           <property name="geometry">
+            <rect>
+             <x>110</x>
+             <y>30</y>
+             <width>131</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background: none;
 font: bold 15pt &quot;微软雅黑&quot;;
 color:white;</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-       <widget class="QLabel" name="signature">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>70</y>
-          <width>131</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background: none;
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+          <widget class="QLabel" name="signature">
+           <property name="geometry">
+            <rect>
+             <x>110</x>
+             <y>70</y>
+             <width>131</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background: none;
 font: 11pt &quot;微软雅黑&quot;;
 color:white;</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="widget_2" native="true">
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QWidget" name="widget_3" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <widget class="QPushButton" name="pushButton">
-             <property name="geometry">
-              <rect>
-               <x>-2</x>
-               <y>-2</y>
-               <width>91</width>
-               <height>44</height>
-              </rect>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="pushButton_3">
-             <property name="geometry">
-              <rect>
-               <x>81</x>
-               <y>-2</y>
-               <width>91</width>
-               <height>44</height>
-              </rect>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="geometry">
-              <rect>
-               <x>166</x>
-               <y>-2</y>
-               <width>86</width>
-               <height>44</height>
-              </rect>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </widget>
-          </item>
-          <item>
-           <widget class="QStackedWidget" name="switchPanel">
-            <property name="currentIndex">
-             <number>2</number>
-            </property>
-            <widget class="QWidget" name="page_2">
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_7">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QTreeWidget" name="messageTree">
-                  <property name="animated">
-                   <bool>true</bool>
-                  </property>
-                  <property name="headerHidden">
-                   <bool>true</bool>
-                  </property>
-                  <column>
-                   <property name="text">
-                    <string notr="true">1</string>
-                   </property>
-                  </column>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="page">
-             <layout class="QVBoxLayout" name="verticalLayout_6">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_5">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QTreeWidget" name="friendTree">
-                  <property name="styleSheet">
-                   <string notr="true">padding :4pt;</string>
-                  </property>
-                  <property name="animated">
-                   <bool>true</bool>
-                  </property>
-                  <property name="allColumnsShowFocus">
-                   <bool>true</bool>
-                  </property>
-                  <property name="wordWrap">
-                   <bool>true</bool>
-                  </property>
-                  <property name="headerHidden">
-                   <bool>true</bool>
-                  </property>
-                  <column>
-                   <property name="text">
-                    <string notr="true">1</string>
-                   </property>
-                  </column>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="page_3">
-             <layout class="QHBoxLayout" name="horizontalLayout">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_9">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QTreeWidget" name="roomTree">
-                  <property name="styleSheet">
-                   <string notr="true">padding :4pt;</string>
-                  </property>
-                  <property name="animated">
-                   <bool>true</bool>
-                  </property>
-                  <property name="allColumnsShowFocus">
-                   <bool>true</bool>
-                  </property>
-                  <property name="wordWrap">
-                   <bool>true</bool>
-                  </property>
-                  <property name="headerHidden">
-                   <bool>true</bool>
-                  </property>
-                  <column>
-                   <property name="text">
-                    <string notr="true">1</string>
-                   </property>
-                  </column>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-         </layout>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </widget>
         </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="widget_5" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>35</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>35</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color:rgba(85, 85, 255, 200);
+        <item>
+         <widget class="QWidget" name="widget_4" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QWidget" name="widget_5" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+               <widget class="QPushButton" name="pushButton">
+                <property name="geometry">
+                 <rect>
+                  <x>-2</x>
+                  <y>-2</y>
+                  <width>91</width>
+                  <height>44</height>
+                 </rect>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="pushButton_3">
+                <property name="geometry">
+                 <rect>
+                  <x>81</x>
+                  <y>-2</y>
+                  <width>91</width>
+                  <height>44</height>
+                 </rect>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="pushButton_2">
+                <property name="geometry">
+                 <rect>
+                  <x>166</x>
+                  <y>-2</y>
+                  <width>86</width>
+                  <height>44</height>
+                 </rect>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </widget>
+             </item>
+             <item>
+              <widget class="QStackedWidget" name="switchPanel">
+               <property name="currentIndex">
+                <number>2</number>
+               </property>
+               <widget class="QWidget" name="page_2">
+                <layout class="QVBoxLayout" name="verticalLayout_8">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_7">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QTreeWidget" name="messageTree">
+                     <property name="animated">
+                      <bool>true</bool>
+                     </property>
+                     <property name="headerHidden">
+                      <bool>true</bool>
+                     </property>
+                     <column>
+                      <property name="text">
+                       <string notr="true">1</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QWidget" name="page">
+                <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_5">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QTreeWidget" name="friendTree">
+                     <property name="styleSheet">
+                      <string notr="true">padding :4pt;</string>
+                     </property>
+                     <property name="animated">
+                      <bool>true</bool>
+                     </property>
+                     <property name="allColumnsShowFocus">
+                      <bool>true</bool>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                     <property name="headerHidden">
+                      <bool>true</bool>
+                     </property>
+                     <column>
+                      <property name="text">
+                       <string notr="true">1</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QWidget" name="page_3">
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_9">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QTreeWidget" name="roomTree">
+                     <property name="styleSheet">
+                      <string notr="true">padding :4pt;</string>
+                     </property>
+                     <property name="animated">
+                      <bool>true</bool>
+                     </property>
+                     <property name="allColumnsShowFocus">
+                      <bool>true</bool>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                     <property name="headerHidden">
+                      <bool>true</bool>
+                     </property>
+                     <column>
+                      <property name="text">
+                       <string notr="true">1</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget_6" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>35</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>35</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:rgba(85, 85, 255, 200);
 </string>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <property name="spacing">
-           <number>0</number>
           </property>
-          <item>
-           <widget class="QFrame" name="frame">
-            <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(76, 139, 254, 255), stop:1 rgba(31, 209, 254, 255))</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <widget class="QPushButton" name="pushButton_4">
-             <property name="geometry">
-              <rect>
-               <x>4</x>
-               <y>3</y>
-               <width>31</width>
-               <height>28</height>
-              </rect>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="spacing">
+              <number>0</number>
              </property>
-             <property name="styleSheet">
-              <string notr="true">border:none;
+             <item>
+              <widget class="QFrame" name="frame">
+               <property name="styleSheet">
+                <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(76, 139, 254, 255), stop:1 rgba(31, 209, 254, 255))</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <widget class="QPushButton" name="pushButton_4">
+                <property name="geometry">
+                 <rect>
+                  <x>4</x>
+                  <y>3</y>
+                  <width>31</width>
+                  <height>28</height>
+                 </rect>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">border:none;
 background:none;</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="AddItemBtn">
-             <property name="geometry">
-              <rect>
-               <x>210</x>
-               <y>0</y>
-               <width>31</width>
-               <height>31</height>
-              </rect>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border:none;
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="AddItemBtn">
+                <property name="geometry">
+                 <rect>
+                  <x>210</x>
+                  <y>0</y>
+                  <width>31</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">border:none;
 background:none;</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </widget>
-          </item>
-         </layout>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
-      </widget>
-     </item>
-    </layout>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>

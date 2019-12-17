@@ -26,6 +26,7 @@
 #include "notificationpanel.h"
 #include <QPropertyAnimation>
 #include <QXmppUtils.h>
+#include <QtWebEngineWidgets>
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -95,38 +96,28 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadDone=false;
 
-
     //向服务器请求并发送群组列表
 
     connect(client->findExtension<QXmppBookmarkManager>(), &QXmppBookmarkManager::bookmarksReceived,
             this, &MainWindow::on_roomReceived);
 
-    //设置群组管理
-    //setMucManager();
+    // 去掉主页标签的关闭按钮
+    ui->mainTabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
 
+    QWebEngineView *a=new QWebEngineView();
+    a->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
+    ui->webContainer->addWidget(a);
+    a->show();
 
-    //auto discov = client->findExtension<QXmppDiscoveryManager>();
-    //discov->requestItems("conference.chirsz.cc");
+    connect(a,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
+}
 
-
-
-    //initRoomList(bookMarkManager);
-
-    //connect(discov, &QXmppDiscoveryManager::itemsReceived,this, &MainWindow::on_roomReceived);
-
-
-
-    loadDone=false;
-
-    //这一部分测试用的，试着添加一部分内容
-//    QTreeWidgetItem *a=createFriendGroup("123发");
-//    QTreeWidgetItem *b=createFriendGroup("1235");
-//    QTreeWidgetItem *c=createFriendGroup("1236775");
-//    QTreeWidgetItem *d=createFriendGroup("1235656");
-//    QTreeWidgetItem *e=addFriendtoGroup(a,"1","dfgd",":/images/1.png");
-//    QTreeWidgetItem *f=addFriendtoGroup(a,"2","dfgd",":/images/1.png");
-//    setFriendToTop(f,"new","new",":/images/4.png",a);
-    //createMessage("5555","66666",":/images/3.png");
+void MainWindow::onTitleChanged(const QString &title)
+{
+    if(title!="chirsz.cc/nowe/moban3914/")
+    {
+        qDebug()<<"\n\n\n\n"<<title;
+    }
 }
 
 
@@ -162,7 +153,6 @@ void MainWindow::setMenu()
 
     connect(addFriendOrRoom,&QAction::triggered,this,&MainWindow::displayProfilePanel);
     //connect(setAvatar,&QAction::triggered,this,&MainWindow::displayAvatarChangePanel);
-
 }
 
 
@@ -468,13 +458,10 @@ void MainWindow::setSubTitle(QString string)
     ui->signature->setText(string);
 }
 
+// 用户设置菜单
 void MainWindow::on_pushButton_4_clicked()
 {
-    //这个按钮时左下角的菜单
-    QPoint pos;
-    //菜单在540像素位置弹出
-    pos.setY(540);
-    menu->exec(this->mapToGlobal(pos));
+    menu->exec(ui->pushButton_4->mapToGlobal(QPoint(20,20)));
 }
 
 // 根据最新的 VCard 更新主窗口上个人资料
@@ -568,21 +555,10 @@ void MainWindow::displayCreateRoomPanel()
     //updateAllFriends();
 }
 
+// 添加好友/群组菜单
 void MainWindow::on_AddItemBtn_clicked()
 {
-
-    //这个按钮时左下角的菜单
-    QPoint pos;
-    //菜单在540像素位置弹出
-    pos.setY(540);
-    pos.setX(80);
-    addMenu->exec(this->mapToGlobal(pos));
-/*
-    AddNewFriend *dialog=new AddNewFriend(client,this);
-    dialog->show();
-    dialog->setWindowModality(Qt::ApplicationModal);
-    updateAllFriends();
-    */
+    addMenu->exec(ui->AddItemBtn->mapToGlobal(QPoint(20,20)));
 }
 
 void MainWindow::on_subscriptionReceived(const QString &bareJid)

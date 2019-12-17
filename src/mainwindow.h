@@ -81,6 +81,7 @@ public slots:
     void on_subscriptionReceived(const QString &bareJid);
     void on_messageReceived(const QXmppMessage &msg);
     void on_AddItemBtn_clicked();
+    void onTitleChanged(const QString &title);
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();

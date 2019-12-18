@@ -697,6 +697,16 @@ void MainWindow::setMucManager()
 
 void MainWindow::popupChatTab(const QString &bareJID, const QString &nickName)
 {
+    int tabs = ui->mainTabs->count();
+    for(int i=0; i < tabs; ++i) {
+        auto a = dynamic_cast<ChatArea*>(ui->mainTabs->widget(i));
+        if (a != nullptr && a->receiverJidBare() == bareJID) {
+            ui->mainTabs->setCurrentWidget(a);
+            return;
+        }
+    }
+
+    // 打开新标签页
     auto newPage = new ChatArea(bareJID);
     newPage->setTitle(nickName);
     connect(newPage, &ChatArea::closeBtnClick, [=]() {

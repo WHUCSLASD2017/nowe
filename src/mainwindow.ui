@@ -535,7 +535,11 @@ background:none;</string>
             <height>591</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="webContainer"/>
+          <layout class="QVBoxLayout" name="webContainer">
+           <item>
+            <widget class="QWebEngineView" name="mainWebView" native="true"/>
+           </item>
+          </layout>
          </widget>
         </widget>
        </widget>
@@ -545,6 +549,14 @@ background:none;</string>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header>QWebEngineView</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

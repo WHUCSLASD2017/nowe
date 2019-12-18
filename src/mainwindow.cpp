@@ -111,12 +111,10 @@ MainWindow::MainWindow(QWidget *parent) :
        ui->mainTabs->removeTab(index);
     });
 
-    QWebEngineView *a=new QWebEngineView();
-    a->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
-    ui->webContainer->addWidget(a);
-    a->show();
+    ui->mainWebView->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
+    ui->mainWebView->show();
 
-    connect(a,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
+    connect(ui->mainWebView,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
 }
 
 void MainWindow::onTitleChanged(const QString &title)

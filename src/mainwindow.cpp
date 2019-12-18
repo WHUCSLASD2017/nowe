@@ -697,7 +697,13 @@ void MainWindow::setMucManager()
 
 void MainWindow::popupChatTab(const QString &bareJID, const QString &nickName)
 {
-    int newtabi = ui->mainTabs->addTab(new ChatArea(bareJID, nickName), nickName);
+    auto newPage = new ChatArea(bareJID);
+    newPage->setTitle(nickName);
+    connect(newPage, &ChatArea::closeBtnClick, [=]() {
+        int i = ui->mainTabs->indexOf(newPage);
+       ui->mainTabs->removeTab(i);
+    });
+    int newtabi = ui->mainTabs->addTab(newPage, nickName);
     ui->mainTabs->setCurrentIndex(newtabi);
 }
 

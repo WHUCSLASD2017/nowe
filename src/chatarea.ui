@@ -132,7 +132,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
        <number>0</number>
       </property>
       <item>
-       <widget class="QTextEdit" name="messBox">
+       <widget class="QTextEdit" name="hsMsgTxtEdt">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -266,6 +266,9 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
         <property name="pixmap">
          <pixmap resource="resources.qrc">:/images/emotic20x20.png</pixmap>
         </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -282,6 +285,9 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
         </property>
         <property name="pixmap">
          <pixmap resource="resources.qrc">:/images/imageIcon20x20.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

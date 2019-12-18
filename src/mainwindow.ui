@@ -522,25 +522,10 @@ background:none;</string>
         <property name="tabBarAutoHide">
          <bool>false</bool>
         </property>
-        <widget class="QWidget" name="mainWeb">
+        <widget class="QWebEngineView" name="mainWebView">
          <attribute name="title">
           <string>主页</string>
          </attribute>
-         <widget class="QWidget" name="verticalLayoutWidget">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>1131</width>
-            <height>591</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="webContainer">
-           <item>
-            <widget class="QWebEngineView" name="mainWebView" native="true"/>
-           </item>
-          </layout>
-         </widget>
         </widget>
        </widget>
       </item>

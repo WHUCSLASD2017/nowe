@@ -112,7 +112,6 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     ui->mainWebView->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
-    ui->mainWebView->show();
 
     connect(ui->mainWebView,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
 }

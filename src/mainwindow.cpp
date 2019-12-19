@@ -111,9 +111,9 @@ MainWindow::MainWindow(QWidget *parent) :
        ui->mainTabs->removeTab(index);
     });
 
-    ui->mainWebView->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
+    ui->recommendPage->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
 
-    connect(ui->mainWebView,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
+    connect(ui->recommendPage,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
 }
 
 void MainWindow::onTitleChanged(const QString &title)
@@ -484,7 +484,7 @@ void MainWindow::on_clientVCardReceived()
     QImageReader avaterReader(&buffer);
     QPixmap avatar = QPixmap::fromImage(avaterReader.read());
 
-    setAvatar(avatar,10,10,45);
+    setAvatar(avatar,10,10,25);
     setMainTitle(myCard.fullName());
     setSubTitle(myCard.description());
 }
@@ -693,6 +693,8 @@ void MainWindow::setMucManager()
 
 void MainWindow::popupChatTab(const QString &bareJID, const QString &nickName)
 {
+    ui->stackedWidget->setCurrentIndex(1);
+
     int tabs = ui->mainTabs->count();
     for(int i=0; i < tabs; ++i) {
         auto a = dynamic_cast<ChatArea*>(ui->mainTabs->widget(i));

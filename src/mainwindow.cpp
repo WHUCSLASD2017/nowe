@@ -403,9 +403,8 @@ void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int col
     //要找到用户点击了哪个面板，从其中的label里面找到用户名等信息，发射信号
     emit msgClicked(labelList[1]->text());
     //不仅要发射信号，还要用获得的用户名等信息，创建一个聊天框
-    qDebug()<<"                                   "<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text()<<labelList[4]->text();
-    QPixmap avatar;
-    avatar.load(labelList[3]->text());
+    //qDebug()<<"                                   "<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text()<<labelList[4]->text();
+
     //聊天框建立
     //ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
     popupChatTab(bareJID, nickName);
@@ -418,10 +417,10 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
     if(item->parent())
     {
         QList<QLabel *> labelList = now->findChildren<QLabel *>();
-        emit friendClicked(labelList[1]->text());
-        QPixmap avatar;
-        avatar.load(labelList[3]->text());
-        ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
+        auto bareJID = labelList[4]->text();
+        auto nickName = labelList[1]->text();
+
+        popupChatTab(bareJID, nickName);
     }
 }
 

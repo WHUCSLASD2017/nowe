@@ -107,6 +107,12 @@ private slots:
 
     void popupChatTab(const QString& bareJID, const QString& nickName);
 
+    void on_recommendBtn_clicked();
+
+    void on_chatBtn_clicked();
+
+    void on_findBtn_clicked();
+
 signals:
     void friendClicked(QString usrName);
     void msgClicked(QString usrName);

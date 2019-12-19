@@ -165,7 +165,7 @@ border-width: 1px;
 </string>
          </property>
          <property name="text">
-          <string/>
+          <string>wuxuhui@chirsz.cc</string>
          </property>
          <property name="readOnly">
           <bool>false</bool>
@@ -214,7 +214,7 @@ border: none;
 	font: 10pt &quot;微软雅黑&quot;</string>
          </property>
          <property name="text">
-          <string/>
+          <string>wuxuhui</string>
          </property>
          <property name="echoMode">
           <enum>QLineEdit::Password</enum>

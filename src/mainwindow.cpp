@@ -428,7 +428,7 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
 void MainWindow::setAvatar(QPixmap &avatar, int length, int width, int radius)
 {
     //首先缩放头像
-    QPixmap pixMap= avatar.scaled(width,length, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    QPixmap pixMap= avatar.scaled(width,length, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
     //把头像搞成圆形的
     pixMap =  PixmapToRound(pixMap, radius);
@@ -484,7 +484,7 @@ void MainWindow::on_clientVCardReceived()
     QImageReader avaterReader(&buffer);
     QPixmap avatar = QPixmap::fromImage(avaterReader.read());
 
-    setAvatar(avatar,80,80,45);
+    setAvatar(avatar,10,10,45);
     setMainTitle(myCard.fullName());
     setSubTitle(myCard.description());
 }
@@ -752,3 +752,19 @@ void MainWindow::createRoom(QString roomName)
 }
 */
 
+
+void MainWindow::on_recommendBtn_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_chatBtn_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_findBtn_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+
+}

@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ChatArea</class>
+ <widget class="QWidget" name="ChatArea">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>471</width>
+    <height>392</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#ChatArea{
+  background-color: rgb(255, 255, 255);
+}
+
+QPushButton{
+  background-color:rgb(0, 170, 255);
+  font: bold 10pt &quot;微软雅黑&quot;;
+  color:rgb(255,255,255);
+  width: 96px;
+  height: 36px;
+  border-radius: 5px;
+}
+
+QPushButton::hover{
+  background-color:rgb(0, 150, 225);
+}
+
+QPushButton::pressed{
+  background-color:rgb(0, 150, 225);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="titleFrame">
+     <property name="styleSheet">
+      <string notr="true">#titleFrame
+ {
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(76, 139, 254, 255), stop:1 rgba(31, 209, 254, 255))
+}
+
+.QLabel
+{background:none;
+	font: bold 14pt &quot;微软雅黑&quot;;
+	color: rgb(255, 255, 255);
+}</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="nickNameTitle">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>NickName</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="messageFrame">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QTextEdit" name="hsMsgTxtEdt">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#messBox
+{
+padding: 4px;
+background-color: rgb(255, 255, 255);
+}
+QScrollBar:vertical
+{
+    width:8px;
+    background:rgba(0,0,0,0%);
+    margin:0px,0px,0px,0px;
+    padding-top:9px;   
+    padding-bottom:9px;
+}
+QScrollBar::handle:vertical
+{
+    width:8px;
+    background:rgba(0,0,0,25%);
+    border-radius:4px;   
+    min-height:20;
+}
+QScrollBar::handle:vertical:hover
+{
+    width:8px;
+    background:rgba(0,0,0,50%);   
+    border-radius:4px;
+    min-height:20;
+}
+QScrollBar::add-line:vertical   
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/3.png);
+    subcontrol-position:bottom;
+}
+QScrollBar::sub-line:vertical  
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/1.png);
+    subcontrol-position:top;
+}
+QScrollBar::add-line:vertical:hover   
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/4.png);
+    subcontrol-position:bottom;
+}
+QScrollBar::sub-line:vertical:hover 
+{ 
+    height:9px;width:8px;
+    border-image:url(:/images/a/2.png);
+    subcontrol-position:top;
+}
+QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical  
+{
+    background:rgba(0,0,0,10%);
+    border-radius:4px;
+}</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="widgetFrame">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <property name="leftMargin">
+       <number>8</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="selEmotBtn">
+        <property name="styleSheet">
+         <string notr="true">:hover
+{
+	background-color: rgb(241, 241, 241);
+	padding: 3px;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="resources.qrc">:/images/emotic20x20.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="selImgBtn">
+        <property name="styleSheet">
+         <string notr="true">:hover
+{
+	background-color: rgb(241, 241, 241);
+	padding: 3px;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="resources.qrc">:/images/imageIcon20x20.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="inputFrame">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QTextEdit" name="contentBox">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="cursor" stdset="0">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QScrollBar:vertical
+{
+    width:8px;
+    background:rgba(0,0,0,0%);
+    margin:0px,0px,0px,0px;
+    padding-top:9px;   
+    padding-bottom:9px;
+}
+QScrollBar::handle:vertical
+{
+    width:8px;
+    background:rgba(0,0,0,25%);
+    border-radius:4px;   
+    min-height:20;
+}
+QScrollBar::handle:vertical:hover
+{
+    width:8px;
+    background:rgba(0,0,0,50%);   
+    border-radius:4px;
+    min-height:20;
+}
+QScrollBar::add-line:vertical   
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/3.png);
+    subcontrol-position:bottom;
+}
+QScrollBar::sub-line:vertical  
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/1.png);
+    subcontrol-position:top;
+}
+QScrollBar::add-line:vertical:hover   
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/4.png);
+    subcontrol-position:bottom;
+}
+QScrollBar::sub-line:vertical:hover 
+{ 
+    height:9px;width:8px;
+    border-image:url(:/images/a/2.png);
+    subcontrol-position:top;
+}
+QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical  
+{
+    background:rgba(0,0,0,10%);
+    border-radius:4px;
+}</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="horizontalFrame">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <layout class="QHBoxLayout" name="bottomBtns">
+      <property name="spacing">
+       <number>40</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="cancleBtn">
+        <property name="text">
+         <string>关闭</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sendBtn">
+        <property name="text">
+         <string>发送</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

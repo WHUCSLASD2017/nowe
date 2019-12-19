@@ -105,7 +105,7 @@ private slots:
 
     void setMucManager();
 
-
+    void popupChatTab(const QString& bareJID, const QString& nickName);
 
 signals:
     void friendClicked(QString usrName);

@@ -16,5 +16,7 @@
         <file>images/mail.png</file>
         <file>images/add.png</file>
         <file>images/createroom.png</file>
+        <file>images/imageIcon20x20.png</file>
+        <file>images/emotic20x20.png</file>
     </qresource>
 </RCC>

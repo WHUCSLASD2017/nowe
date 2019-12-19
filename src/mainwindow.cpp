@@ -47,6 +47,16 @@ MainWindow::MainWindow(QWidget *parent) :
     QPixmap icon3(":/images/c.png");
     ui->pushButton_2->setIcon(icon3);
 
+    //功能主面板按钮
+    QPixmap iconRecommend(":/images/recommend.png");
+    ui->recommendBtn->setIcon(iconRecommend);
+
+    QPixmap iconChat(":/images/chat.png");
+    ui->chatBtn->setIcon(iconChat);
+
+    QPixmap iconFind(":/images/thefind.png");
+    ui->findBtn->setIcon(iconFind);
+
     //设置下面按钮的图标
     QPixmap icon4(":/images/more.png");
     QPixmap iconAdd(":/images/add.png");
@@ -487,7 +497,7 @@ void MainWindow::on_clientVCardReceived()
     QImageReader avaterReader(&buffer);
     QPixmap avatar = QPixmap::fromImage(avaterReader.read());
 
-    setAvatar(avatar,10,10,25);
+    setAvatar(avatar,40,40,20);
     setMainTitle(myCard.fullName());
     setSubTitle(myCard.description());
 }

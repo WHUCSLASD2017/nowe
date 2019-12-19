@@ -75,19 +75,19 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>130</height>
+            <height>60</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>130</height>
+            <height>60</height>
            </size>
           </property>
           <property name="styleSheet">
            <string notr="true">#widget_3
  {
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(76, 139, 254, 255), stop:1 rgba(31, 209, 254, 255))
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(2, 223, 223), stop:1 rgb(190, 235, 233))
 }
 </string>
           </property>
@@ -95,9 +95,9 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>30</y>
+             <y>10</y>
              <width>50</width>
-             <height>50</height>
+             <height>41</height>
             </rect>
            </property>
            <property name="minimumSize">
@@ -122,15 +122,15 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <widget class="QLabel" name="nickname">
            <property name="geometry">
             <rect>
-             <x>110</x>
-             <y>30</y>
+             <x>60</x>
+             <y>10</y>
              <width>131</width>
              <height>41</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">background: none;
-font: bold 15pt &quot;微软雅黑&quot;;
+font: bold 9pt &quot;微软雅黑&quot;;
 color:white;</string>
            </property>
            <property name="text">
@@ -195,7 +195,7 @@ color:white;</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">background-color:rgb(255, 253, 249)</string>
                </property>
                <widget class="QPushButton" name="pushButton">
                 <property name="geometry">
@@ -213,7 +213,7 @@ color:white;</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">border:none</string>
                 </property>
                 <property name="text">
                  <string/>
@@ -234,6 +234,9 @@ color:white;</string>
                   <height>40</height>
                  </size>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true">border:none</string>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -253,6 +256,9 @@ color:white;</string>
                   <height>40</height>
                  </size>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true">border:none</string>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -261,10 +267,19 @@ color:white;</string>
              </item>
              <item>
               <widget class="QStackedWidget" name="switchPanel">
+               <property name="styleSheet">
+                <string notr="true">QTreeWidget{
+border:none;
+background-color:rgb(249, 249, 249)
+}</string>
+               </property>
                <property name="currentIndex">
-                <number>2</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="page_2">
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
                 <layout class="QVBoxLayout" name="verticalLayout_8">
                  <property name="spacing">
                   <number>0</number>
@@ -542,14 +557,21 @@ background:none;</string>
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>50</height>
+            <height>60</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>50</height>
+            <height>60</height>
            </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#showWidget_2
+ {
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(190, 235, 233), stop:1 rgb(2, 223, 223))
+}
+</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <property name="spacing">
@@ -589,7 +611,7 @@ background:none;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true"/>
+              <string notr="true">border:none</string>
              </property>
              <property name="text">
               <string/>
@@ -604,6 +626,9 @@ background:none;</string>
                <height>40</height>
               </size>
              </property>
+             <property name="styleSheet">
+              <string notr="true">border:none</string>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -616,6 +641,9 @@ background:none;</string>
                <width>100</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border:none</string>
              </property>
              <property name="text">
               <string/>
@@ -659,15 +687,95 @@ background:none;</string>
            <item>
             <widget class="QStackedWidget" name="stackedWidget">
              <property name="currentIndex">
-              <number>2</number>
+              <number>1</number>
              </property>
              <widget class="QWebEngineView" name="recommendPage"/>
              <widget class="QWidget" name="chatPage">
+              <property name="styleSheet">
+               <string notr="true">#chatPage{
+background-color:rgb(255, 253, 249)}</string>
+              </property>
               <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QTabWidget" name="mainTabs">
+                 <property name="styleSheet">
+                  <string notr="true">
+
+QTabBar::tab
+
+{
+
+height:40px;
+
+font:20px;
+
+background-color:white 
+
+}
+
+QTabBar::tab:selected
+
+{
+
+
+background-color: white;
+
+}
+
+QTabBar::tab:!selected
+
+{
+
+background-color: rgb(255, 253, 249);
+
+
+}
+
+QTabBar::tab:hover:!selected
+
+{
+
+background-color: white;
+
+
+}
+
+QTabBar::tab:!selected
+
+{
+
+margin-top: 6px;   
+
+margin-bottom: -6px; 
+
+}​</string>
+                 </property>
+                 <property name="tabShape">
+                  <enum>QTabWidget::Rounded</enum>
+                 </property>
                  <property name="currentIndex">
                   <number>-1</number>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>16</width>
+                   <height>40</height>
+                  </size>
                  </property>
                  <property name="usesScrollButtons">
                   <bool>true</bool>

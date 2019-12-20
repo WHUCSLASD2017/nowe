@@ -48,6 +48,8 @@ void sendBookMarkRequest()
 //创建聊天室书签
 void createBookMark( QString markName)
 {
+    qDebug() << "createBookMark " << "markName" << markName << endl;
+
     //加载已存在的书签
     auto markMsg = myClient()->findExtension<QXmppBookmarkManager>();
     QXmppBookmarkSet markset = markMsg->bookmarks();

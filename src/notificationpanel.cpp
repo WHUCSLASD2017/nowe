@@ -31,6 +31,8 @@ void NotificationPanel::setJid(QString jid)
 
 void NotificationPanel::startAnimation()
 {
+    qDebug() << "NotificationPanel::startAnimation " << endl;
+
     QPropertyAnimation *animation=new QPropertyAnimation(ui->TitleFrame,"geometry");
     animation->setDuration(1000);
     animation->setStartValue(QRect(0,-101,541,101));
@@ -146,9 +148,11 @@ void NotificationPanel::setMessageReceiveMode(QString id,QString content,const Q
 
 void NotificationPanel::setInvitationReceiveMode(const QString &roomJid, const QString &inviter, const QString &reason)
 {
+    qDebug() << "NotificationPanel::setInvitationReceiveMode start " << "roomJid " << roomJid << " inviter " << inviter << " reason " << reason << endl;
+
     setIconForMessage();
     setTitle("群聊邀请");
-    setExplanation("您收到了" + inviter + "发来的群聊邀请消息!");
+    setExplanation("您收到了群聊邀请消息!");
     setInstruction("您收到了" + inviter + "发来的群聊邀请消息。\n消息详细信息如下：");
     setHint(roomJid);
     setID(reason);
@@ -156,6 +160,8 @@ void NotificationPanel::setInvitationReceiveMode(const QString &roomJid, const Q
     setRejectButtonTitle("拒绝");
     this->invitationMode = true;
     this->roomJid = roomJid;
+
+    qDebug() << "NotificationPanel::setInvitationReceiveMode end " << "roomJid " << roomJid << " inviter " << inviter << " reason " << reason << endl;
 }
 
 void NotificationPanel::on_agreeBtn_clicked()
@@ -192,10 +198,14 @@ void NotificationPanel::on_rejectBtn_clicked()
 
 void NotificationPanel::addRoom()
 {
+    qDebug() << "NotificationPanel::addRoom " << "this->roomJid " << this->roomJid << endl;
+
     //服务器名
     QString suffix = "@conference.chirsz.cc";
     //聊天室JID
-    QString roomName = this->jid.replace(this->jid.indexOf('@'), suffix.length(), "");
+    QString roomName = this->roomJid.replace(this->roomJid.indexOf('@'), suffix.length(), "");
+
+    qDebug() << "NotificationPanel::addRoom " << "roomName " << roomName << endl;
 
     QXmppMucManager * roomMsg = client->findExtension<QXmppMucManager>();
     QXmppBookmarkManager * bookMsg = client->findExtension<QXmppBookmarkManager>();
@@ -223,8 +233,14 @@ void NotificationPanel::addRoom()
     p.setFrom(Nowe::myJid());
     client -> sendPacket(p);
 
+    //添加群组
+    roomMsg->addRoom(jid);
+
     Nowe::createBookMark(roomName);
 
     Groups groups = Groups::getMyGroups();
     groups.addGroup(this->roomJid);
+
+    qDebug() << "NotificationPanel::addRoom" << "roomName" << roomName << endl;
+
 }

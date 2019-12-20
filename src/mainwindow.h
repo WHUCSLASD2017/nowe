@@ -43,8 +43,6 @@ public:
     QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, QString avatarAddr, QTreeWidgetItem *grp = nullptr, QString jid=nullptr);
     QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
 
-    QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
-
     void createRoom(QString roomName);
 
     void createBookMark(QString markName);
@@ -82,6 +80,9 @@ public slots:
     void on_messageReceived(const QXmppMessage &msg);
     void on_invitationReceived(const QString &roomJid, const QString &inviter, const QString &reason);
     void on_AddItemBtn_clicked();
+
+    QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
+
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();

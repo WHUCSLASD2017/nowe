@@ -423,8 +423,6 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
     QWidget *now=ui->friendTree->itemWidget(item,0);
     if(item->parent())
     {
-        qDebug() << "MainWindow::on_roomTree_itemDoubleClicked entering" << endl;
-
         QList<QLabel *> labelList = now->findChildren<QLabel *>();
         emit friendClicked(labelList[1]->text());
         QPixmap avatar;
@@ -652,15 +650,19 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
 
 void MainWindow::on_invitationReceived(const QString &roomJid, const QString &inviter, const QString &reason)
 {
-    NotificationPanel *notice=new NotificationPanel(this, client);
+    qDebug() << "MainWindow::on_invitationReceived " << endl;
+
+    NotificationPanel * notice=new NotificationPanel(this, client);
+
     notice->setInvitationReceiveMode(roomJid, inviter, reason);
-    notice->startAnimation();
+    notice->show();
+    notice->startAnimation();    
 }
 
 //在聊天室面板添加一个聊天室
 QTreeWidgetItem *MainWindow::addRoom(QString roomName,QString avatarAddr)
 {
-
+    qDebug() << "MainWindow::addRoom" << "roomName" << roomName << "avatarAddr" << avatarAddr << endl;
     //暂时把头像文件写死
     avatarAddr = ":/images/room.png";
     //先添加一个表项到群组列表
@@ -712,6 +714,7 @@ void MainWindow::createBookMark( QString markName)
 //初始化及更新聊天室书签列表
 void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
 {
+    qDebug() << "MainWindow::on_roomReceived" << endl;
     //打印当前书签
     /*foreach(QXmppBookmarkConference c,myBookMarkManager->bookmarks().conferences())
     {

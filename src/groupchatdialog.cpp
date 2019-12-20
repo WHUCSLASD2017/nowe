@@ -188,13 +188,21 @@ void GroupChatDialog::setOutMsgFormat(QFont target,Qt::GlobalColor color)
 
 void GroupChatDialog::on_messageReceived(const QXmppMessage &msg)
 {
+    qDebug() << "GroupChatDialog::on_messageReceived " << endl;
+
     QString room = msg.from().split("/")[0];
     QString from = msg.from().split("/")[1];
-    QString to = msg.to();
+    QString to = msg.to().replace("/QXmpp", "");
 
-    if (to != Nowe::myJid() && room == thisGroup->getRoomJid()) {
+    qDebug() << "GroupChatDialog::on_messageReceived " << "room " << room << " from " << from << " to " << to << " Nowe::myJidBare() " << Nowe::myJidBare() << endl;
+
+    if (from != Nowe::myJidBare() && to == Nowe::myJidBare() && room == thisGroup->getRoomJid()) {
         auto time = msg.stamp();
-        insertInMessage(from, msg.body(), &time);
+        if (!time.isValid()) {
+            insertInMessage(from.replace("@chirsz.cc", ""), msg.body(), nullptr);
+        } else {
+            insertInMessage(from.replace("@chirsz.cc", ""), msg.body(), &time);
+        }
     }
 }
 
@@ -307,53 +315,58 @@ void GroupChatDialog::renderMemberList()
 
     for (QString activeMember : thisGroup->getActiveMembers()) {
         qDebug() << "GroupChatDialog::renderMemberList" << activeMember << endl;
-        QStandardItem * activeItem = new QStandardItem(QIcon(":/images/1.png"), activeMember);
+        QStandardItem * activeItem = new QStandardItem(QIcon(":/images/1.png"), activeMember.replace(thisGroup->getRoomJid() + "/", "").replace(".chirsz.cc", ""));
         activeItems->appendRow(activeItem);
     }
 
     for (QString inActiveMember : thisGroup->getInactiveMembers()) {
         qDebug() << "GroupChatDialog::renderMemberList" << inActiveMember << endl;
-        QStandardItem * inActiveItem = new QStandardItem(QIcon(":/images/1.png"), inActiveMember);
+        QStandardItem * inActiveItem = new QStandardItem(QIcon(":/images/1.png"), inActiveMember.replace(thisGroup->getRoomJid() + "/", "").replace(".chirsz.cc", ""));
         inActiveItems->appendRow(inActiveItem);
     }
 }
 
 void GroupChatDialog::someoneOnline(QString jid)
 {
-    QDataStream jidStream;
+    qDebug() << "GroupChatDialog::someoneOnline " << "jid " << jid << endl;
+
     QString jidString;
     int row;
 
     for (row = 0; row < inActiveItems->rowCount(); row++) {
-        inActiveItems->child(row)->read(jidStream);
-        jidStream >> jidString;
-
+        jidString = inActiveItems->child(row)->text();
+        qDebug() << "GroupChatDialog::someoneOnline " << "jidString " << jidString << endl;
         if (jidString == jid) {
             break;
         }
     }
 
-    activeItems->appendRow(new QStandardItem(QIcon(":/images/1.png"), jid));
-    inActiveItems->removeRow(row);
+    activeItems->appendRow(new QStandardItem(QIcon(":/images/1.png"), jid.replace(thisGroup->getRoomJid() + "/", "").replace(".chirsz.cc", "")));
+    if (row < inActiveItems->rowCount()) {
+        inActiveItems->removeRow(row);
+    }
 }
 
 void GroupChatDialog::someoneOffline(QString jid)
 {
-    QDataStream jidStream;
+    qDebug() << "GroupChatDialog::someoneOffline " << "jid " << jid << endl;
+
     QString jidString;
     int row;
 
+    jid = jid.split("/")[1];
     for (row = 0; row < activeItems->rowCount(); row++) {
-        activeItems->child(row)->read(jidStream);
-        jidStream >> jidString;
-
+        jidString = activeItems->child(row)->text();
+        qDebug() << "GroupChatDialog::someoneOffline " << "jidString " << jidString << endl;
         if (jidString == jid) {
             break;
         }
     }
 
-    inActiveItems->appendRow(new QStandardItem(QIcon(":/images/1.png"), jid));
-    activeItems->removeRow(row);
+    inActiveItems->appendRow(new QStandardItem(QIcon(":/images/1.png"), jid.replace(thisGroup->getRoomJid() + "/", "").replace(".chirsz.cc", "")));
+    if (row < activeItems->rowCount()) {
+        activeItems->removeRow(row);
+    }
 }
 
 

@@ -16,15 +16,16 @@ Group::Group(QString jid)
             this->roomJid = jid;
 
             this->isRefreshList = true;
-            this->room->join();
 
             connect(Nowe::myClient(), &QXmppClient::iqReceived, this, &Group::on_iqReceived);
             connect(this->room, &QXmppMucRoom::joined, this, &Group::registerWithRoom);
             connect(this->room, &QXmppMucRoom::left, this, [=]() {
-                removeMember(Nowe::myJid());
+                removeMember(Nowe::myJidBare());
             });
             connect(this->room, &QXmppMucRoom::participantAdded, this, &Group::addMember);
             connect(this->room, &QXmppMucRoom::participantRemoved, this, &Group::removeMember);
+
+            this->room->join();
         }
     }
 }
@@ -54,7 +55,7 @@ bool Group::obtainMemberList(QString affiliation)
 
         QXmppIq membersIq(QXmppIq::Get);
         membersIq.setTo(this->roomJid);
-        membersIq.setFrom(Nowe::myJid());
+        membersIq.setFrom(Nowe::myJidBare());
         membersIq.setExtensions(membersEls);
 
         Nowe::myClient()->sendPacket(membersIq);
@@ -94,7 +95,7 @@ bool Group::inviteNewMember(QString jid)
         return false;
     }
 
-    this->room->sendInvitation(jid, Nowe::myJid() + "向你发来了加群邀请，一起来玩吧～");
+    this->room->sendInvitation(jid, Nowe::myJidBare() + "向你发来了加群邀请，一起来玩吧～");
     return true;
 }
 
@@ -110,7 +111,7 @@ void Group::registerWithRoom()
 
     QXmppIq membersIq(QXmppIq::Get);
     membersIq.setTo(this->roomJid);
-    membersIq.setFrom(Nowe::myJid());
+    membersIq.setFrom(Nowe::myJidBare());
     membersIq.setExtensions(membersEls);
 
     Nowe::myClient()->sendPacket(membersIq);
@@ -282,7 +283,7 @@ bool Group::receiveRegistrationForm()
 
     QXmppIq registrationIq(QXmppIq::Set);
     registrationIq.setTo(this->roomJid);
-    registrationIq.setFrom(Nowe::myJid());
+    registrationIq.setFrom(Nowe::myJidBare());
     registrationIq.setExtensions(registrationEls);
 
     Nowe::myClient()->sendPacket(registrationIq);
@@ -296,7 +297,7 @@ bool Group::updateMembership(QXmppElement xEl)
 
     itemEl = xEl.firstChildElement();
 
-    while (!itemEl.isNull() && itemEl.attribute("affiliation") == "member" && itemEl.attribute("jid") != Nowe::myJid()) {
+    while (!itemEl.isNull() && itemEl.attribute("affiliation") == "member" && itemEl.attribute("jid") != Nowe::myJidBare()) {
         this->members.append(itemEl.attribute("jid"));
         itemEl = itemEl.nextSiblingElement();
     }

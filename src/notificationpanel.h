@@ -49,6 +49,7 @@ private:
     Ui::NotificationPanel *ui;
 
     void addRoom();
+
 };
 
 #endif // NOTIFICATIONPANEL_H

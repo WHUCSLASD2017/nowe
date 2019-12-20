@@ -105,7 +105,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 SUBDIRS += \
     nowe.pro
 
-DISTFILES +=
+DISTFILES += \
+    images/chat.png \
+    images/recommend.png \
+    images/thefind.png
 
 RESOURCES += \
     resources.qrc

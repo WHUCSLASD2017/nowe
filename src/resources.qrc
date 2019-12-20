@@ -20,5 +20,8 @@
         <file>images/invitefriend.png</file>
         <file>images/imageIcon20x20.png</file>
         <file>images/emotic20x20.png</file>
+        <file>images/chat.png</file>
+        <file>images/recommend.png</file>
+        <file>images/thefind.png</file>
     </qresource>
 </RCC>

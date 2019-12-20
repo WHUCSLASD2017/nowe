@@ -68,7 +68,7 @@ void ChatArea::setOutMsgFormat(const QFont &target, const QColor &color)
 
 void ChatArea::setTitle(const QString &newTitle)
 {
-    ui->nickNameTitle->setText(newTitle);
+    //ui->nickNameTitle->setText(newTitle);
 }
 
 void ChatArea::on_sendBtn_clicked()

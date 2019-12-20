@@ -102,13 +102,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-SUBDIRS += \
-    nowe.pro
-
-DISTFILES += \
-    images/chat.png \
-    images/recommend.png \
-    images/thefind.png
-
 RESOURCES += \
     resources.qrc

@@ -38,33 +38,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     NoweBaseWindow::initNoweStyle();
 
-    //设置面板上面三个按钮的图标
-    QPixmap icon1(":/images/b.png");
-    ui->pushButton->setIcon(icon1);
-
-    QPixmap icon2(":/images/a.png");
-    ui->pushButton_3->setIcon(icon2);
-
-    QPixmap icon3(":/images/c.png");
-    ui->pushButton_2->setIcon(icon3);
-
-    //功能主面板按钮
-    QPixmap iconRecommend(":/images/recommend.png");
-    ui->recommendBtn->setIcon(iconRecommend);
-
-    QPixmap iconChat(":/images/chat.png");
-    ui->chatBtn->setIcon(iconChat);
-
-    QPixmap iconFind(":/images/thefind.png");
-    ui->findBtn->setIcon(iconFind);
-
-    //设置下面按钮的图标
-    QPixmap icon4(":/images/more.png");
-    QPixmap iconAdd(":/images/add.png");
-    ui->pushButton_4->setIcon(icon4);
-    ui->AddItemBtn->setIcon(iconAdd);
-    //ui->pushButton->setFixedSize(icon1.size());
-
     //设置三个面板的表头、列数（被隐藏，但必须设置）
     ui->friendTree->setColumnCount(1);
     QStringList headers;

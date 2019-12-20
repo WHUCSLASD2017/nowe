@@ -218,6 +218,10 @@ color:white;</string>
                 <property name="text">
                  <string/>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/b.png</normaloff>:/images/b.png</iconset>
+                </property>
                </widget>
                <widget class="QPushButton" name="pushButton_3">
                 <property name="geometry">
@@ -240,6 +244,10 @@ color:white;</string>
                 <property name="text">
                  <string/>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/c.png</normaloff>:/images/c.png</iconset>
+                </property>
                </widget>
                <widget class="QPushButton" name="pushButton_2">
                 <property name="geometry">
@@ -261,6 +269,10 @@ color:white;</string>
                 </property>
                 <property name="text">
                  <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/a.png</normaloff>:/images/a.png</iconset>
                 </property>
                </widget>
               </widget>
@@ -499,6 +511,10 @@ background:none;</string>
                 <property name="text">
                  <string/>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/more.png</normaloff>:/images/more.png</iconset>
+                </property>
                </widget>
                <widget class="QPushButton" name="AddItemBtn">
                 <property name="geometry">
@@ -515,6 +531,10 @@ background:none;</string>
                 </property>
                 <property name="text">
                  <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
                 </property>
                </widget>
               </widget>
@@ -616,6 +636,10 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
              <property name="text">
               <string/>
              </property>
+             <property name="icon">
+              <iconset resource="resources.qrc">
+               <normaloff>:/images/recommend.png</normaloff>:/images/recommend.png</iconset>
+             </property>
             </widget>
            </item>
            <item>
@@ -632,6 +656,10 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
              <property name="text">
               <string/>
              </property>
+             <property name="icon">
+              <iconset resource="resources.qrc">
+               <normaloff>:/images/chat.png</normaloff>:/images/chat.png</iconset>
+             </property>
             </widget>
            </item>
            <item>
@@ -647,6 +675,10 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
              </property>
              <property name="text">
               <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="resources.qrc">
+               <normaloff>:/images/thefind.png</normaloff>:/images/thefind.png</iconset>
              </property>
             </widget>
            </item>
@@ -814,6 +846,8 @@ margin-bottom: -6px;
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

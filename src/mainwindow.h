@@ -13,6 +13,7 @@
 #include <QXmppBookmarkSet.h>
 #include <QXmppDiscoveryManager.h>
 #include <QXmppPubSubIq.h>
+#include <QXmppVCardIq.h>
 #include "groupmanager.h"
 #include "addnewfriend.h"
 #include "createroom.h"
@@ -33,15 +34,15 @@ public:
     QMenu *menu;
     QMenu *addMenu;
 
-    QWidget *createItem(QString jid, QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP, bool ifOnline);
+    QWidget *createItem(QString jid, QString mainTitle, const QImage& icon, QString subTitle, bool ifVIP, bool ifOnline);
     QWidget *createRoomItem(QString mainTitle, QString iconAddr);
 
     QTreeWidgetItem *createFriendGroup(QString grpName);
-    QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
+    QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, const QImage& avatar,QString jid);
     QTreeWidgetItem *removeFriendOrGroup(QTreeWidgetItem *toSet);
-    QTreeWidgetItem *addFriendtoGroupAtTop(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
-    QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, QString avatarAddr, QTreeWidgetItem *grp = nullptr, QString jid=nullptr);
-    QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, QString avatarAddr,QString jid);
+    QTreeWidgetItem *addFriendtoGroupAtTop(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, const QImage& avatar,QString jid);
+    QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, const QImage& avatar, QTreeWidgetItem *grp = nullptr, QString jid=nullptr);
+    QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, const QImage& avatar,QString jid);
 
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
 
@@ -98,6 +99,8 @@ private slots:
 
     void on_clientVCardReceived();
 
+    void on_vcardReceived(const QXmppVCardIq&);
+
     void on_rosterReceived();
 
     void on_roomReceived(const QXmppBookmarkSet &bookmarks);
@@ -106,6 +109,12 @@ private slots:
     void setMucManager();
 
     void popupChatTab(const QString& bareJID, const QString& nickName);
+
+    void on_recommendBtn_clicked();
+
+    void on_chatBtn_clicked();
+
+    void on_findBtn_clicked();
 
 signals:
     void friendClicked(QString usrName);

@@ -47,6 +47,16 @@ MainWindow::MainWindow(QWidget *parent) :
     QPixmap icon3(":/images/c.png");
     ui->pushButton_2->setIcon(icon3);
 
+    //功能主面板按钮
+    QPixmap iconRecommend(":/images/recommend.png");
+    ui->recommendBtn->setIcon(iconRecommend);
+
+    QPixmap iconChat(":/images/chat.png");
+    ui->chatBtn->setIcon(iconChat);
+
+    QPixmap iconFind(":/images/thefind.png");
+    ui->findBtn->setIcon(iconFind);
+
     //设置下面按钮的图标
     QPixmap icon4(":/images/more.png");
     QPixmap iconAdd(":/images/add.png");
@@ -93,6 +103,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(client->findExtension<QXmppRosterManager>(), &QXmppRosterManager::subscriptionReceived,
             this, &MainWindow::on_subscriptionReceived);
 
+    connect(client->findExtension<QXmppVCardManager>(), &QXmppVCardManager::vCardReceived,
+            this, &MainWindow::on_vcardReceived);
+
     connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &MainWindow::on_messageReceived);
 
     loadDone=false;
@@ -111,9 +124,9 @@ MainWindow::MainWindow(QWidget *parent) :
        ui->mainTabs->removeTab(index);
     });
 
-    ui->mainWebView->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
+    ui->recommendPage->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
 
-    connect(ui->mainWebView,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
+    connect(ui->recommendPage,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
 }
 
 void MainWindow::onTitleChanged(const QString &title)
@@ -202,30 +215,30 @@ QTreeWidgetItem *MainWindow::createFriendGroup(QString grpName)
     return item1;
 }
 //在消息面板添加一个消息
-QTreeWidgetItem *MainWindow::createMessage(QString mainTitle,QString subTitle,QString avatarAddr,QString jid)
+QTreeWidgetItem *MainWindow::createMessage(QString mainTitle,QString subTitle,const QImage& avatar,QString jid)
 {
     //先添加一个表项到消息列表
     QTreeWidgetItem *item1=new QTreeWidgetItem;
     ui->messageTree->addTopLevelItem(item1);
     //再把这个表项里的控件插入进去，下面都是这样
-    ui->messageTree->setItemWidget(item1,0,createItem(jid,mainTitle,avatarAddr,subTitle,true,true));
+    ui->messageTree->setItemWidget(item1,0,createItem(jid,mainTitle,avatar,subTitle,true,true));
     return item1;
 }
 
 
-QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr,QString jid)
+QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,const QImage& avatar,QString jid)
 {
     //向一个分组里添加一个好友，也就是向二级表项里插入一个三级表项
     QTreeWidgetItem *item11=new QTreeWidgetItem(grp);
-    ui->friendTree->setItemWidget(item11,0,createItem(jid,mainTitle,avatarAddr,subTitle,true,true));
+    ui->friendTree->setItemWidget(item11,0,createItem(jid,mainTitle,avatar,subTitle,true,true));
     return item11;
 }
 
-QTreeWidgetItem *MainWindow::addFriendtoGroupAtTop(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,QString avatarAddr,QString jid)
+QTreeWidgetItem *MainWindow::addFriendtoGroupAtTop(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,const QImage& avatar,QString jid)
 {
     //和上面函数功能一样，但是上面是在末尾插，这个在顶部插
     QTreeWidgetItem *item11=new QTreeWidgetItem(grp,nullptr);
-    QWidget *now=createItem(jid,mainTitle,avatarAddr,subTitle,true,true);
+    QWidget *now=createItem(jid,mainTitle,avatar,subTitle,true,true);
     ui->friendTree->setItemWidget(item11,0,now);
 
     return item11;
@@ -253,29 +266,29 @@ QTreeWidgetItem *MainWindow::removeFriendOrGroup(QTreeWidgetItem *toSet)
 }
 
 
-QTreeWidgetItem *MainWindow::setFriendToTop(QTreeWidgetItem *toSet,QString mainTitle,QString subTitle,QString avatarAddr,QTreeWidgetItem *grp,QString jid)
+QTreeWidgetItem *MainWindow::setFriendToTop(QTreeWidgetItem *toSet,QString mainTitle,QString subTitle,const QImage& avatar,QTreeWidgetItem *grp,QString jid)
 {
     //把某个好友放到顶部去，就是删了再加
     if(grp==nullptr)
         grp=toSet->parent();
     removeFriendOrGroup(toSet);
-    return addFriendtoGroupAtTop(grp,mainTitle,subTitle,avatarAddr,jid);
+    return addFriendtoGroupAtTop(grp,mainTitle,subTitle,avatar,jid);
 }
 
 
-QWidget *MainWindow::createItem(QString jid,QString mainTitle, QString iconAddr, QString subTitle, bool ifVIP=false, bool ifOnline=false)
+QWidget *MainWindow::createItem(QString jid,QString mainTitle, const QImage& icon, QString subTitle, bool ifVIP=false, bool ifOnline=false)
 {
     //本函数用于向一个已经存在的表项里添加控件
     QWidget *myItem=new QWidget(this);
     QLabel *mainLabel=new QLabel(this);
     QLabel *subLabel=new QLabel(this);
     QLabel *iconLabel=new QLabel(this);
-    QPixmap *avatar=new QPixmap(iconAddr);
-    QLabel *addr=new QLabel(iconAddr,this);
+    QPixmap avatar= QPixmap::fromImage(icon);
     QLabel *jidLabel=new QLabel(jid,this);
-    addr->hide();
+    QLabel *nickName=new QLabel(mainTitle,this);
     jidLabel->hide();
-    QPixmap avatarAfter=avatar->scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    nickName->hide();
+    QPixmap avatarAfter=avatar.scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     //分别代表一个消息条中的用户名、个性签名和头像，addr存头像地址，隐藏起来，发射信号用
     mainLabel->setText(mainTitle);
@@ -289,7 +302,7 @@ QWidget *MainWindow::createItem(QString jid,QString mainTitle, QString iconAddr,
     vLayout->addStretch();
     vLayout->addWidget(mainLabel);
     vLayout->addWidget(subLabel);
-    vLayout->addWidget(addr);
+    vLayout->addWidget(nickName);
     vLayout->addWidget(jidLabel);
     vLayout->addStretch();
     vLayout->setSpacing(5);
@@ -428,7 +441,7 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
 void MainWindow::setAvatar(QPixmap &avatar, int length, int width, int radius)
 {
     //首先缩放头像
-    QPixmap pixMap= avatar.scaled(width,length, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    QPixmap pixMap= avatar.scaled(width,length, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
     //把头像搞成圆形的
     pixMap =  PixmapToRound(pixMap, radius);
@@ -484,34 +497,68 @@ void MainWindow::on_clientVCardReceived()
     QImageReader avaterReader(&buffer);
     QPixmap avatar = QPixmap::fromImage(avaterReader.read());
 
-    setAvatar(avatar,80,80,45);
+    setAvatar(avatar,40,40,20);
     setMainTitle(myCard.fullName());
     setSubTitle(myCard.description());
+}
+
+void MainWindow::on_vcardReceived(const QXmppVCardIq& vcard)
+{
+    const static QImage defaultAvatar(":/images/1.png");
+    static int loadedItems = 0;
+
+    if (vcard.from().isEmpty())
+        return;
+
+    auto photo = vcard.photo();
+    auto bareJid = QXmppUtils::jidToBareJid(vcard.from());
+
+    QImage avatar;
+    if (photo.isEmpty()) {
+        avatar = defaultAvatar;
+    } else {
+        QBuffer buffer;
+        buffer.setData(photo);
+        buffer.open(QIODevice::ReadOnly);
+        QImageReader avatarReader(&buffer);
+        avatar = avatarReader.read();
+    }
+
+    auto rstMng = client->findExtension<QXmppRosterManager>();
+    auto item = rstMng->getRosterEntry(bareJid);
+    auto resources = rstMng->getResources(bareJid);
+    QString res = resources.isEmpty() ? "" : resources[0];
+    auto presence = rstMng->getPresence(bareJid,res);
+
+    if (!loadDone) {
+        createMessage(item.bareJid(), presence.statusText(), avatar,item.bareJid());
+        ++loadedItems;
+        if (loadedItems == rstMng->getRosterBareJids().length())
+            loadDone = true;
+    }
+
+    QTreeWidgetItem* grp;
+    if(item.groups().empty()) {
+        grp = grpMng.getGrpAddr("未分组好友",this);
+    } else {
+        grp = grpMng.getGrpAddr(*(item.groups().begin()),this);
+    }
+
+    addFriendtoGroup(grp,item.bareJid(),presence.statusText(),avatar,bareJid);
 }
 
 // 初始化好友列表
 void MainWindow::on_rosterReceived()
 {
     Nowe::sendBookMarkRequest();
+    QMap<QString, QByteArray> jidToAvatar;
 
-    loadDone=false;
     auto rstMng = client->findExtension<QXmppRosterManager>();
-    foreach(const QString& bareJid, rstMng->getRosterBareJids()) {
-        auto item = rstMng->getRosterEntry(bareJid);
-        auto resources = rstMng->getResources(bareJid);
-        QString res = resources.isEmpty() ? "" : resources[0];
-        auto presence = rstMng->getPresence(bareJid,res);
+    auto vcdMng = client->findExtension<QXmppVCardManager>();
 
-       // qDebug()<<"■■■■■■■■■■■■■■■"<<"create!";
-        createMessage(item.bareJid(), presence.statusText(), ":/images/1.png",item.bareJid());
-        //qDebug()<<"■■■■■■■■■■■■■■■"<<"add!";
-        //qDebug()<<item.groups()<<"\n\n\n\n\n\n\n\n\n\n\n\n";
-        if(item.groups().empty())
-            addFriendtoGroup(grpMng.getGrpAddr("未分组好友",this),item.bareJid(),presence.statusText(),":/images/1.png",bareJid);
-        else
-            addFriendtoGroup(grpMng.getGrpAddr(*(item.groups().begin()),this),item.bareJid(),presence.statusText(),":/images/1.png",bareJid);
+    foreach(const QString& bareJid, rstMng->getRosterBareJids()) {
+        vcdMng->requestVCard(bareJid);
     }
-    loadDone=true;
 }
 
 
@@ -693,6 +740,8 @@ void MainWindow::setMucManager()
 
 void MainWindow::popupChatTab(const QString &bareJID, const QString &nickName)
 {
+    ui->stackedWidget->setCurrentIndex(1);
+
     int tabs = ui->mainTabs->count();
     for(int i=0; i < tabs; ++i) {
         auto a = dynamic_cast<ChatArea*>(ui->mainTabs->widget(i));
@@ -752,3 +801,19 @@ void MainWindow::createRoom(QString roomName)
 }
 */
 
+
+void MainWindow::on_recommendBtn_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_chatBtn_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_findBtn_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+
+}

@@ -25,8 +25,9 @@ void CreateRoom::on_cancelBtn_clicked()
 void CreateRoom::on_createBtn_clicked()
 {
     QString  roomName = ui->nameLnEdt->text();
-    if(roomName == ""){
-        QMessageBox::critical(this,"输入非法","请输入群名称！");
+    QRegExp regx("[a-zA-Z0-9\\x4e00-\\x9fa5]+");
+    if(!regx.exactMatch(roomName)){
+        QMessageBox::critical(this,"输入非法","请输入合法群名称！");
     }
     else {
         createRoom(roomName);
@@ -71,7 +72,6 @@ void CreateRoom::createRoom(QString roomName)
         //设置房间属性，使群成为长久群
         QXmppDataForm form(QXmppDataForm::Submit);
         QList<QXmppDataForm::Field> fields;
-
         {
            QXmppDataForm::Field field(QXmppDataForm::Field::HiddenField);
            field.setKey("FORM_TYPE");
@@ -85,13 +85,13 @@ void CreateRoom::createRoom(QString roomName)
             field.setValue(roomName);
             fields.append(field);
         }
+
         //field.setKey("muc#roomconfig_subject");
         //field.setValue(roomSubject.text());
         //fields.append(field);
 
         //field.setKey("muc#roomconfig_roomdesc");
         //field.setValue(roomDesc.text());
-        //fields.append(field);
 
         {
            QXmppDataForm::Field field(QXmppDataForm::Field::BooleanField);
@@ -122,6 +122,7 @@ void CreateRoom::createRoom(QString roomName)
 
         Nowe::createBookMark(roomName);
     }
+
 
     close();
 

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network xml
+QT       += core gui network xml webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -43,7 +43,8 @@ SOURCES += \
     chatdialog.cpp \
     ChangeHeaderWnd.cpp \
     noweglobal.cpp \
-    nowebasewindow.cpp
+    nowebasewindow.cpp \
+    chatarea.cpp
 
 HEADERS += \
     addnewfriend.h \
@@ -63,7 +64,8 @@ HEADERS += \
     chatdialog.h \
     ChangeHeaderWnd.h \
     NoweGlobal.h \
-    nowebasewindow.h
+    nowebasewindow.h \
+    chatarea.h
 
 FORMS += \
     addnewfriend.ui \
@@ -76,7 +78,8 @@ FORMS += \
     loginwindow.ui \
     dataframe.ui \
     chatdialog.ui \
-    ChangeHeaderWnd.ui
+    ChangeHeaderWnd.ui \
+    chatarea.ui
 
 unix {
     INCLUDEPATH += /usr/local/include/qxmpp

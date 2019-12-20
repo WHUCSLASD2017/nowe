@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Description: 切换头像窗口
 * Author: 公子开明 KaiMing Prince
 * Detail: 从本地上传图片，进行放缩，切割等操作，选择合适范围作为头像
@@ -15,7 +15,7 @@
 #include <QPainter>
 
 
-class ChangeHeaderWnd : public QWidget
+class ChangeHeaderWnd : public NoweBaseWindow
 {
     Q_OBJECT
 
@@ -26,12 +26,12 @@ public:
     void LoadHeader(const QPixmap& pixmap);
     void RotateHeader(bool bClock);
 
-    void mousePressEvent(QMouseEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
+//    void mousePressEvent(QMouseEvent *e);
+//    void mouseMoveEvent(QMouseEvent *e);
+//    void mouseReleaseEvent(QMouseEvent *e);
 
 protected:
-    virtual bool eventFilter(QObject* watched, QEvent* event);
+    bool eventFilter(QObject* watched, QEvent* event);
 
 signals:
     void updateHeader(const QPixmap& header);
@@ -41,6 +41,7 @@ protected slots:
     void onScaledChanged(int nValue);
     void onOk();
     void onCancel();
+
 
 private:
     Ui::ChangeHeaderWnd ui;

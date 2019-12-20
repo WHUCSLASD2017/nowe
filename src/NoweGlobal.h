@@ -6,7 +6,6 @@
 #include <QXmppPubSubIq.h>
 #include <QXmppBookmarkManager.h>
 #include <QXmppMucManager.h>
-#include <QString>
 
 namespace Nowe {
 QXmppClient* myClient();
@@ -16,7 +15,6 @@ QString myJidBare();
 QXmppMucManager * myMucManager();
 void sendBookMarkRequest();
 void createBookMark(QString markName);
-void registerWithRoom(QString roomJid);
 }
 
 

@@ -80,9 +80,8 @@ public slots:
     void on_messageReceived(const QXmppMessage &msg);
     void on_invitationReceived(const QString &roomJid, const QString &inviter, const QString &reason);
     void on_AddItemBtn_clicked();
-
+    void onTitleChanged(const QString &title);
     QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
-
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();
@@ -111,7 +110,7 @@ private slots:
 
     void setMucManager();
 
-
+    void popupChatTab(const QString& bareJID, const QString& nickName);
 
 signals:
     void friendClicked(QString usrName);

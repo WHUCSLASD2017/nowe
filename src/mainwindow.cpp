@@ -27,6 +27,8 @@
 #include "notificationpanel.h"
 #include <QPropertyAnimation>
 #include <QXmppUtils.h>
+#include <QtWebEngineWidgets>
+#include "chatarea.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -98,38 +100,31 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadDone=false;
 
-
     //向服务器请求并发送群组列表
 
     connect(client->findExtension<QXmppBookmarkManager>(), &QXmppBookmarkManager::bookmarksReceived,
             this, &MainWindow::on_roomReceived);
 
-    //设置群组管理
-    //setMucManager();
+    // 去掉主页标签的关闭按钮
+    ui->mainTabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
 
+    ui->mainTabs->setMovable(true);
 
-    //auto discov = client->findExtension<QXmppDiscoveryManager>();
-    //discov->requestItems("conference.chirsz.cc");
+    connect(ui->mainTabs, &QTabWidget::tabCloseRequested,[=](int index) {
+       ui->mainTabs->removeTab(index);
+    });
 
+    ui->mainWebView->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
 
+    connect(ui->mainWebView,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
+}
 
-    //initRoomList(bookMarkManager);
-
-    //connect(discov, &QXmppDiscoveryManager::itemsReceived,this, &MainWindow::on_roomReceived);
-
-
-
-    loadDone=false;
-
-    //这一部分测试用的，试着添加一部分内容
-//    QTreeWidgetItem *a=createFriendGroup("123发");
-//    QTreeWidgetItem *b=createFriendGroup("1235");
-//    QTreeWidgetItem *c=createFriendGroup("1236775");
-//    QTreeWidgetItem *d=createFriendGroup("1235656");
-//    QTreeWidgetItem *e=addFriendtoGroup(a,"1","dfgd",":/images/1.png");
-//    QTreeWidgetItem *f=addFriendtoGroup(a,"2","dfgd",":/images/1.png");
-//    setFriendToTop(f,"new","new",":/images/4.png",a);
-    //createMessage("5555","66666",":/images/3.png");
+void MainWindow::onTitleChanged(const QString &title)
+{
+    if(title!="chirsz.cc/nowe/moban3914/")
+    {
+        qDebug()<<"\n\n\n\n"<<title;
+    }
 }
 
 
@@ -165,7 +160,6 @@ void MainWindow::setMenu()
 
     connect(addFriendOrRoom,&QAction::triggered,this,&MainWindow::displayProfilePanel);
     //connect(setAvatar,&QAction::triggered,this,&MainWindow::displayAvatarChangePanel);
-
 }
 
 
@@ -407,14 +401,20 @@ void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int col
     //双击了消息面板！
     QWidget *now=ui->messageTree->itemWidget(item,0);
     QList<QLabel *> labelList = now->findChildren<QLabel *>();
+    // labelList:[4]->bareJid [2]->signature
+
+    auto bareJID = labelList[4]->text();
+    auto nickName = labelList[1]->text();
+
+
     //要找到用户点击了哪个面板，从其中的label里面找到用户名等信息，发射信号
     emit msgClicked(labelList[1]->text());
     //不仅要发射信号，还要用获得的用户名等信息，创建一个聊天框
-    qDebug()<<"                                   "<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text()<<labelList[4]->text();
-    QPixmap avatar;
-    avatar.load(labelList[3]->text());
+    //qDebug()<<"                                   "<<labelList<<labelList[0]->text()<<labelList[1]->text()<<labelList[2]->text()<<labelList[3]->text()<<labelList[4]->text();
+
     //聊天框建立
-    ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
+    //ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
+    popupChatTab(bareJID, nickName);
 }
 
 void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
@@ -424,10 +424,10 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
     if(item->parent())
     {
         QList<QLabel *> labelList = now->findChildren<QLabel *>();
-        emit friendClicked(labelList[1]->text());
-        QPixmap avatar;
-        avatar.load(labelList[3]->text());
-        ChatDialog::getChatDialog(labelList[4]->text(),ui->nickname->text(),labelList[2]->text(),labelList[1]->text(),avatar);
+        auto bareJID = labelList[4]->text();
+        auto nickName = labelList[1]->text();
+
+        popupChatTab(bareJID, nickName);
     }
 }
 
@@ -457,7 +457,7 @@ void MainWindow::on_roomTree_itemDoubleClicked(QTreeWidgetItem *item, int column
     Group * myGroup = Groups::getMyGroups().getGroup(jid);
     qDebug() << "MainWindow::on_roomTree_itemDoubleClicked myGroup->getRoomJid() " << myGroup->getRoomJid() << endl;
 
-    myGroup->obtainMemberList("admin");
+    myGroup->obtainMemberList("none");
 
     GroupChatDialog::getChatDialog(myGroup, ui->nickname->text(), "", labelList[1]->text(), avatar);
 
@@ -508,13 +508,10 @@ void MainWindow::setSubTitle(QString string)
     ui->signature->setText(string);
 }
 
+// 用户设置菜单
 void MainWindow::on_pushButton_4_clicked()
 {
-    //这个按钮时左下角的菜单
-    QPoint pos;
-    //菜单在540像素位置弹出
-    pos.setY(540);
-    menu->exec(this->mapToGlobal(pos));
+    menu->exec(ui->pushButton_4->mapToGlobal(QPoint(20,20)));
 }
 
 // 根据最新的 VCard 更新主窗口上个人资料
@@ -608,21 +605,10 @@ void MainWindow::displayCreateRoomPanel()
     //updateAllFriends();
 }
 
+// 添加好友/群组菜单
 void MainWindow::on_AddItemBtn_clicked()
 {
-
-    //这个按钮时左下角的菜单
-    QPoint pos;
-    //菜单在540像素位置弹出
-    pos.setY(540);
-    pos.setX(80);
-    addMenu->exec(this->mapToGlobal(pos));
-/*
-    AddNewFriend *dialog=new AddNewFriend(client,this);
-    dialog->show();
-    dialog->setWindowModality(Qt::ApplicationModal);
-    updateAllFriends();
-    */
+    addMenu->exec(ui->AddItemBtn->mapToGlobal(QPoint(20,20)));
 }
 
 void MainWindow::on_subscriptionReceived(const QString &bareJid)
@@ -662,7 +648,6 @@ void MainWindow::on_invitationReceived(const QString &roomJid, const QString &in
 //在聊天室面板添加一个聊天室
 QTreeWidgetItem *MainWindow::addRoom(QString roomName,QString avatarAddr)
 {
-    qDebug() << "MainWindow::addRoom" << "roomName" << roomName << "avatarAddr" << avatarAddr << endl;
     //暂时把头像文件写死
     avatarAddr = ":/images/room.png";
     //先添加一个表项到群组列表
@@ -714,7 +699,6 @@ void MainWindow::createBookMark( QString markName)
 //初始化及更新聊天室书签列表
 void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
 {
-    qDebug() << "MainWindow::on_roomReceived" << endl;
     //打印当前书签
     /*foreach(QXmppBookmarkConference c,myBookMarkManager->bookmarks().conferences())
     {
@@ -757,6 +741,28 @@ void MainWindow::setMucManager()
         m_pRoom->join();
     }
     //createRoom("zff");
+}
+
+void MainWindow::popupChatTab(const QString &bareJID, const QString &nickName)
+{
+    int tabs = ui->mainTabs->count();
+    for(int i=0; i < tabs; ++i) {
+        auto a = dynamic_cast<ChatArea*>(ui->mainTabs->widget(i));
+        if (a != nullptr && a->receiverJidBare() == bareJID) {
+            ui->mainTabs->setCurrentWidget(a);
+            return;
+        }
+    }
+
+    // 打开新标签页
+    auto newPage = new ChatArea(bareJID);
+    newPage->setTitle(nickName);
+    connect(newPage, &ChatArea::closeBtnClick, [=]() {
+        int i = ui->mainTabs->indexOf(newPage);
+       ui->mainTabs->removeTab(i);
+    });
+    int newtabi = ui->mainTabs->addTab(newPage, nickName);
+    ui->mainTabs->setCurrentIndex(newtabi);
 }
 
 /*

@@ -48,8 +48,6 @@ void sendBookMarkRequest()
 //创建聊天室书签
 void createBookMark( QString markName)
 {
-    qDebug() << "createBookMark " << "markName" << markName << endl;
-
     //加载已存在的书签
     auto markMsg = myClient()->findExtension<QXmppBookmarkManager>();
     QXmppBookmarkSet markset = markMsg->bookmarks();
@@ -80,24 +78,6 @@ void createBookMark( QString markName)
 
     markMsg->setBookmarks(markset);
 
-}
-
-void registerWithRoom(QString roomJid)
-{
-    QXmppElementList membersEls;
-    QXmppElement queryEl;
-
-    queryEl.setTagName("query");
-    queryEl.setAttribute("xlmns", "jabber:iq:register");
-
-    membersEls.append(queryEl);
-
-    QXmppIq membersIq(QXmppIq::Get);
-    membersIq.setTo(roomJid);
-    membersIq.setFrom(Nowe::myJid());
-    membersIq.setExtensions(membersEls);
-
-    Nowe::myClient()->sendPacket(membersIq);
 }
 
 }

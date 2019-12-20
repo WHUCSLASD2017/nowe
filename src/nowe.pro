@@ -44,7 +44,8 @@ SOURCES += \
     ChangeHeaderWnd.cpp \
     noweglobal.cpp \
     nowebasewindow.cpp \
-    chatarea.cpp
+    chatarea.cpp \
+    groupchatarea.cpp
 
 HEADERS += \
     addnewfriend.h \
@@ -65,7 +66,8 @@ HEADERS += \
     ChangeHeaderWnd.h \
     NoweGlobal.h \
     nowebasewindow.h \
-    chatarea.h
+    chatarea.h \
+    groupchatarea.h
 
 FORMS += \
     addnewfriend.ui \
@@ -79,7 +81,8 @@ FORMS += \
     dataframe.ui \
     chatdialog.ui \
     ChangeHeaderWnd.ui \
-    chatarea.ui
+    chatarea.ui \
+    groupchatarea.ui
 
 unix {
     INCLUDEPATH += /usr/local/include/qxmpp

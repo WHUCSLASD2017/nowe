@@ -1,7 +1,5 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "chatdialog.h"
-#include "groupchatdialog.h"
 #include "dataframe.h"
 #include "ChangeHeaderWnd.h"
 #include "NoweGlobal.h"
@@ -29,6 +27,7 @@
 #include <QXmppUtils.h>
 #include <QtWebEngineWidgets>
 #include "chatarea.h"
+#include "groupchatarea.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -179,6 +178,18 @@ void MainWindow::displayAvatarChangePanel()
     //显示头像
     ChangeHeaderWnd* d=new ChangeHeaderWnd;
     d->show();
+}
+
+bool MainWindow::ifChatExist(const QString &bareJID)
+{
+    int tabs = ui->mainTabs->count();
+    for(int i=0; i < tabs; ++i) {
+        auto a = dynamic_cast<ChatArea*>(ui->mainTabs->widget(i));
+        if (a != nullptr && a->receiverJidBare() == bareJID) {
+            return true;
+        }
+    }
+    return false;
 }
 
 //新建一个好友分组
@@ -441,13 +452,13 @@ void MainWindow::on_roomTree_itemDoubleClicked(QTreeWidgetItem *item, int column
     QString jid = labelList[1]->text() + "@conference." + serverName;
 
     Group * myGroup = Groups::getMyGroups().getGroup(jid);
-    qDebug() << "MainWindow::on_roomTree_itemDoubleClicked myGroup->getRoomJid() " << myGroup->getRoomJid() << endl;
+    //qDebug() << "MainWindow::on_roomTree_itemDoubleClicked myGroup->getRoomJid() " << myGroup->getRoomJid() << endl;
 
     myGroup->obtainMemberList("none");
 
-    GroupChatDialog::getChatDialog(myGroup, ui->nickname->text(), "", labelList[1]->text(), avatar);
+    //GroupChatDialog::getChatDialog(myGroup, ui->nickname->text(), "", labelList[1]->text(), avatar);
+    popupGroupChatTab(myGroup, labelList[1]->text());
 
-    qDebug() << "MainWindow::on_roomTree_itemDoubleClicked ending" << endl;
 }
 
 //设置头像
@@ -645,7 +656,7 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     username=ui->nickname->text();
     auto senderID=QXmppUtils::jidToBareJid(msg.from());
     auto msgBody=msg.body();
-    if((!msg.body().isEmpty())&&(!ChatDialog::ifChatDialogExist(senderID)))
+    if((!msg.body().isEmpty())&&(!ifChatExist(senderID)))
     {
     NotificationPanel *notice=new NotificationPanel(this,client);
     notice->setMessageReceiveMode(senderID,msgBody,msg,username);
@@ -784,6 +795,30 @@ void MainWindow::popupChatTab(const QString &bareJID, const QString &nickName)
        ui->mainTabs->removeTab(i);
     });
     int newtabi = ui->mainTabs->addTab(newPage, nickName);
+    ui->mainTabs->setCurrentIndex(newtabi);
+}
+
+void MainWindow::popupGroupChatTab(Group *grp, const QString &groupName)
+{
+    ui->stackedWidget->setCurrentIndex(1);
+
+    int tabs = ui->mainTabs->count();
+    for(int i=0; i < tabs; ++i) {
+        auto a = dynamic_cast<GroupChatArea*>(ui->mainTabs->widget(i));
+        if (a != nullptr && a->group() == grp) {
+            ui->mainTabs->setCurrentWidget(a);
+            return;
+        }
+    }
+
+    // 打开新标签页
+    auto newPage = new GroupChatArea(grp);
+    newPage->setTitle(groupName);
+    connect(newPage, &GroupChatArea::closeBtnClick, [=]() {
+        int i = ui->mainTabs->indexOf(newPage);
+        ui->mainTabs->removeTab(i);
+    });
+    int newtabi = ui->mainTabs->addTab(newPage, groupName);
     ui->mainTabs->setCurrentIndex(newtabi);
 }
 

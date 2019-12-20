@@ -61,6 +61,8 @@ public:
     void displayAvatarChangePanel();
     GroupManager grpMng;
 
+    bool ifChatExist(const QString& bareJID);
+
     void on_presenceChanged();
     void addFriend();
     void flushAllFriends();
@@ -114,6 +116,8 @@ private slots:
     void setMucManager();
 
     void popupChatTab(const QString& bareJID, const QString& nickName);
+
+    void popupGroupChatTab(Group *grp, const QString& groupName);
 
     void on_recommendBtn_clicked();
 

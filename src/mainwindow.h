@@ -38,9 +38,11 @@ public:
     QWidget *createRoomItem(QString mainTitle, QString iconAddr);
 
     QTreeWidgetItem *createFriendGroup(QString grpName);
-    QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, const QImage& avatar,QString jid);
+    QTreeWidgetItem *addFriendtoGroup(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, const QImage& avatar,QString jid,QString role);
     QTreeWidgetItem *removeFriendOrGroup(QTreeWidgetItem *toSet);
     QTreeWidgetItem *addFriendtoGroupAtTop(QTreeWidgetItem *grp, QString mainTitle, QString subTitle, const QImage& avatar,QString jid);
+    QTreeWidgetItem *addRoomtoGroup(QTreeWidgetItem *grp,QString name,const QString& avatar);
+
     QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, const QImage& avatar, QTreeWidgetItem *grp = nullptr, QString jid=nullptr);
     QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, const QImage& avatar,QString jid);
 
@@ -75,6 +77,10 @@ private:
     QXmppBookmarkManager *myBookMarkManager;
     QXmppMucManager *myRoomManager;
     bool loadDone=false;
+
+    QTreeWidgetItem* friendGrp;
+    QTreeWidgetItem* roomGrp;
+
 
 public slots:
     void windowclosed();

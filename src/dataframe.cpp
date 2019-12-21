@@ -60,6 +60,11 @@ void DataFrame::sendNewVCard()
     myVCard.setFullName(ui->name->text());
     myVCard.setDescription(ui->instruction->toPlainText());
 
+    //设置组织
+    //QXmppVCardOrganization org;
+    //org.setOrganization("visitor");
+    //myVCard.setOrganization(org);
+
     myVCardManager->setClientVCard(myVCard);
     myVCardManager->requestClientVCard();
 }
@@ -77,10 +82,15 @@ void DataFrame::updatePanel(const QXmppVCardIq &vcard)
 
        ui->name->setText(vcard.fullName());
        ui->instruction->setText(vcard.description());
+
+       ui->role->setText(vcard.organization().organization());
+
        image->setPixmap(avatar.scaled(image->size()));
        icon.addPixmap(avatar);
        ui->change->setIcon(icon);
        ui->change->setIconSize(QSize(101,101));
+
+
 }
 
 

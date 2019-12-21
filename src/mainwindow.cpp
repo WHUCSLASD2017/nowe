@@ -52,6 +52,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setMenu();
     setAddMenu();
 
+    //构造分组
+
+
     client->logger()->setLoggingType(QXmppLogger::StdoutLogging);
 
     //添加扩展
@@ -102,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->recommendPage->setUrl(QUrl("http://chirsz.cc/nowe/moban3914/"));
 
     connect(ui->recommendPage,&QWebEngineView::titleChanged,this,&MainWindow::onTitleChanged);
+
 }
 
 void MainWindow::onTitleChanged(const QString &title)
@@ -213,7 +217,7 @@ QTreeWidgetItem *MainWindow::createMessage(QString mainTitle,QString subTitle,co
 }
 
 
-QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,const QImage& avatar,QString jid)
+QTreeWidgetItem *MainWindow::addFriendtoGroup(QTreeWidgetItem *grp,QString mainTitle,QString subTitle,const QImage& avatar,QString jid,QString role)
 {
     //向一个分组里添加一个好友，也就是向二级表项里插入一个三级表项
     QTreeWidgetItem *item11=new QTreeWidgetItem(grp);
@@ -376,6 +380,7 @@ void MainWindow::on_pushButton_3_clicked()
 {
     ui->switchPanel->setCurrentIndex(1);
     updateAllFriends();
+    on_roomReceived(myBookMarkManager->bookmarks());
 }
 
 void MainWindow::on_roomTree_itemClicked(QTreeWidgetItem *item, int column)
@@ -561,14 +566,20 @@ void MainWindow::on_vcardReceived(const QXmppVCardIq& vcard)
             loadDone = true;
     }
 
-    QTreeWidgetItem* grp;
-    if(item.groups().empty()) {
+
+    /*if(item.groups().empty()) {
         grp = grpMng.getGrpAddr("未分组好友",this);
     } else {
         grp = grpMng.getGrpAddr(*(item.groups().begin()),this);
-    }
+    }*/
+    friendGrp = grpMng.getGrpAddr("好友",this);
+    //roomGrp = grpMng.getGrpAddr("圈子",this);
 
-    addFriendtoGroup(grp,item.bareJid(),presence.statusText(),avatar,bareJid);
+
+    QString role;
+
+
+    addFriendtoGroup(friendGrp,item.bareJid(),presence.statusText(),avatar,bareJid,role);
 }
 
 // 初始化好友列表
@@ -726,6 +737,18 @@ void MainWindow::createBookMark( QString markName)
 }
 
 
+//将群组添加到分组
+QTreeWidgetItem *MainWindow::addRoomtoGroup(QTreeWidgetItem *grp,QString name,const QString &avatar)
+{
+    //向一个分组里添加一个好友，也就是向二级表项里插入一个三级表项
+    QString avatarAddr = ":/images/room.png";
+
+    QTreeWidgetItem *item11=new QTreeWidgetItem(grp);
+    ui->friendTree->setItemWidget(item11,0,createRoomItem(name,avatarAddr));
+    return item11;
+}
+
+
 
 //初始化及更新聊天室书签列表
 void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
@@ -739,14 +762,25 @@ void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
     //清空群组面板
     ui->roomTree->clear();
 
+
+
     QXmppMucManager * roomMsg = Nowe::myClient()->findExtension<QXmppMucManager>();
+
+
+    QString avatarAddr = ":/images/room.png";    //群组列表头像【头像路径在addRoom函数中已写死，在此留出接口方便之后修改】
+    QImage ava;
+    ava.load(":/images/room.png");
+
+    roomGrp = grpMng.getGrpAddr("圈子",this);
 
     //更新本地聊天室书签管理
     QList<QXmppBookmarkConference> markList= bookmarks.conferences();
     foreach(QXmppBookmarkConference mark, markList)
     {
-        QString avad = "11";    //群组列表头像【头像路径在addRoom函数中已写死，在此留出接口方便之后修改】
-        addRoom(mark.name(),avad);
+
+        addRoomtoGroup(roomGrp,mark.name(),avatarAddr);
+
+        //addRoom(mark.name(),avatarAddr);
         roomMsg->addRoom(mark.jid());
         Groups::getMyGroups().addGroup(mark.jid());
     }

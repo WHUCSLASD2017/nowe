@@ -112,7 +112,53 @@ void MainWindow::onTitleChanged(const QString &title)
 {
     if(title!="chirsz.cc/nowe/moban3914/")
     {
-        qDebug()<<"\n\n\n\n"<<title;
+        auto l = title.split('@');
+        if (l.length() == 2) {
+            if (l[1] == "friend") {
+                auto jid = l[0]+"@chirsz.cc";
+                createMessage(l[0], "Online", QImage(":/images/1.png"), jid);
+                auto rstMng = client->findExtension<QXmppRosterManager>();
+                rstMng->subscribe(jid);
+            } else if (l[1] == "room") {
+                QString serverName = "chirsz.cc";
+                auto roomName = l[0];
+                //聊天室JID
+                QString jid=roomName+"@conference."+serverName;
+
+                QXmppMucManager* roomMsg = client->findExtension<QXmppMucManager>();
+                QXmppBookmarkManager *bookMsg = client->findExtension<QXmppBookmarkManager>();
+
+                QXmppBookmarkSet markset = bookMsg->bookmarks();
+
+                //服务器书签列表
+                QList<QXmppBookmarkConference> markList= markset.conferences();
+
+                QList<QXmppMucRoom*> rooms = roomMsg->rooms();
+
+
+                //若该书签已经存在则返回
+                foreach(QXmppBookmarkConference mark, markList)
+                {
+                    if(mark.jid() == jid)
+                    {
+                        QMessageBox::critical(this,"加入失败","已加入该群聊！");
+                        return ;
+                    }
+                }
+
+                //将加入信息打包发送给服务器
+                QXmppPresence p;
+                QString to = jid+"/"+Nowe::myJidBare();
+                p.setTo(to);
+                p.setFrom(Nowe::myJid());
+                client->sendPacket(p);
+
+                Nowe::createBookMark(roomName);
+
+                Groups groups = Groups::getMyGroups();
+                groups.addGroup(jid);
+            }
+        }
     }
 }
 
@@ -423,8 +469,21 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
 {    
     //和上面的on_messageTree_itemDoubleClicked类似，不过这个点击的是好友面板
     QWidget *now=ui->friendTree->itemWidget(item,0);
-    if(item->parent())
-    {
+    if(item->parent()->text(0) == "圈子") {
+        QList<QLabel *> labelList = now->findChildren<QLabel *>();
+        emit roomClicked(labelList[1]->text());
+
+        //服务器名
+        QString serverName = "chirsz.cc";
+        //聊天室JID
+        QString jid = labelList[1]->text() + "@conference." + serverName;
+
+        Group * myGroup = Groups::getMyGroups().getGroup(jid);
+
+        myGroup->obtainMemberList("none");
+
+        popupGroupChatTab(myGroup, labelList[1]->text());
+    } else {
         QList<QLabel *> labelList = now->findChildren<QLabel *>();
         auto bareJID = labelList[4]->text();
         auto nickName = labelList[1]->text();

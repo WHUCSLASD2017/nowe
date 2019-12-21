@@ -105,6 +105,9 @@ void AddNewFriend::addRoom(QString roomName)
 
     Nowe::createBookMark(roomName);
 
+    Groups groups = Groups::getMyGroups();
+    groups.addGroup(jid);
+
     firstAdd = false;
 
     close();
@@ -172,3 +175,7 @@ void AddNewFriend::test(const QXmppDiscoveryIq &iq)
 {
     iq.items();
 }
+
+
+
+

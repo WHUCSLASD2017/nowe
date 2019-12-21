@@ -78,10 +78,13 @@ void CreateRoom::createRoom(QString roomName)
            field.setValue("http://jabber.org/protocol/muc#roomconfig");
            fields.append(field);
         }
-        QXmppDataForm::Field field;
-        field.setKey("muc#roomconfig_roomname");
-        field.setValue(roomName);
-        fields.append(field);
+
+        {
+            QXmppDataForm::Field field;
+            field.setKey("muc#roomconfig_roomname");
+            field.setValue(roomName);
+            fields.append(field);
+        }
 
         //field.setKey("muc#roomconfig_subject");
         //field.setValue(roomSubject.text());
@@ -89,12 +92,28 @@ void CreateRoom::createRoom(QString roomName)
 
         //field.setKey("muc#roomconfig_roomdesc");
         //field.setValue(roomDesc.text());
-        fields.append(field);
+
         {
            QXmppDataForm::Field field(QXmppDataForm::Field::BooleanField);
            field.setKey("muc#roomconfig_persistentroom");
            field.setValue(true);
            fields.append(field);
+        }
+
+        {
+            // 允许所有群成员邀请新成员
+            QXmppDataForm::Field field(QXmppDataForm::Field::BooleanField);
+            field.setKey("muc#roomconfig_allowinvites");
+            field.setValue(true);
+            fields.append(field);
+        }
+
+        {
+            // 允许所有群成员获取成员列表
+            QXmppDataForm::Field field(QXmppDataForm::Field::ListMultiField);
+            field.setKey("muc#roomconfig_getmemberlist");
+            field.setValue(QXmppMucItem::MemberAffiliation);
+            fields.append(field);
         }
 
         form.setFields(fields);

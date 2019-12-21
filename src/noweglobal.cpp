@@ -30,6 +30,10 @@ QString myJidBare() {
     return myClient()->configuration().jidBare();
 }
 
+QXmppMucManager * myMucManager() {
+    return myClient()->findExtension<QXmppMucManager>();
+}
+
 void sendBookMarkRequest()
 {
     QXmppPubSubIq pbiq;
@@ -75,6 +79,5 @@ void createBookMark( QString markName)
     markMsg->setBookmarks(markset);
 
 }
-
 
 }

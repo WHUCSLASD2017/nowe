@@ -1,6 +1,5 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "chatdialog.h"
 #include "dataframe.h"
 #include "ChangeHeaderWnd.h"
 #include "NoweGlobal.h"
@@ -28,6 +27,7 @@
 #include <QXmppUtils.h>
 #include <QtWebEngineWidgets>
 #include "chatarea.h"
+#include "groupchatarea.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     NoweBaseWindow(parent),
@@ -36,33 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     NoweBaseWindow::initNoweStyle();
-
-    //设置面板上面三个按钮的图标
-    QPixmap icon1(":/images/b.png");
-    ui->pushButton->setIcon(icon1);
-
-    QPixmap icon2(":/images/a.png");
-    ui->pushButton_3->setIcon(icon2);
-
-    QPixmap icon3(":/images/c.png");
-    ui->pushButton_2->setIcon(icon3);
-
-    //功能主面板按钮
-    QPixmap iconRecommend(":/images/recommend.png");
-    ui->recommendBtn->setIcon(iconRecommend);
-
-    QPixmap iconChat(":/images/chat.png");
-    ui->chatBtn->setIcon(iconChat);
-
-    QPixmap iconFind(":/images/thefind.png");
-    ui->findBtn->setIcon(iconFind);
-
-    //设置下面按钮的图标
-    QPixmap icon4(":/images/more.png");
-    QPixmap iconAdd(":/images/add.png");
-    ui->pushButton_4->setIcon(icon4);
-    ui->AddItemBtn->setIcon(iconAdd);
-    //ui->pushButton->setFixedSize(icon1.size());
 
     //设置三个面板的表头、列数（被隐藏，但必须设置）
     ui->friendTree->setColumnCount(1);
@@ -107,6 +80,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, &MainWindow::on_vcardReceived);
 
     connect(Nowe::myClient(), &QXmppClient::messageReceived, this, &MainWindow::on_messageReceived);
+
+    connect(Nowe::myMucManager(), &QXmppMucManager::invitationReceived, this, &MainWindow::on_invitationReceived);
 
     loadDone=false;
 
@@ -203,6 +178,18 @@ void MainWindow::displayAvatarChangePanel()
     //显示头像
     ChangeHeaderWnd* d=new ChangeHeaderWnd;
     d->show();
+}
+
+bool MainWindow::ifChatExist(const QString &bareJID)
+{
+    int tabs = ui->mainTabs->count();
+    for(int i=0; i < tabs; ++i) {
+        auto a = dynamic_cast<ChatArea*>(ui->mainTabs->widget(i));
+        if (a != nullptr && a->receiverJidBare() == bareJID) {
+            return true;
+        }
+    }
+    return false;
 }
 
 //新建一个好友分组
@@ -391,6 +378,10 @@ void MainWindow::on_pushButton_3_clicked()
     updateAllFriends();
 }
 
+void MainWindow::on_roomTree_itemClicked(QTreeWidgetItem *item, int column)
+{
+
+}
 
 void MainWindow::on_friendTree_itemClicked(QTreeWidgetItem *item, int column)
 {
@@ -424,7 +415,7 @@ void MainWindow::on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int col
 }
 
 void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
-{
+{    
     //和上面的on_messageTree_itemDoubleClicked类似，不过这个点击的是好友面板
     QWidget *now=ui->friendTree->itemWidget(item,0);
     if(item->parent())
@@ -435,6 +426,39 @@ void MainWindow::on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int colu
 
         popupChatTab(bareJID, nickName);
     }
+}
+
+void MainWindow::on_roomTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    qDebug() << "MainWindow::on_roomTree_itemDoubleClicked starting" << endl;
+
+    //和上面的on_messageTree_itemDoubleClicked类似，不过这个点击的是群组面板
+    QWidget *now=ui->roomTree->itemWidget(item,0);
+
+    QList<QLabel *> labelList = now->findChildren<QLabel *>();
+
+    qDebug() << "labelList.size " << labelList.size() << endl;
+    qDebug() << "labelList<<labelList[0]->text() " << labelList[0]->text() << endl;
+    qDebug() << "labelList<<labelList[1]->text() " << labelList[1]->text() << endl;
+    qDebug() << "labelList<<labelList[2]->text() " << labelList[2]->text() << endl;
+
+    emit roomClicked(labelList[1]->text());
+    QPixmap avatar;
+    avatar.load(labelList[2]->text());
+
+    //服务器名
+    QString serverName = "chirsz.cc";
+    //聊天室JID
+    QString jid = labelList[1]->text() + "@conference." + serverName;
+
+    Group * myGroup = Groups::getMyGroups().getGroup(jid);
+    //qDebug() << "MainWindow::on_roomTree_itemDoubleClicked myGroup->getRoomJid() " << myGroup->getRoomJid() << endl;
+
+    myGroup->obtainMemberList("none");
+
+    //GroupChatDialog::getChatDialog(myGroup, ui->nickname->text(), "", labelList[1]->text(), avatar);
+    popupGroupChatTab(myGroup, labelList[1]->text());
+
 }
 
 //设置头像
@@ -632,7 +656,7 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     username=ui->nickname->text();
     auto senderID=QXmppUtils::jidToBareJid(msg.from());
     auto msgBody=msg.body();
-    if((!msg.body().isEmpty())&&(!ChatDialog::ifChatDialogExist(senderID)))
+    if((!msg.body().isEmpty())&&(!ifChatExist(senderID)))
     {
     NotificationPanel *notice=new NotificationPanel(this,client);
     notice->setMessageReceiveMode(senderID,msgBody,msg,username);
@@ -641,12 +665,20 @@ void MainWindow::on_messageReceived(const QXmppMessage &msg)
     }
 }
 
+void MainWindow::on_invitationReceived(const QString &roomJid, const QString &inviter, const QString &reason)
+{
+    qDebug() << "MainWindow::on_invitationReceived " << endl;
 
+    NotificationPanel * notice=new NotificationPanel(this, client);
+
+    notice->setInvitationReceiveMode(roomJid, inviter, reason);
+    notice->show();
+    notice->startAnimation();    
+}
 
 //在聊天室面板添加一个聊天室
 QTreeWidgetItem *MainWindow::addRoom(QString roomName,QString avatarAddr)
 {
-
     //暂时把头像文件写死
     avatarAddr = ":/images/room.png";
     //先添加一个表项到群组列表
@@ -707,12 +739,16 @@ void MainWindow::on_roomReceived(const QXmppBookmarkSet &bookmarks)
     //清空群组面板
     ui->roomTree->clear();
 
+    QXmppMucManager * roomMsg = Nowe::myClient()->findExtension<QXmppMucManager>();
+
     //更新本地聊天室书签管理
     QList<QXmppBookmarkConference> markList= bookmarks.conferences();
     foreach(QXmppBookmarkConference mark, markList)
     {
         QString avad = "11";    //群组列表头像【头像路径在addRoom函数中已写死，在此留出接口方便之后修改】
         addRoom(mark.name(),avad);
+        roomMsg->addRoom(mark.jid());
+        Groups::getMyGroups().addGroup(mark.jid());
     }
 
     //设置群管理
@@ -759,6 +795,30 @@ void MainWindow::popupChatTab(const QString &bareJID, const QString &nickName)
        ui->mainTabs->removeTab(i);
     });
     int newtabi = ui->mainTabs->addTab(newPage, nickName);
+    ui->mainTabs->setCurrentIndex(newtabi);
+}
+
+void MainWindow::popupGroupChatTab(Group *grp, const QString &groupName)
+{
+    ui->stackedWidget->setCurrentIndex(1);
+
+    int tabs = ui->mainTabs->count();
+    for(int i=0; i < tabs; ++i) {
+        auto a = dynamic_cast<GroupChatArea*>(ui->mainTabs->widget(i));
+        if (a != nullptr && a->group() == grp) {
+            ui->mainTabs->setCurrentWidget(a);
+            return;
+        }
+    }
+
+    // 打开新标签页
+    auto newPage = new GroupChatArea(grp);
+    newPage->setTitle(groupName);
+    connect(newPage, &GroupChatArea::closeBtnClick, [=]() {
+        int i = ui->mainTabs->indexOf(newPage);
+        ui->mainTabs->removeTab(i);
+    });
+    int newtabi = ui->mainTabs->addTab(newPage, groupName);
     ui->mainTabs->setCurrentIndex(newtabi);
 }
 

@@ -26,9 +26,13 @@ CONFIG += c++11
 
 SOURCES += \
     addnewfriend.cpp \
+    group.cpp \
+    groupchatdialog.cpp \
     createroom.cpp \
     groupentry.cpp \
     groupmanager.cpp \
+    groups.cpp \
+    invitefriend.cpp \
     notificationpanel.cpp \
     registwindow.cpp \
     mainwindow.cpp \
@@ -40,13 +44,18 @@ SOURCES += \
     ChangeHeaderWnd.cpp \
     noweglobal.cpp \
     nowebasewindow.cpp \
-    chatarea.cpp
+    chatarea.cpp \
+    groupchatarea.cpp
 
 HEADERS += \
     addnewfriend.h \
+    group.h \
+    groupchatdialog.h \
     createroom.h \
     groupentry.h \
     groupmanager.h \
+    groups.h \
+    invitefriend.h \
     notificationpanel.h \
     registwindow.h \
     mainwindow.h \
@@ -57,11 +66,14 @@ HEADERS += \
     ChangeHeaderWnd.h \
     NoweGlobal.h \
     nowebasewindow.h \
-    chatarea.h
+    chatarea.h \
+    groupchatarea.h
 
 FORMS += \
     addnewfriend.ui \
+    groupchatdialog.ui \
     createroom.ui \
+    invitefriend.ui \
     notificationpanel.ui \
     registwindow.ui \
     mainwindow.ui \
@@ -69,7 +81,8 @@ FORMS += \
     dataframe.ui \
     chatdialog.ui \
     ChangeHeaderWnd.ui \
-    chatarea.ui
+    chatarea.ui \
+    groupchatarea.ui
 
 unix {
     INCLUDEPATH += /usr/local/include/qxmpp
@@ -91,14 +104,6 @@ win32-msvc {
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-SUBDIRS += \
-    nowe.pro
-
-DISTFILES += \
-    images/chat.png \
-    images/recommend.png \
-    images/thefind.png
 
 RESOURCES += \
     resources.qrc

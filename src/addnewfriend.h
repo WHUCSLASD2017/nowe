@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QXmppClient.h>
 #include "nowebasewindow.h"
+#include "groups.h"
 
 namespace Ui {
 class AddNewFriend;

@@ -44,8 +44,6 @@ public:
     QTreeWidgetItem *setFriendToTop(QTreeWidgetItem *toSet, QString mainTitle, QString subTitle, const QImage& avatar, QTreeWidgetItem *grp = nullptr, QString jid=nullptr);
     QTreeWidgetItem *createMessage(QString mainTitle, QString subTitle, const QImage& avatar,QString jid);
 
-    QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
-
     void createRoom(QString roomName);
 
     void createBookMark(QString markName);
@@ -62,6 +60,8 @@ public:
     void displayProfilePanel();
     void displayAvatarChangePanel();
     GroupManager grpMng;
+
+    bool ifChatExist(const QString& bareJID);
 
     void on_presenceChanged();
     void addFriend();
@@ -81,12 +81,17 @@ public slots:
     void updateAllFriends();
     void on_subscriptionReceived(const QString &bareJid);
     void on_messageReceived(const QXmppMessage &msg);
+    void on_invitationReceived(const QString &roomJid, const QString &inviter, const QString &reason);
     void on_AddItemBtn_clicked();
     void onTitleChanged(const QString &title);
+    QTreeWidgetItem *addRoom(QString roomName,QString avatarAddr);
 private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();
     void on_pushButton_clicked();
+
+    void on_roomTree_itemClicked(QTreeWidgetItem *item, int column);
+
     void on_friendTree_itemClicked(QTreeWidgetItem *item, int column);
 
     void on_messageTree_itemClicked(QTreeWidgetItem *item, int column);
@@ -94,6 +99,8 @@ private slots:
     void on_messageTree_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
     void on_friendTree_itemDoubleClicked(QTreeWidgetItem *item, int column);
+
+    void on_roomTree_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
     void on_pushButton_4_clicked();
 
@@ -110,6 +117,8 @@ private slots:
 
     void popupChatTab(const QString& bareJID, const QString& nickName);
 
+    void popupGroupChatTab(Group *grp, const QString& groupName);
+
     void on_recommendBtn_clicked();
 
     void on_chatBtn_clicked();
@@ -119,6 +128,7 @@ private slots:
 signals:
     void friendClicked(QString usrName);
     void msgClicked(QString usrName);
+    void roomClicked(QString roomName);
 };
 
 #endif // MAINWINDOW_H

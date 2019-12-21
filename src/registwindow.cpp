@@ -1,4 +1,4 @@
-#include "registwindow.h"
+﻿#include "registwindow.h"
 #include "ui_registwindow.h"
 #include <QXmppRegisterIq.h>
 #include <QMessageBox>
@@ -86,6 +86,10 @@ void RegistWindow::iqReceived(const QXmppIq &recIq)
         QXmppVCardPhone phone;
         phone.setNumber(ui->phoneLnEdt->text());
         iq.setPhones({phone});
+
+        QXmppVCardOrganization org;
+        org.setOrganization("Visitor");
+        iq.setOrganization(org);
 
         connect(client, &QXmppClient::connected,[=]() {
             client->findExtension<QXmppVCardManager>()->setClientVCard(iq);

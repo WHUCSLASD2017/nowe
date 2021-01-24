@@ -286,46 +286,43 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="button1">
+   <widget class="QPushButton" name="photoBtn">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>20</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/2.png</normaloff>:/images/2.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="emojiBtn">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>14</y>
-      <width>25</width>
-      <height>25</height>
+      <y>20</y>
+      <width>111</width>
+      <height>20</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">:hover
-{
-	background-color: rgb(241, 241, 241);
-	padding: 3px;
-}</string>
-    </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>PushButton</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/1.png</normaloff>:/images/1.png</iconset>
     </property>
    </widget>
-   <widget class="QLabel" name="button2">
-    <property name="geometry">
-     <rect>
-      <x>46</x>
-      <y>14</y>
-      <width>23</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">:hover
-{
-	background-color: rgb(241, 241, 241);
-	padding: 3px;
-}</string>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
+   <zorder>line</zorder>
+   <zorder>emojiBtn</zorder>
+   <zorder>photoBtn</zorder>
   </widget>
   <widget class="QFrame" name="inputFrame">
    <property name="geometry">
@@ -436,6 +433,9 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
    <property name="text">
     <string>发送</string>
    </property>
+   <property name="shortcut">
+    <string>Return</string>
+   </property>
   </widget>
   <widget class="QPushButton" name="cancleBtn">
    <property name="geometry">
@@ -460,6 +460,8 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -5,8 +5,14 @@
 #include <QDialog>
 #include <QTextDocument>
 #include <QTextFrame>
-#include <QDateTime>
 #include <QXmppMessage.h>
+#include <QNetworkReply>
+#include <QHttpMultiPart>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QNetworkAccessManager>
+#include <QKeyEvent>
+
 
 namespace Ui {
 class ChatDialog;
@@ -39,6 +45,11 @@ public:
     void setBareJid(const QString &value);
     void scrollBarAdjust();
 
+    void insertOutPicture(QImage *image);
+    void insertInPicture(QImage *image,QDateTime *time);
+
+
+
 private:
     Ui::ChatDialog *ui;
     QTextDocument *document;
@@ -52,8 +63,11 @@ private:
     QString receiver;
     QString timeFormat;
     QPixmap *avatar;
-    QTextCursor save;
-    int savepos;
+
+    QImage *image;
+    QString picUrl;
+
+
 
 public slots:
     void on_messageReceived(const QXmppMessage &msg);
@@ -61,10 +75,16 @@ public slots:
 
 signals:
     void newMessage(QString sender,QString receiver,QDateTime time,QString content);
+    void newPicture(QString sender,QString receiver,QDateTime time,QString content);
+
 private slots:
     void on_cancleBtn_clicked();
     void on_sendBtn_clicked();
     void on_messBox_cursorPositionChanged();
+
+    void on_photoBtn_clicked();
+    void Generatelink(QNetworkReply* reply);
+    void LoadPicture(QNetworkReply *reply);
 };
 
 #endif // CHATDIALOG_H
